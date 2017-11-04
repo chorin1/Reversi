@@ -6,18 +6,16 @@
  *  ID: 021906185
  *  basic class for creating a board of size AxA
  */
-
-#ifndef BOARD_H_
-#define BOARD_H_
+#pragma once
 
 class Board {
 
 public:
 
-    enum Piece {
-        PIECE_EMPTY,
-        PIECE_X,
-        PIECE_O
+    enum Cell {
+        CELL_EMPTY,
+        CELL_X,
+        CELL_O
     };
 
     /**
@@ -37,9 +35,12 @@ public:
      */
     int getBoardSize() const;
 
+	Cell getCellAt(int x, int y) const;
+	void setCellAt (int x, int y, Cell cell);
+
 private:
 	const int m_boardSize;
-	Piece** m_board;
+	Cell** m_board;
 
 	void initBoard(); //initialize the board according to Reversi starting positions
 	void drawFirstRow() const; //draw the first row of the board (column numbering)
@@ -47,6 +48,3 @@ private:
 	void drawRow(int row) const; //draw a single row
 
 };
-
-
-#endif /* BOARD_H_ */

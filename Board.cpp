@@ -12,9 +12,9 @@ using namespace std;
 
 
 Board::Board(int boardSize = 8): m_boardSize(boardSize) {
-	m_board = new Piece*[m_boardSize];
+	m_board = new Cell*[m_boardSize];
 		for (int i = 0; i < m_boardSize; ++i)
-			m_board[i] = new Piece[m_boardSize];
+			m_board[i] = new Cell[m_boardSize];
 	initBoard();
 
 }
@@ -27,11 +27,11 @@ void Board::initBoard() {
         for (int i = 0; i < Board::m_boardSize; i++) {
             for (int j = 0; j < Board::m_boardSize; j++) {
                 if ((j == center - 1 && i == center - 1) || (j == center && i == center))
-                    Board::m_board[i][j] = Board::PIECE_O;
+                    Board::m_board[i][j] = Board::CELL_O;
                 else if ((j == center - 1 && i == center) || (j == center && i == center - 1))
-                    Board::m_board[i][j] = Board::PIECE_X;
+                    Board::m_board[i][j] = Board::CELL_X;
                 else
-                    Board::m_board[i][j] = Board::PIECE_EMPTY;
+                    Board::m_board[i][j] = Board::CELL_EMPTY;
             }
         }
     }
@@ -71,13 +71,13 @@ void Board::drawRow(int row) const {
 		cout << " ";
 
 		switch (Board::m_board[row][i]) {
-		case Board::PIECE_EMPTY:
+		case Board::CELL_EMPTY:
 			cout << " ";
 			break;
-		case Board::PIECE_X:
+		case Board::CELL_X:
 			cout << "X";
 			break;
-		case Board::PIECE_O:
+		case Board::CELL_O:
 			cout << "O";
 			break;
 		default:
