@@ -77,10 +77,6 @@ void Board::drawRow(int row) const {
 	cout << endl;
 }
 
-int Board::getBoardSize() const {
-    return m_boardSize;
-}
-
 void Board::draw() const {
 	drawFirstRow();
 	drawCompleteLine();

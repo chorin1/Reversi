@@ -23,8 +23,7 @@ public:
      * @param boardSize the size of the board that will be created (valid sizes are 3..20, default is 8)
      */
 	Board(int boardSize);
-	~Board();
-
+	~Board() {delete[] m_board;}
     /**
      * draws the current board state in the console
      */
@@ -33,7 +32,7 @@ public:
     /**
      * @return the size of the board
      */
-    int getBoardSize() const;
+	int getBoardSize() const {return m_boardSize;}
 
 	Cell getCellAt(int x, int y) const {return m_board[x + y*m_boardSize];}
 	void setCellValue(int x, int y, const Cell cell) { m_board[x + y*m_boardSize] = cell; }
