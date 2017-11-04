@@ -35,12 +35,12 @@ public:
      */
     int getBoardSize() const;
 
-	Cell getCellAt(int x, int y) const;
-	void setCellAt (int x, int y, Cell cell);
+	Cell getCellAt(int x, int y) const {return m_board[x + y*m_boardSize];}
+	void setCellValue(int x, int y, const Cell cell) { m_board[x + y*m_boardSize] = cell; }
 
 private:
 	const int m_boardSize;
-	Cell** m_board;
+	Cell* m_board;
 
 	void initBoard(); //initialize the board according to Reversi starting positions
 	void drawFirstRow() const; //draw the first row of the board (column numbering)

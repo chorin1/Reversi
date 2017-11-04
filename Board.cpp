@@ -8,49 +8,37 @@
 
 #include "Board.h"
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 
 Board::Board(int boardSize = 8): m_boardSize(boardSize) {
-	m_board = new Cell*[m_boardSize];
-		for (int i = 0; i < m_boardSize; ++i)
-			m_board[i] = new Cell[m_boardSize];
+	m_board = new Cell [m_boardSize * m_boardSize];
 	initBoard();
-
 }
 
 void Board::initBoard() {
-    try {
-        if (Board::m_boardSize < 3 || Board::m_boardSize > 20)
-            throw 1;
+	assert(Board::m_boardSize > 3 || Board::m_boardSize < 20);
         int center = Board::m_boardSize / 2;
         for (int i = 0; i < Board::m_boardSize; i++) {
             for (int j = 0; j < Board::m_boardSize; j++) {
-                if ((j == center - 1 && i == center - 1) || (j == center && i == center))
-                    Board::m_board[i][j] = Board::CELL_O;
+				if ((j == center - 1 && i == center - 1) || (j == center && i == center))
+					Board::setCellValue(i, j, Board::CELL_O);
                 else if ((j == center - 1 && i == center) || (j == center && i == center - 1))
-                    Board::m_board[i][j] = Board::CELL_X;
+					Board::setCellValue(i, j, Board::CELL_X);
                 else
-                    Board::m_board[i][j] = Board::CELL_EMPTY;
+					Board::setCellValue(i, j, Board::CELL_EMPTY);
             }
         }
-    }
-    catch (int errorNum){
-        if (errorNum==1)
-            cout << endl << "Error #1, failed to initialize board, size invalid" <<endl;
-    }
 }
 
 Board::~Board() {
-	for(int i = 0; i < Board::m_boardSize; ++i) {
-	  delete [] m_board[i];
-	}
 	delete [] m_board;
 }
 
 void Board::drawFirstRow() const {
 	cout << " |";
-	for (int i=1; i<= Board::m_boardSize; i++) {
+	for (int i=1; i<= m_boardSize; i++) {
 		cout << " " << i << " |";
 	}
 	cout << endl;
@@ -69,8 +57,7 @@ void Board::drawRow(int row) const {
 	cout << row+1 << "|";
 	for (int i=0; i < Board::m_boardSize; i++) {
 		cout << " ";
-
-		switch (Board::m_board[row][i]) {
+		switch (Board::getCellAt(row, i)) {
 		case Board::CELL_EMPTY:
 			cout << " ";
 			break;
@@ -97,7 +84,7 @@ int Board::getBoardSize() const {
 void Board::draw() const {
 	drawFirstRow();
 	drawCompleteLine();
-	for (int i=0; i<Board::m_boardSize ; i++) {
+	for (int i=0; i<m_boardSize ; i++) {
 		drawRow(i);
 		drawCompleteLine();
 	}
