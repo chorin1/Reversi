@@ -13,9 +13,10 @@ class Board {
 public:
 
     enum Cell {
+        CELL_ERROR,
         CELL_EMPTY,
-        CELL_X,
-        CELL_O
+        CELL_PLAYER1,
+        CELL_PLAYER2
     };
 
     /**
@@ -23,7 +24,7 @@ public:
      * @param boardSize the size of the board that will be created (valid sizes are 3..20, default is 8)
      */
 	Board(int boardSize);
-	~Board() {delete[] m_board;}
+	~Board();
     /**
      * draws the current board state in the console
      */
@@ -42,8 +43,5 @@ private:
 	Cell* m_board;
 
 	void initBoard(); //initialize the board according to Reversi starting positions
-	void drawFirstRow() const; //draw the first row of the board (column numbering)
-	void drawCompleteLine() const; //draw a complete separation line "---"
-	void drawRow(int row) const; //draw a single row
 
 };

@@ -4,9 +4,13 @@
 
 class ConsoleView : public View {
 public:
-	ConsoleView (const GameModel& model);
-	~ConsoleView();
+    ConsoleView (GameModel& model) : View(model){}
+	~ConsoleView() {};
 	void DrawBoard() const;
-	void drawPossibleMoves (const std::vector<GameModel::Pos> possVector) const;
-	void askForInputfromPlayer(GameModel::PlayerNum currPlayer) const;
+	void drawPossibleMoves (const GameModel::PlayerNum ofPlayer) const;
+	//void askPlayerMove(GameModel::PlayerNum currPlayer) const;
+private:
+	void drawFirstRow() const; //draw the first row of the board (column numbering)
+	void drawCompleteLine() const; //draw a complete separation line "---"
+	void drawRow(int row) const; //draw a single row
 };

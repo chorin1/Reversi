@@ -7,6 +7,6 @@ set(SOURCE_FILES
         Board.cpp
         Board.h
         main.cpp
-)
+        ConsoleView.cpp GameModel.cpp)
 
-add_executable(Reversi ${SOURCE_FILES})
+add_executable(Reversi ${SOURCE_FILES} ConsoleView.cpp GameModel.cpp)
