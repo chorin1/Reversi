@@ -7,6 +7,8 @@
 
 GameModel::GameModel() {
    m_board = new Board(DEFAULT_BOARD_SIZE);
+   updatePossibleMoves(PLAYER1);
+   updatePossibleMoves(PLAYER2);
 }
 
 GameModel::~GameModel() {
@@ -21,8 +23,7 @@ bool GameModel::isOutOfBounds (const Pos& pos) const {
     return false;
 }
 
-Board::Cell GameModel::getCellAt(const Pos& pos) const
-{
+Board::Cell GameModel::getCellAt(const Pos& pos) const {
     if (GameModel::isOutOfBounds(pos)) {
         return Board::CELL_ERROR;
     }
@@ -43,19 +44,9 @@ bool GameModel::isPossibleMove (const PlayerNum& player, const Pos& pos) const {
 bool GameModel::place (const PlayerNum& player, const Pos& pos) {
     if (!isPossibleMove(player, pos))
         return false;
-    Board::Cell currPiece;
-    Board::Cell opponentPiece;
-    switch (player) {
-        case PLAYER1:
-            currPiece = Board::CELL_PLAYER1;
-            opponentPiece = Board::CELL_PLAYER2;
-            break;
-        case PLAYER2:
-        default:
-            currPiece = Board::CELL_PLAYER2;
-            opponentPiece = Board::CELL_PLAYER1;
-            break;
-    }
+
+	Board::Cell currPiece = (player == PLAYER1)? Board::CELL_PLAYER1 : Board::CELL_PLAYER2;
+
     setCellAt(pos, currPiece); //set current cell to player piece
     int row = pos.m_x;
     int clmn = pos.m_y;
@@ -68,7 +59,7 @@ bool GameModel::place (const PlayerNum& player, const Pos& pos) {
     bool sw = false;
     bool se = false;
 
-    //goTo (direction, currplayerpiece, nextposition, flipIfValidMove, false
+    //goTo (direction, currplayerpiece, nextposition, doflipIfValidMove, false
     south = goTo(SOUTH, currPiece, Pos(row+1, clmn), true, false);
     north = goTo(NORTH, currPiece, Pos(row-1, clmn), true, false);
     east = goTo(EAST, currPiece, Pos(row, clmn+1), true, false);
@@ -78,25 +69,24 @@ bool GameModel::place (const PlayerNum& player, const Pos& pos) {
     sw = goTo(SW, currPiece, Pos(row+1, clmn-1), true, false);
     se = goTo(SE, currPiece, Pos(row+1, clmn+1), true, false);
 
+	GameModel::PlayerNum otherPlayer = (player == PLAYER1) ? PLAYER2 : PLAYER1;
+	updatePossibleMoves(otherPlayer);
     return (north || south || east || west || nw || ne || sw || se);
 
 }
 
-void GameModel::updatePossibleMoves(PlayerNum& player) {
+void GameModel::updatePossibleMoves(PlayerNum player) {
     std::vector<Pos>* vec;
     Board::Cell currPiece;
-    Board::Cell opponentPiece;
     switch (player) {
         case PLAYER1:
             vec = &m_possibleMovesPlayer1;
             currPiece = Board::CELL_PLAYER1;
-            opponentPiece = Board::CELL_PLAYER2;
             break;
         case PLAYER2:
         default:
             vec = &m_possibleMovesPlayer2;
             currPiece = Board::CELL_PLAYER2;
-            opponentPiece = Board::CELL_PLAYER1;
             break;
     }
 
@@ -142,77 +132,6 @@ void GameModel::setCellAt(const Pos& pos, const Board::Cell piece) {
         m_board->setCellValue(pos.m_x-1, pos.m_y-1, piece);
 }
 
-
-/*
-bool GameModel::goDown(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found) {
-    Board::Cell currCell = getCellAt(pos);
-    if (currCell==Board::CELL_ERROR || currCell == Board::CELL_EMPTY) //reached out of bounds or an empty cell
-        return false;
-    if (currCell==currPlayerPiece)
-       if (!found)
-           return false;
-        if (found)
-            return true;
-    if (goDown(currPlayerPiece, Pos(pos.m_x+1, pos.m_y), doFlip, true)) { //current cell contains opponent
-        if (doFlip)
-            flip(pos);
-        return true;
-    }
-    return false;
-}
-
-bool GameModel::goUp(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found) {
-    Board::Cell currCell = getCellAt(pos);
-    if (currCell==Board::CELL_ERROR || currCell == Board::CELL_EMPTY) //reached out of bounds or an empty cell
-        return false;
-    if (currCell==currPlayerPiece)
-        if (!found)
-            return false;
-    if (found)
-        return true;
-    if (goUp(currPlayerPiece, Pos(pos.m_x-1, pos.m_y), doFlip, true)) { //current cell contains opponent
-        if (doFlip)
-            flip(pos);
-        return true;
-    }
-    return false;
-}
-
-bool GameModel::goLeft(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found) {
-    Board::Cell currCell = getCellAt(pos);
-    if (currCell==Board::CELL_ERROR || currCell == Board::CELL_EMPTY) //reached out of bounds or an empty cell
-        return false;
-    if (currCell==currPlayerPiece)
-        if (!found)
-            return false;
-    if (found)
-        return true;
-    if (goLeft(currPlayerPiece, Pos(pos.m_x, pos.m_y-1), doFlip, true)) { //current cell contains opponent
-        if (doFlip)
-            flip(pos);
-        return true;
-    }
-    return false;
-}
-
-bool GameModel::goRight(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found) {
-    Board::Cell currCell = getCellAt(pos);
-    if (currCell==Board::CELL_ERROR || currCell == Board::CELL_EMPTY) //reached out of bounds or an empty cell
-        return false;
-    if (currCell==currPlayerPiece)
-        if (!found)
-            return false;
-    if (found)
-        return true;
-    if (goRight(currPlayerPiece, Pos(pos.m_x, pos.m_y+1), doFlip, true)) { //current cell contains opponent
-        if (doFlip)
-            flip(pos);
-        return true;
-    }
-    return false;
-}
-*/
-//START of experimental
 bool GameModel::goTo (const GameModel::Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found) {
     Board::Cell currCell = getCellAt(pos);
     if (currCell==Board::CELL_ERROR || currCell == Board::CELL_EMPTY) //reached out of bounds or an empty cell
@@ -269,8 +188,6 @@ bool GameModel::goTo (const GameModel::Direction& direction, const Board::Cell& 
     }
     return false;
 }
-
-//END OF EXPERIMENTAL
 
 void GameModel::flip(const Pos& pos) {
     Board::Cell currPiece = getCellAt(pos);

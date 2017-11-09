@@ -21,29 +21,13 @@ public:
 
 	GameModel();
 	~GameModel();
-    // move to private later!!
-    enum Direction {
-        NORTH,
-        SOUTH,
-        WEST,
-        EAST,
-        NW,
-        NE,
-        SE,
-        SW
-    };
-
-    void updatePossibleMoves(PlayerNum& player); //run all across and update the possible moves vector
-
-    bool goTo (const Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found);
-
-    // end move to private
-
+ 
 	bool place (const PlayerNum& player, const Pos& pos);  //return true if move succeeded
 	const std::vector<Pos>* getPossibleMoves(PlayerNum player) const;
     bool isAbleToMove(PlayerNum& player) const;
 	Board::Cell getCellAt(const Pos& pos) const;  //think about making private method and friend of view
     int getBoardSize() const {return this->m_board->getBoardSize();}
+	void updatePossibleMoves(PlayerNum player); //run all across and update the possible moves vector
 
 private:
 	Board* m_board;
@@ -52,14 +36,21 @@ private:
     const static int DEFAULT_BOARD_SIZE = 8;
 
 
+	enum Direction {
+		NORTH,
+		SOUTH,
+		WEST,
+		EAST,
+		NW,
+		NE,
+		SE,
+		SW
+	};
 
+	bool goTo(const Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found);
     bool isPossibleMove (const PlayerNum& player, const Pos& pos) const;
     bool isOutOfBounds (const Pos& pos) const;
     void setCellAt(const Pos& pos, const Board::Cell piece); //void setCellValue(int x, int y, const Cell cell)
-    //bool goDown(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found);
-    //bool goUp(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found);
-    //bool goLeft(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found);
-    //bool goRight(const Board::Cell& currPlayerPiece, const Pos pos, bool doFlip, bool found);
     void flip(const Pos& pos);
 
 };

@@ -49,20 +49,29 @@ void ConsoleView::drawRow(int row) const {
     cout << endl;
 }
 
-void ConsoleView::DrawBoard() const {
+void ConsoleView::drawBoard() const {
+	cout << "Current Board:" << endl << endl;
     drawFirstRow();
     drawCompleteLine();
     for (int i=1; i<= m_model->getBoardSize() ; i++) {
         drawRow(i);
         drawCompleteLine();
     }
+	cout << endl;
 }
 
 
 void ConsoleView::drawPossibleMoves (const GameModel::PlayerNum ofPlayer) const {
     const std::vector<GameModel::Pos>* vec = m_model->getPossibleMoves(ofPlayer);
-    cout << "Possible moves are:" << endl;
+	cout << "Possible moves are:" << endl;
     for (std::vector<GameModel::Pos>::const_iterator it = vec->begin(); it != vec->end(); ++it) {
         cout << "(" << it->m_x << "," << it->m_y << ") ";
     }
+}
+
+void ConsoleView::printPlayerTurn(const GameModel::PlayerNum player) const {
+	if (player == GameModel::PLAYER1)
+		cout << "X: it's your turn." << endl;
+	else 
+		cout << "O: it's your turn." << endl;
 }

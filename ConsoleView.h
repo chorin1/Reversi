@@ -6,8 +6,9 @@ class ConsoleView : public View {
 public:
     ConsoleView (GameModel& model) : View(model){}
 	~ConsoleView() {};
-	void DrawBoard() const;
+	void drawBoard() const;
 	void drawPossibleMoves (const GameModel::PlayerNum ofPlayer) const;
+	void printPlayerTurn(const GameModel::PlayerNum player) const;
 	//void askPlayerMove(GameModel::PlayerNum currPlayer) const;
 private:
 	void drawFirstRow() const; //draw the first row of the board (column numbering)

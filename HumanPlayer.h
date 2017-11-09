@@ -1,8 +1,8 @@
 #pragma once
-#include "PlayerType.h"
+#include "Player.h"
 #include "GameModel.h"
 
-class HumanPlayer : public PlayerType {
+class HumanPlayer : public Player {
 public:
 	HumanPlayer();
 	~HumanPlayer();

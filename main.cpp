@@ -44,6 +44,7 @@ int main() {
     view.DrawBoard();
     model.updatePossibleMoves(player1);
     view.drawPossibleMoves(player1);
+	std::cin.get();
     return 0;
 }
 
