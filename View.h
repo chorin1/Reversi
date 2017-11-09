@@ -4,12 +4,13 @@
 
 class View {
 public:
-	View(GameModel& model) {m_model = &model;};
+	View(GameModel& model) : m_model(&model) {}
 	virtual ~View() {}
-	virtual void DrawBoard() const =0;
-	virtual void drawPossibleMoves (const GameModel::PlayerNum ofPlayer) const =0;
-	virtual void printPlayerTurn (const GameModel::PlayerNum player) const =0;
-	//virtual void askPlayerMove(GameModel::PlayerNum currPlayer) const = 0;
+	virtual void drawBoard() const = 0;
+	virtual void drawTurn(const GameModel::PlayerNum player) const = 0; 
+	virtual void drawNoPossibleMoves(const GameModel::PlayerNum player) const = 0;
+	virtual void drawMoveIsInvalid (GameModel::Pos& pos) const = 0;
+	virtual void drawEndGame(int& scoreP1, int& scoreP2) const = 0;
 protected:
 	GameModel* m_model;
 };

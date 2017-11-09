@@ -5,6 +5,5 @@ class Player {
 public:
 	Player() {};
 	virtual ~Player() {};
-	virtual GameModel::Pos makeMove() = 0;
-	//GameModel::PlayerNum playerNum;
+	virtual GameModel::Pos makeMove() const = 0;
 };

@@ -4,7 +4,7 @@
 
 class HumanPlayer : public Player {
 public:
-	HumanPlayer();
-	~HumanPlayer();
-	GameModel::Pos makeMove();
+	HumanPlayer() {}
+	~HumanPlayer() {}
+	GameModel::Pos makeMove() const;
 };

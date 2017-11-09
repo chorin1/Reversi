@@ -6,9 +6,15 @@
 #include <algorithm>
 
 GameModel::GameModel() {
-   m_board = new Board(DEFAULT_BOARD_SIZE);
-   updatePossibleMoves(PLAYER1);
-   updatePossibleMoves(PLAYER2);
+	m_board = new Board(DEFAULT_BOARD_SIZE);
+	updatePossibleMoves(PLAYER1);
+	updatePossibleMoves(PLAYER2);
+}
+
+GameModel::GameModel(int boardSize) {
+	m_board = new Board(boardSize);
+	updatePossibleMoves(PLAYER1);
+	updatePossibleMoves(PLAYER2);
 }
 
 GameModel::~GameModel() {
@@ -120,7 +126,7 @@ void GameModel::updatePossibleMoves(PlayerNum player) {
 
 }
 
-bool GameModel::isAbleToMove(PlayerNum& player) const {
+bool GameModel::isAbleToMove(const PlayerNum& player) const {
     const std::vector<Pos>* vec = (player==PLAYER1)? &m_possibleMovesPlayer1 : &m_possibleMovesPlayer2;
     return !(vec->empty());
 }
@@ -200,6 +206,31 @@ void GameModel::flip(const Pos& pos) {
     else
         setCellAt(pos, Board::CELL_PLAYER1);
 
+}
+
+
+void GameModel::calculateScore(int& scoreP1, int& scoreP2) const {
+	int score1 = 0;
+	int score2 = 0;
+	for (int row = 1; row <= getBoardSize(); row++) {
+		for (int clmn = 1; clmn <= getBoardSize(); clmn++) {
+			Pos currPos(row, clmn);
+			switch (getCellAt(currPos)) {
+			case Board::CELL_EMPTY:
+				break;
+			case Board::CELL_PLAYER1:
+				score1++;
+				break;
+			case Board::CELL_PLAYER2:
+				score2++;
+				break;
+
+			}
+		}
+	}
+
+	scoreP1 = score1;
+	scoreP2 = score2;
 }
 
 

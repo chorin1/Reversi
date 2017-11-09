@@ -63,15 +63,48 @@ void ConsoleView::drawBoard() const {
 
 void ConsoleView::drawPossibleMoves (const GameModel::PlayerNum ofPlayer) const {
     const std::vector<GameModel::Pos>* vec = m_model->getPossibleMoves(ofPlayer);
-	cout << "Possible moves are:" << endl;
+	cout << "Possible moves are: ";
     for (std::vector<GameModel::Pos>::const_iterator it = vec->begin(); it != vec->end(); ++it) {
         cout << "(" << it->m_x << "," << it->m_y << ") ";
     }
 }
 
-void ConsoleView::printPlayerTurn(const GameModel::PlayerNum player) const {
+void ConsoleView::drawTurn(const GameModel::PlayerNum player) const {
 	if (player == GameModel::PLAYER1)
 		cout << "X: it's your turn." << endl;
 	else 
 		cout << "O: it's your turn." << endl;
+	drawPossibleMoves(player);
+	cout << endl;
+	cout << "Please enter your move as row,column: ";
+}
+
+void ConsoleView::drawNoPossibleMoves(const GameModel::PlayerNum player) const {
+	if (player == GameModel::PLAYER1)
+		cout << "X: ";
+	else
+		cout << "O: ";
+	cout << "Has no possible moves. Press any key to switch turn..." << endl;
+	std::cin.get();
+}
+
+void ConsoleView::drawMoveIsInvalid(GameModel::Pos& pos) const {
+	cout << "Move (" << pos.m_x << "," << pos.m_y << ") is not possible. Please try again: ";
+}
+
+void ConsoleView::drawEndGame(int& scoreP1, int& scoreP2) const {
+	cout << endl << endl << endl;
+	cout << "No possible moves for both players." << endl << endl << "---The game has ended!---" << endl;
+	if (scoreP1 > scoreP2)
+		cout << "The winner is: Player 1" << endl;
+	else if (scoreP1 < scoreP2)
+		cout << "The winner is: Player 2" << endl;
+	else if (scoreP1 == scoreP2)
+		cout << "Its a tie!" << endl << endl;
+
+	cout << "   ~ Final score ~" << endl;
+	cout << "Player1: " << scoreP1 << "   Player2: " << scoreP2;
+	cout << endl << endl;
+	cout << "Thank you for playing!";
+
 }

@@ -5,6 +5,7 @@
 
 class GameModel {
 public:
+
 	struct Pos {
 		int m_x;
 		int m_y;
@@ -20,21 +21,23 @@ public:
 	};
 
 	GameModel();
+	GameModel(int boardSize);
 	~GameModel();
  
 	bool place (const PlayerNum& player, const Pos& pos);  //return true if move succeeded
 	const std::vector<Pos>* getPossibleMoves(PlayerNum player) const;
-    bool isAbleToMove(PlayerNum& player) const;
+    bool isAbleToMove(const PlayerNum& player) const;
 	Board::Cell getCellAt(const Pos& pos) const;  //think about making private method and friend of view
     int getBoardSize() const {return this->m_board->getBoardSize();}
 	void updatePossibleMoves(PlayerNum player); //run all across and update the possible moves vector
+	bool isPossibleMove(const PlayerNum& player, const Pos& pos) const;
+	void calculateScore(int& scoreP1, int& scoreP2) const;
 
 private:
 	Board* m_board;
 	std::vector<Pos> m_possibleMovesPlayer1;
 	std::vector<Pos> m_possibleMovesPlayer2;
     const static int DEFAULT_BOARD_SIZE = 8;
-
 
 	enum Direction {
 		NORTH,
@@ -48,7 +51,6 @@ private:
 	};
 
 	bool goTo(const Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found);
-    bool isPossibleMove (const PlayerNum& player, const Pos& pos) const;
     bool isOutOfBounds (const Pos& pos) const;
     void setCellAt(const Pos& pos, const Board::Cell piece); //void setCellValue(int x, int y, const Cell cell)
     void flip(const Pos& pos);
