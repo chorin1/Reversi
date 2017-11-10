@@ -14,6 +14,10 @@ Board::Board(int boardSize = 8): m_boardSize(boardSize) {
 	initBoard();
 }
 
+Board::~Board() {
+	delete[] m_board;
+}
+
 void Board::initBoard() {
 	assert(Board::m_boardSize > 3 || Board::m_boardSize < 20);
         int center = Board::m_boardSize / 2;
@@ -28,10 +32,3 @@ void Board::initBoard() {
             }
         }
 }
-
-Board::~Board() {
-	delete [] m_board;
-}
-
-
-

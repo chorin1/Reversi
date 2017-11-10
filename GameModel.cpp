@@ -21,14 +21,6 @@ GameModel::~GameModel() {
     delete GameModel::m_board;
 }
 
-
-bool GameModel::isOutOfBounds (const Pos& pos) const {
-    int boardSize = GameModel::getBoardSize();
-    if (pos.m_x < 1 || pos.m_y < 1 || pos.m_x > boardSize || pos.m_y > boardSize)
-        return true;
-    return false;
-}
-
 Board::Cell GameModel::getCellAt(const Pos& pos) const {
     if (GameModel::isOutOfBounds(pos)) {
         return Board::CELL_ERROR;
@@ -75,10 +67,35 @@ bool GameModel::place (const PlayerNum& player, const Pos& pos) {
     sw = goTo(SW, currPiece, Pos(row+1, clmn-1), true, false);
     se = goTo(SE, currPiece, Pos(row+1, clmn+1), true, false);
 
+	updatePossibleMoves(player);
 	GameModel::PlayerNum otherPlayer = (player == PLAYER1) ? PLAYER2 : PLAYER1;
 	updatePossibleMoves(otherPlayer);
     return (north || south || east || west || nw || ne || sw || se);
 
+}
+
+void GameModel::calculateScore(int& scoreP1, int& scoreP2) const {
+	int score1 = 0;
+	int score2 = 0;
+	for (int row = 1; row <= getBoardSize(); row++) {
+		for (int clmn = 1; clmn <= getBoardSize(); clmn++) {
+			Pos currPos(row, clmn);
+			switch (getCellAt(currPos)) {
+			case Board::CELL_EMPTY:
+				break;
+			case Board::CELL_PLAYER1:
+				score1++;
+				break;
+			case Board::CELL_PLAYER2:
+				score2++;
+				break;
+
+			}
+		}
+	}
+
+	scoreP1 = score1;
+	scoreP2 = score2;
 }
 
 void GameModel::updatePossibleMoves(PlayerNum player) {
@@ -129,13 +146,6 @@ void GameModel::updatePossibleMoves(PlayerNum player) {
 bool GameModel::isAbleToMove(const PlayerNum& player) const {
     const std::vector<Pos>* vec = (player==PLAYER1)? &m_possibleMovesPlayer1 : &m_possibleMovesPlayer2;
     return !(vec->empty());
-}
-
-void GameModel::setCellAt(const Pos& pos, const Board::Cell piece) {
-    if (isOutOfBounds(pos))
-        std::cout << "error in GameModel::setCell, out of bounds" << std::endl;
-    else
-        m_board->setCellValue(pos.m_x-1, pos.m_y-1, piece);
 }
 
 bool GameModel::goTo (const GameModel::Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found) {
@@ -208,29 +218,17 @@ void GameModel::flip(const Pos& pos) {
 
 }
 
-
-void GameModel::calculateScore(int& scoreP1, int& scoreP2) const {
-	int score1 = 0;
-	int score2 = 0;
-	for (int row = 1; row <= getBoardSize(); row++) {
-		for (int clmn = 1; clmn <= getBoardSize(); clmn++) {
-			Pos currPos(row, clmn);
-			switch (getCellAt(currPos)) {
-			case Board::CELL_EMPTY:
-				break;
-			case Board::CELL_PLAYER1:
-				score1++;
-				break;
-			case Board::CELL_PLAYER2:
-				score2++;
-				break;
-
-			}
-		}
-	}
-
-	scoreP1 = score1;
-	scoreP2 = score2;
+bool GameModel::isOutOfBounds(const Pos& pos) const {
+	int boardSize = GameModel::getBoardSize();
+	if (pos.m_x < 1 || pos.m_y < 1 || pos.m_x > boardSize || pos.m_y > boardSize)
+		return true;
+	return false;
 }
 
+void GameModel::setCellAt(const Pos& pos, const Board::Cell piece) {
+	if (isOutOfBounds(pos))
+		std::cout << "error in GameModel::setCell, out of bounds" << std::endl;
+	else
+		m_board->setCellValue(pos.m_x - 1, pos.m_y - 1, piece);
+}
 

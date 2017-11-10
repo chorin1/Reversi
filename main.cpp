@@ -14,7 +14,7 @@
 #include <iostream>
 int main() {
 
-    GameModel model;
+	GameModel model;
 	ConsoleView view(model);
 	HumanPlayer dude;
 	HumanPlayer dad;

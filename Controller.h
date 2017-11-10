@@ -6,12 +6,11 @@
 class Controller {
 	
 public:
-
 	Controller(GameModel& model, const View& view, const Player& player1, const Player& player2) :
-		m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2), gameEnded (false) , currentPlayerNum(GameModel::PLAYER1){}
+		       m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2), gameEnded (false) , currentPlayerNum(GameModel::PLAYER1){}
 	~Controller() {}
 	void beginGame();
-	
+
 private:
 	const View* const m_view;
 	GameModel* const m_model;

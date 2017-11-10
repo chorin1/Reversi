@@ -1,3 +1,11 @@
+/*
+* GameModel.h
+*
+*  Updated on: Oct 25, 2017
+*  Author: Ben Chorin
+*  ID: 021906185
+*  basic class for creating a board of size AxA
+*/
 #pragma once
 #include "Board.h"
 #include <vector>
@@ -15,6 +23,7 @@ public:
 			return pos2.m_x == m_x && pos2.m_y == m_y;
 		}
 	};
+
 	enum PlayerNum {
 		PLAYER1,
 		PLAYER2
@@ -27,7 +36,7 @@ public:
 	bool place (const PlayerNum& player, const Pos& pos);  //return true if move succeeded
 	const std::vector<Pos>* getPossibleMoves(PlayerNum player) const;
     bool isAbleToMove(const PlayerNum& player) const;
-	Board::Cell getCellAt(const Pos& pos) const;  //think about making private method and friend of view
+	Board::Cell getCellAt(const Pos& pos) const; 
     int getBoardSize() const {return this->m_board->getBoardSize();}
 	void updatePossibleMoves(PlayerNum player); //run all across and update the possible moves vector
 	bool isPossibleMove(const PlayerNum& player, const Pos& pos) const;

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cctype>
 #include <string>
+#include <cstdlib>
+
 using std::cin;
 using std::cout;
 using std::endl;

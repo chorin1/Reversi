@@ -1,6 +1,7 @@
 #include "Controller.h"
 
 void Controller::beginGame() {
+	GameModel::Pos lastMove = GameModel::Pos(0, 0);
 
 	while (!gameEnded) {
 		m_view->drawBoard();
@@ -11,12 +12,12 @@ void Controller::beginGame() {
 		}
 
 		if (!m_model->isAbleToMove(currentPlayerNum)) {
-			m_view->drawNoPossibleMoves(currentPlayerNum);
+			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
 			switchCurrentPlayer();
 			continue;
 		}
 		
-		m_view->drawTurn(currentPlayerNum);
+		m_view->drawTurn(currentPlayerNum, lastMove);
 		GameModel::Pos wantedMove(0,0);
 		bool moveValid = false;
 		do {
@@ -30,6 +31,7 @@ void Controller::beginGame() {
 
 		//move is valid, lets place the piece
 		m_model->place(currentPlayerNum, wantedMove);
+		lastMove = wantedMove;
 		switchCurrentPlayer();
 	}
 
