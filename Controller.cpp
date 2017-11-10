@@ -1,3 +1,10 @@
+/*
+*  Controller.cpp
+*
+*  Author: Ben Chorin
+*  ID: 021906185
+*/
+
 #include "Controller.h"
 
 void Controller::beginGame() {
@@ -6,20 +13,24 @@ void Controller::beginGame() {
 	while (!gameEnded) {
 		m_view->drawBoard();
 
+		//both players can't move
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
 			gameEnded = true;
 			continue;
 		}
 
+		//current player has no moves
 		if (!m_model->isAbleToMove(currentPlayerNum)) {
 			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
 			switchCurrentPlayer();
 			continue;
 		}
 		
+		//current player has moves
 		m_view->drawTurn(currentPlayerNum, lastMove);
 		GameModel::Pos wantedMove(0,0);
 		bool moveValid = false;
+		//loop until player selects a valid move
 		do {
 			wantedMove = getCurretPlayer()->makeMove();
 			if (m_model->isPossibleMove(currentPlayerNum, wantedMove)) {

@@ -14,9 +14,20 @@ Board::Board(int boardSize = 8): m_boardSize(boardSize) {
 	initBoard();
 }
 
+Board::Board(const Board &otherBoard): m_boardSize(otherBoard.m_boardSize) {
+	m_board = new Cell[m_boardSize * m_boardSize];
+	for (int i = 0; i < Board::m_boardSize; i++) {
+		for (int j = 0; j < Board::m_boardSize; j++) {
+			Board::setCellValue(i, j, otherBoard.getCellAt(i,j));
+		}
+	}
+}
+
 Board::~Board() {
 	delete[] m_board;
 }
+
+
 
 void Board::initBoard() {
 	assert(Board::m_boardSize > 3 || Board::m_boardSize < 20);

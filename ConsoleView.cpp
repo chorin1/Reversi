@@ -1,6 +1,10 @@
-//
-// Created by chorin on 11/6/17.
-//
+/*
+*  ConsoleView.cpp
+*
+*  Author: Ben Chorin
+*  ID: 021906185
+*/
+
 #include "ConsoleView.h"
 #include <iostream>
 using std::cout;
@@ -84,6 +88,7 @@ void ConsoleView::drawEndGame(int& scoreP1, int& scoreP2) const {
 }
 
 void ConsoleView::drawPossibleMoves(const GameModel::PlayerNum ofPlayer) const {
+	//create a pointer (read-only) to the corresponding possible moves vector
 	const std::vector<GameModel::Pos>* vec = m_model->getPossibleMoves(ofPlayer);
 	cout << "Possible moves are: ";
 	for (std::vector<GameModel::Pos>::const_iterator it = vec->begin(); it != vec->end(); ++it) {
@@ -91,6 +96,7 @@ void ConsoleView::drawPossibleMoves(const GameModel::PlayerNum ofPlayer) const {
 	}
 }
 
+//draw coulmn numbering
 void ConsoleView::drawFirstRow() const {
 	cout << " |";
 	for (int i = 1; i <= m_model->getBoardSize(); i++) {

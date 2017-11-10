@@ -1,15 +1,17 @@
 /*
-* GameModel.h
-*
-*  Updated on: Oct 25, 2017
+*  Reversi - Advaced Programming 1
+*  Ex: #2
+*  Group: 04
 *  Author: Ben Chorin
 *  ID: 021906185
-*  basic class for creating a board of size AxA
+*  GameModel is responsible to store the data of the Reversi game. (eg. the board, possible moves for each player)
+*  Also responsible to store game logic (eg. what is a possible move)
+*  Has a position struct used to describe a point on the board.
 */
+
 #pragma once
 #include "Board.h"
 #include <vector>
-#include <iostream>
 
 class GameModel {
 public:
@@ -18,7 +20,9 @@ public:
 		int m_x;
 		int m_y;
         Pos (int x,int y): m_x(x), m_y(y) {}
-        Pos (const Pos& other): m_x(other.m_x), m_y(other.m_y) {} //copy constructor
+		//copy constructor
+        Pos (const Pos& other): m_x(other.m_x), m_y(other.m_y) {} 
+		
 		bool operator==(const Pos& pos2) const {
 			return pos2.m_x == m_x && pos2.m_y == m_y;
 		}
@@ -29,24 +33,36 @@ public:
 		PLAYER2
 	};
 
+	//create with default boardSize
 	GameModel();
+	//create with custom boardSize
 	GameModel(int boardSize);
+	//copy constructor (copies the whole board and the player's possible moves)
+	GameModel(const GameModel &otherModel);
 	~GameModel();
- 
-	bool place (const PlayerNum& player, const Pos& pos);  //return true if move succeeded
+	
+	//place a piece of player in a position. return true if succeeded.
+	bool place (const PlayerNum& player, const Pos& pos); 
+	//returns a read-only pointer to the possibleMoves vecotr of a certain player
 	const std::vector<Pos>* getPossibleMoves(PlayerNum player) const;
     bool isAbleToMove(const PlayerNum& player) const;
+	//return whats on the cell at a specific position 
 	Board::Cell getCellAt(const Pos& pos) const; 
     int getBoardSize() const {return this->m_board->getBoardSize();}
-	void updatePossibleMoves(PlayerNum player); //run all across and update the possible moves vector
+
+	//update the possible moves
+	void updatePossibleMoves(PlayerNum player); 
 	bool isPossibleMove(const PlayerNum& player, const Pos& pos) const;
+
+	//use to calculate score at end of game. scoreP1 and scoreP2 will be overwritten with the resulting score of each player.
 	void calculateScore(int& scoreP1, int& scoreP2) const;
 
 private:
+	const static int DEFAULT_BOARD_SIZE = 8;
 	Board* m_board;
 	std::vector<Pos> m_possibleMovesPlayer1;
 	std::vector<Pos> m_possibleMovesPlayer2;
-    const static int DEFAULT_BOARD_SIZE = 8;
+    
 
 	enum Direction {
 		NORTH,
@@ -59,9 +75,17 @@ private:
 		SW
 	};
 
+	//recursive handle method to check if a certain move is possible in a certain direction.
+	//return true if the move at that direction is possible.
+	//if doFlip is set to true then it will flip the opponent pieces (only if move is valid).
+	//found is a handle parameter, init always with false.
 	bool goTo(const Direction& direction, const Board::Cell& currPlayerPiece, const Pos& pos, const bool& doFlip, bool found);
+
+	//is position out of board bounds
     bool isOutOfBounds (const Pos& pos) const;
-    void setCellAt(const Pos& pos, const Board::Cell piece); //void setCellValue(int x, int y, const Cell cell)
+    void setCellAt(const Pos& pos, const Board::Cell piece); 
+
+	//flip the piece at position X->O, O->x
     void flip(const Pos& pos);
 
 };

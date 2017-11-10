@@ -1,3 +1,10 @@
+/*
+*  HumanPlayer.cpp
+*
+*  Author: Ben Chorin
+*  ID: 021906185
+*/
+
 #include "HumanPlayer.h"
 #include <iostream>
 #include <cctype>
@@ -23,6 +30,7 @@ GameModel::Pos HumanPlayer::makeMove() const {
 		}
 		else
 		{
+			//drop all overbuffered data
 			std::cin.ignore(32767, '\n'); 
 
 			std::string xCoord = input.substr(0, input.find(','));
@@ -33,10 +41,12 @@ GameModel::Pos HumanPlayer::makeMove() const {
 				std::cout << "Invalid input. Please try again: ";
 				continue;
 			}
+
+			//convert coord to integer
 			int xCoordInt = atoi(xCoord.c_str());
 			int yCoordInt = atoi(yCoord.c_str());
 			
-			//test for possible integers
+			//are the integers valid?
 			if (xCoordInt < 1 || xCoordInt > 30 || yCoordInt < 1 || yCoordInt > 30) {
 				std::cout << "Invalid input. Please try again: ";
 				continue;

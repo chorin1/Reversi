@@ -1,9 +1,13 @@
-//
-// Created by chorin on 11/6/17.
-//
+/*
+*  GameModel.cpp
+*
+*  Author: Ben Chorin
+*  ID: 021906185
+*/
 
 #include "GameModel.h"
 #include <algorithm>
+#include <assert.h>
 
 GameModel::GameModel() {
 	m_board = new Board(DEFAULT_BOARD_SIZE);
@@ -15,6 +19,12 @@ GameModel::GameModel(int boardSize) {
 	m_board = new Board(boardSize);
 	updatePossibleMoves(PLAYER1);
 	updatePossibleMoves(PLAYER2);
+}
+
+GameModel::GameModel(const GameModel &otherModel) {
+	m_board = new Board(*otherModel.m_board);
+	m_possibleMovesPlayer1 = otherModel.m_possibleMovesPlayer1;
+	m_possibleMovesPlayer2 = otherModel.m_possibleMovesPlayer2;
 }
 
 GameModel::~GameModel() {
@@ -45,7 +55,8 @@ bool GameModel::place (const PlayerNum& player, const Pos& pos) {
 
 	Board::Cell currPiece = (player == PLAYER1)? Board::CELL_PLAYER1 : Board::CELL_PLAYER2;
 
-    setCellAt(pos, currPiece); //set current cell to player piece
+	//move is possible, set current cell to player piece
+    setCellAt(pos, currPiece); 
     int row = pos.m_x;
     int clmn = pos.m_y;
     bool south = false;
@@ -208,7 +219,6 @@ bool GameModel::goTo (const GameModel::Direction& direction, const Board::Cell& 
 void GameModel::flip(const Pos& pos) {
     Board::Cell currPiece = getCellAt(pos);
     if (currPiece==Board::CELL_ERROR || currPiece == Board::CELL_EMPTY) {
-        std::cout << "Error in GameModel::flip, trying to flip an empty/undefined cell" << std::endl;
         return;
     }
     if (currPiece==Board::CELL_PLAYER1)
@@ -225,10 +235,9 @@ bool GameModel::isOutOfBounds(const Pos& pos) const {
 	return false;
 }
 
+//Converts from a POS(x, y) (x, y = 1..boardSize) to array data structure(0..boardSize - 1)
 void GameModel::setCellAt(const Pos& pos, const Board::Cell piece) {
-	if (isOutOfBounds(pos))
-		std::cout << "error in GameModel::setCell, out of bounds" << std::endl;
-	else
-		m_board->setCellValue(pos.m_x - 1, pos.m_y - 1, piece);
+	assert(!isOutOfBounds(pos));
+	m_board->setCellValue(pos.m_x - 1, pos.m_y - 1, piece);
 }
 
