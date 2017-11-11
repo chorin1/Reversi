@@ -32,7 +32,7 @@ void Controller::beginGame() {
 		bool moveValid = false;
 		//loop until player selects a valid move
 		do {
-			wantedMove = getCurretPlayer()->makeMove();
+			wantedMove = getCurrentPlayer()->makeMove();
 			if (m_model->isPossibleMove(currentPlayerNum, wantedMove)) {
 				moveValid = true;
 			}
@@ -56,6 +56,6 @@ void Controller::beginGame() {
 void Controller::switchCurrentPlayer() {
 	currentPlayerNum = (currentPlayerNum == GameModel::PLAYER1) ? GameModel::PLAYER2 : GameModel::PLAYER1;
 }
-const Player* Controller::getCurretPlayer() const {
+const Player* Controller::getCurrentPlayer() const {
 	return (currentPlayerNum == GameModel::PLAYER1) ? m_player1 : m_player2;
 }

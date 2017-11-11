@@ -1,12 +1,12 @@
 /*
-*  Reversi - Advaced Programming 1
+*  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
 *  Author: Ben Chorin
 *  ID: 021906185
 *  Controller class for Reversi game - controls the game flow.
-*  Resposible to tell the view what to show (and when).
-*  Resposible to update the model according to game progression.
+*  Responsible to tell the view what to show (and when).
+*  Responsible to update the model according to game progression.
 */
 
 #pragma once
@@ -24,8 +24,8 @@ public:
 	void beginGame();
 
 private:
+    	//maybe later on think about making players and view not const (to be able to switch players and views mid-game)
 	const View* const m_view;
-	//not const because model needs to change as game progresses
 	GameModel* const m_model;
 	const Player* const m_player1;
 	const Player* const m_player2;
@@ -35,5 +35,5 @@ private:
 	bool gameEnded;
 
 	void switchCurrentPlayer();
-	const Player* getCurretPlayer() const;
+	const Player* getCurrentPlayer() const;
 };

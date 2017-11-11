@@ -66,7 +66,7 @@ void ConsoleView::drawNoPossibleMoves(const GameModel::PlayerNum player, const G
 	std::cin.get();
 }
 
-void ConsoleView::drawMoveIsInvalid(GameModel::Pos& pos) const {
+void ConsoleView::drawMoveIsInvalid(const GameModel::Pos& pos) const {
 	cout << "Move (" << pos.m_x << "," << pos.m_y << ") is not possible. Please try again: ";
 }
 
@@ -96,7 +96,7 @@ void ConsoleView::drawPossibleMoves(const GameModel::PlayerNum ofPlayer) const {
 	}
 }
 
-//draw coulmn numbering
+//draw column numbering
 void ConsoleView::drawFirstRow() const {
 	cout << " |";
 	for (int i = 1; i <= m_model->getBoardSize(); i++) {

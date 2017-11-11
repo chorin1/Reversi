@@ -1,5 +1,5 @@
 /*
-*  Reversi - Advaced Programming 1
+*  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
 *  Author: Ben Chorin
@@ -43,7 +43,7 @@ public:
 	
 	//place a piece of player in a position. return true if succeeded.
 	bool place (const PlayerNum& player, const Pos& pos); 
-	//returns a read-only pointer to the possibleMoves vecotr of a certain player
+	//returns a read-only pointer to the possibleMoves vector of a certain player
 	const std::vector<Pos>* getPossibleMoves(PlayerNum player) const;
     bool isAbleToMove(const PlayerNum& player) const;
 	//return whats on the cell at a specific position 

@@ -1,10 +1,10 @@
 /*
-*  Reversi - Advaced Programming 1
+*  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
 *  Author: Ben Chorin
 *  ID: 021906185
-*  A basic class for creating board size NxN for reversi
+*  A basic class for creating board size NxN for Reversi
 */
 #pragma once
 
