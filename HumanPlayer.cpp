@@ -15,7 +15,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-GameModel::Pos HumanPlayer::makeMove() const {
+GameModel::Pos HumanPlayer::makeMove(const GameModel*) const {
 
 	std::string input;
 

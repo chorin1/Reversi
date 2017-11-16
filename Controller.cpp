@@ -47,9 +47,8 @@ void Controller::beginGame() {
 	}
 
 	//game has ended
-	int score1 = 0;
-	int score2 = 0;
-	m_model->calculateScore(score1, score2);
+	int score1 = m_model->calcScoreOf(GameModel::PLAYER1);
+	int score2 = m_model->calcScoreOf(GameModel::PLAYER2);
 	m_view->drawEndGame(score1, score2);
 }
 

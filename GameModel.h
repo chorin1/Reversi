@@ -55,7 +55,7 @@ public:
 	bool isPossibleMove(const PlayerNum& player, const Pos& pos) const;
 
 	//use to calculate score at end of game. scoreP1 and scoreP2 will be overwritten with the resulting score of each player.
-	void calculateScore(int& scoreP1, int& scoreP2) const;
+	int calcScoreOf(PlayerNum player) const;
 
 private:
 	const static int DEFAULT_BOARD_SIZE = 8;

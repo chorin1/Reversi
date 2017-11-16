@@ -85,28 +85,17 @@ bool GameModel::place (const PlayerNum& player, const Pos& pos) {
 
 }
 
-void GameModel::calculateScore(int& scoreP1, int& scoreP2) const {
-	int score1 = 0;
-	int score2 = 0;
+int GameModel::calcScoreOf(GameModel::PlayerNum player) const {
+	int score = 0;
+    Board::Cell currPiece = (player==PLAYER1)? Board::CELL_PLAYER1 : Board::CELL_PLAYER2;
 	for (int row = 1; row <= getBoardSize(); row++) {
 		for (int clmn = 1; clmn <= getBoardSize(); clmn++) {
 			Pos currPos(row, clmn);
-			switch (getCellAt(currPos)) {
-			case Board::CELL_EMPTY:
-				break;
-			case Board::CELL_PLAYER1:
-				score1++;
-				break;
-			case Board::CELL_PLAYER2:
-				score2++;
-				break;
-
-			}
+			if (getCellAt(currPos) == currPiece)
+                score++;
 		}
 	}
-
-	scoreP1 = score1;
-	scoreP2 = score2;
+    return score;
 }
 
 void GameModel::updatePossibleMoves(PlayerNum player) {

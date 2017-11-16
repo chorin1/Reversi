@@ -16,6 +16,6 @@ set(SOURCE_FILES
         HumanPlayer.h
         main.cpp
         Player.h
-        View.h)
+        View.h AIPlayer.cpp AIPlayer.h)
 
 add_executable(Reversi ${SOURCE_FILES} main.cpp)

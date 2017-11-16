@@ -16,5 +16,5 @@ class HumanPlayer : public Player {
 public:
 	HumanPlayer() {}
 	~HumanPlayer() {}
-	GameModel::Pos makeMove() const;
+	GameModel::Pos makeMove(const GameModel* const = 0) const;
 };

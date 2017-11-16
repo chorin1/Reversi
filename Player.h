@@ -16,5 +16,5 @@ public:
 	Player() {};
 	virtual ~Player() {};
 	//return the position of the wanted move by the player
-	virtual GameModel::Pos makeMove() const = 0;
+	virtual GameModel::Pos makeMove(const GameModel* const = 0) const = 0;
 };
