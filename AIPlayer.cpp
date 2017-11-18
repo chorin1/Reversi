@@ -14,6 +14,9 @@ GameModel::Pos AIPlayer::makeMove(const GameModel* const model) const {
     for (std::vector<GameModel::Pos>::const_iterator cpuMove = vec->begin(); cpuMove != vec->end(); ++cpuMove) {
         GameModel copyModel(*model);
         copyModel.place(GameModel::PLAYER2, *cpuMove);
+        // if opponent won't be able to move on next turn, use this move
+        if (!copyModel.isAbleToMove(GameModel::PLAYER1))
+            return (*cpuMove);
         int tempScore = maxOpponentMoveScore(&copyModel);
         if (tempScore < minOpponentScore) {
             minOpponentScore = tempScore;

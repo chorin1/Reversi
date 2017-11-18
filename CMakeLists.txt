@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(Reversi)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 98)
 
 set(SOURCE_FILES
         Board.cpp
@@ -16,6 +16,9 @@ set(SOURCE_FILES
         HumanPlayer.h
         main.cpp
         Player.h
-        View.h AIPlayer.cpp AIPlayer.h)
+        View.h
+		AIPlayer.cpp
+		AIPlayer.h)
 
+add_definitions(-std=c++98)
 add_executable(Reversi ${SOURCE_FILES} main.cpp)

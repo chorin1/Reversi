@@ -13,22 +13,31 @@
 #include "GameModel.h"
 #include "View.h"
 #include "Player.h"
+#include "HumanPlayer.h"
+
 
 class Controller {
 	
 public:
-	//bind to controller to a model and a view. Assigned player paramater order sets who will be X and who O.
+	//bind controller to a model and a view. Player parameter order will define who will be X and who O.
 	Controller(GameModel& model, const View& view, const Player& player1, const Player& player2) :
-		       m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2), gameEnded (false) , currentPlayerNum(GameModel::PLAYER1){}
+		       m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2),
+			   gameEnded (false) , currentPlayerNum(GameModel::PLAYER1) {
+		//if player 2 is human, switch the human flag (to draw board and moves for player2)
+        if (const HumanPlayer* pcast = dynamic_cast<const HumanPlayer*>(m_player2))
+            isPlayer2Human = true;
+        else
+            isPlayer2Human = false;
+	}
 	~Controller() {}
 	void beginGame();
 
 private:
-    	//maybe later on think about making players and view not const (to be able to switch players and views mid-game)
 	const View* const m_view;
 	GameModel* const m_model;
 	const Player* const m_player1;
 	const Player* const m_player2;
+	bool isPlayer2Human;
 	//stores who is currently playing (player 1 or 2)
 	GameModel::PlayerNum currentPlayerNum;
 	//has game ended?

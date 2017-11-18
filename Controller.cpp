@@ -9,30 +9,37 @@
 
 void Controller::beginGame() {
 	GameModel::Pos lastMove = GameModel::Pos(0, 0);
-
+    gameEnded = false;
 	while (!gameEnded) {
-		m_view->drawBoard();
 
 		//both players can't move
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
+			m_view->drawBoard();
 			gameEnded = true;
 			continue;
 		}
 
 		//current player has no moves
 		if (!m_model->isAbleToMove(currentPlayerNum)) {
+			m_view->drawBoard();
 			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
+			lastMove = GameModel::Pos(0, 0);
 			switchCurrentPlayer();
 			continue;
 		}
 		
 		//current player has moves
-		m_view->drawTurn(currentPlayerNum, lastMove);
+
+		//draw board and turn if this player is human
+		if (!(currentPlayerNum==GameModel::PLAYER2 && isPlayer2Human==false)) {
+			m_view->drawBoard();
+			m_view->drawTurn(currentPlayerNum, lastMove);
+		}
 		GameModel::Pos wantedMove(0,0);
 		bool moveValid = false;
 		//loop until player selects a valid move
 		do {
-			wantedMove = getCurrentPlayer()->makeMove();
+			wantedMove = getCurrentPlayer()->makeMove(m_model);
 			if (m_model->isPossibleMove(currentPlayerNum, wantedMove)) {
 				moveValid = true;
 			}
