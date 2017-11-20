@@ -1,52 +1,40 @@
 /*
- * Board.h
- *
- *  Created on: Oct 25, 2017
- *  Author: Ben Chorin
- *  ID: 021906185
- *  basic class for creating a board of size AxA
- */
-
-#ifndef BOARD_H_
-#define BOARD_H_
+*  Reversi - Advanced Programming 1
+*  Ex: #2
+*  Group: 04
+*  Author: Ben Chorin
+*  ID: 021906185
+*  A basic class for creating board size NxN for Reversi
+*/
+#pragma once
 
 class Board {
 
 public:
-
-    enum Piece {
-        PIECE_EMPTY,
-        PIECE_X,
-        PIECE_O
+	//enumeration of each cell data
+    enum Cell {
+        CELL_ERROR,
+        CELL_EMPTY,
+        CELL_PLAYER1,
+        CELL_PLAYER2
     };
 
-    /**
-     * creates and initializes a board according to Reversi rules
-     * @param boardSize the size of the board that will be created (valid sizes are 3..20, default is 8)
-     */
+	//create a board according to boardSize, default is 8
 	Board(int boardSize);
+	//Copy constructor
+	Board(const Board &otherBoard);
 	~Board();
 
-    /**
-     * draws the current board state in the console
-     */
-	void draw() const;
-
-    /**
-     * @return the size of the board
-     */
-    int getBoardSize() const;
+	int getBoardSize() const {return m_boardSize;}
+	//returns the cell at location (converts the boardSize*boardSize to a 2d array)
+	Cell getCellAt(int x, int y) const {return m_board[x + y*m_boardSize];}
+	void setCellValue(int x, int y, const Cell cell) { m_board[x + y*m_boardSize] = cell; }
 
 private:
 	const int m_boardSize;
-	Piece** m_board;
-
-	void initBoard(); //initialize the board according to Reversi starting positions
-	void drawFirstRow() const; //draw the first row of the board (column numbering)
-	void drawCompleteLine() const; //draw a complete separation line "---"
-	void drawRow(int row) const; //draw a single row
+	Cell* m_board;
+	
+	//initialize the board according to Reversi starting positions
+	void initBoard(); 
 
 };
-
-
-#endif /* BOARD_H_ */
