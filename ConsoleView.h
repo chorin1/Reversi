@@ -2,8 +2,6 @@
 *  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
-*  Author: Ben Chorin
-*  ID: 021906185
 *  View class to play Reversi game on the console
 */
 

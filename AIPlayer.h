@@ -1,5 +1,4 @@
 //
-// Created by chorin on 11/16/17.
 // Assuming AI always plays as 'O' = player2
 //
 

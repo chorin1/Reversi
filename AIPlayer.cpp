@@ -1,5 +1,4 @@
 //
-// Created by chorin on 11/16/17.
 //
 
 #include "AIPlayer.h"
@@ -17,6 +16,7 @@ GameModel::Pos AIPlayer::makeMove(const GameModel* const model) const {
         // if opponent won't be able to move on next turn, use this move
         if (!copyModel.isAbleToMove(GameModel::PLAYER1))
             return (*cpuMove);
+        //get the maximum opponent score for this move. update CPU best move if its less than the previous scores.
         int tempScore = maxOpponentMoveScore(&copyModel);
         if (tempScore < minOpponentScore) {
             minOpponentScore = tempScore;
