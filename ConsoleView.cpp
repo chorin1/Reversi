@@ -1,8 +1,7 @@
 /*
 *  ConsoleView.cpp
 *
-*  Author: Ben Chorin
-*  ID: 021906185
+*  Author: Ben
 */
 
 #include "ConsoleView.h"

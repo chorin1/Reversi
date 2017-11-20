@@ -2,8 +2,7 @@
 *  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
-*  Author: Ben Chorin
-*  ID: 021906185
+*  Author: Ben
 *  Player interface for creating players (human, AI or LAN/WEB) to play game reversi.
 */
 

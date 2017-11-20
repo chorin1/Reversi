@@ -2,8 +2,7 @@
 *  Reversi - Advanced Programming 1
 *  Ex: #2
 *  Group: 04
-*  Author: Ben Chorin
-*  ID: 021906185
+*  Author: Ben
 *  Controller class for Reversi game - controls the game flow.
 *  Responsible to tell the view what to show (and when).
 *  Responsible to update the model according to game progression.
