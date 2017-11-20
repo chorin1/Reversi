@@ -2,7 +2,7 @@
  * Board.cpp
  *
  *  Created on: Oct 25, 2017
- *  Author: Ben Chorin
+ *
  */
 
 #include "Board.h"

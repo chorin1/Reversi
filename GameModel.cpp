@@ -1,8 +1,6 @@
 /*
 *  GameModel.cpp
 *
-*  Author: Ben Chorin
-*  ID: 021906185
 */
 
 #include "GameModel.h"

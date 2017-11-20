@@ -1,8 +1,6 @@
 /*
 *  Controller.cpp
 *
-*  Author: Ben Chorin
-*  ID: 021906185
 */
 
 #include "Controller.h"
