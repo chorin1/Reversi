@@ -18,7 +18,7 @@ set(SOURCE_FILES
         Player.h
         View.h
 		AIPlayer.cpp
-		AIPlayer.h)
+		AIPlayer.h ReversiMenu.cpp ReversiMenu.h)
 
 add_definitions(-std=c++98)
 add_executable(Reversi ${SOURCE_FILES} main.cpp)
