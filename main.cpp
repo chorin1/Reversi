@@ -5,21 +5,13 @@
  *  Date: 12/11/17
  */
 
-#include "GameModel.h"
-#include "ConsoleView.h"
-#include "HumanPlayer.h"
-#include "Controller.h"
-#include "AIPlayer.h"
+#include "ReversiMenu.h"
 #include <iostream>
-#include <cstdlib>
-
-
 
 int main() {
-
-
-
-	std::cin.get();
+    ReversiMenu::selectFromMenu();
+    ReversiMenu::beginGame();
+    std::cin.get();
     return 0;
 }
 

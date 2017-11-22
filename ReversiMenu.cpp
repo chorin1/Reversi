@@ -10,45 +10,47 @@
 #include "Controller.h"
 #include "ConsoleView.h"
 #include <iostream>
-#include <cstdlib>
 
 using std::cin;
 using std::cout;
 using std::endl;
 
-static void ReversiMenu::beginGame() {
+//must set static members globally
+ReversiMenu::GameType ReversiMenu::m_choice = PVP;
+
+void ReversiMenu::beginGame() {
     GameModel model;
     ConsoleView view(model);
     HumanPlayer p1;
     Player *p2;
-    if (choice == PVC)
+    if (m_choice == PVC) {
         p2 = new AIPlayer();
-    else
+        cout << "Starting a game vs AI..." << endl << endl;
+    } else {
         p2 = new HumanPlayer();
+        cout << "Starting a PVP game..." << endl << endl;
+    }
     Controller controller(model, view, p1, *p2);
     controller.beginGame();
     delete p2;
 }
 
-static void ReversiMenu::selectFromMenu() {
+void ReversiMenu::selectFromMenu() {
 
     cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
+    cout << "         -A Game By Nathan & Ben-     " << endl;
     cout << "------------------------------------------" << endl << endl;
     cout << "Please select form the following options:" << endl;
     cout << "1. Play against a human player." << endl;
     cout << "2. Play against an AI player." << endl << endl;
     cout << "choice: ";
 
-    ReversiMenu::GameChoice chosenGame = getMenuChoice();
-    ReversiMenu::choice = chosenGame;
-        
+    m_choice = getMenuChoice();
 
 }
 
-
-
-static ReversiMenu::GameChoice ReversiMenu::getMenuChoice() {
-    std::string input;
+ReversiMenu::GameType ReversiMenu::getMenuChoice() {
+    int input;
     while (true) {
         cin >> input;
         if (cin.fail()) {
@@ -57,9 +59,8 @@ static ReversiMenu::GameChoice ReversiMenu::getMenuChoice() {
             cout << "Invalid choice. Please try again: ";
         } else {
             std::cin.ignore(32767, '\n');
-            if (input.length() == 1 &&
-                ((input.find('1') != std::string::npos || input.find('2') != std::string::npos))) {
-                return atoi(input.c_str());
+            if (input >= 1 && input < GAMETYPE_COUNT) {
+                return static_cast<ReversiMenu::GameType>(input);
             } else
                 cout << "Invalid choice. Please try again: ";
         }

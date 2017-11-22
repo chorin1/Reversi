@@ -6,17 +6,18 @@
 
 
 class ReversiMenu {
-private:
-    enum GameChoice {
-        PVP,
-        PVC
-    };
-public:
-    static void selectFromMenu();
-    static void beginGame();
-private:
-    static GameChoice choice;
-    static ReversiMenu::GameChoice getMenuChoice()
+    private:
+        enum GameType {
+            PVP = 1,
+            PVC,
+            GAMETYPE_COUNT
+        };
+        static GameType m_choice;
+    public:
+        static void selectFromMenu();
+        static void beginGame();
+    private:
+        static GameType getMenuChoice();
 };
 
 
