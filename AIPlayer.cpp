@@ -6,11 +6,12 @@
 #include <climits>
 
 GameModel::Pos AIPlayer::makeMove(const GameModel* const model) const {
-    //get possible moves of player2 (computer)
     GameModel::Pos bestCPUMove(0,0);
     int minOpponentScore = INT_MAX;
+    //get possible moves of player2 (computer)
     const std::vector<GameModel::Pos>* vec = model->getPossibleMoves(GameModel::PLAYER2);
     for (std::vector<GameModel::Pos>::const_iterator cpuMove = vec->begin(); cpuMove != vec->end(); ++cpuMove) {
+        //create a copy of the model for each possible move
         GameModel copyModel(*model);
         copyModel.place(GameModel::PLAYER2, *cpuMove);
         // if opponent won't be able to move on next turn, use this move

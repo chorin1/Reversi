@@ -9,10 +9,11 @@
 #pragma once
 #include "Player.h"
 #include "GameModel.h"
+#include <iostream>
 
 class HumanPlayer : public Player {
 public:
 	HumanPlayer() {}
 	~HumanPlayer() {}
-	GameModel::Pos makeMove(const GameModel* const = 0) const;
+	GameModel::Pos makeMove(const GameModel* const = NULL) const;
 };
