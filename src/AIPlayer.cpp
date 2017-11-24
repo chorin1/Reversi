@@ -7,6 +7,8 @@
 
 GameModel::Pos AIPlayer::makeMove(const GameModel* const model) const {
     GameModel::Pos bestCPUMove(0,0);
+    if (model==NULL)
+        return bestCPUMove;
     int minOpponentScore = INT_MAX;
     //get possible moves of player2 (computer)
     const std::vector<GameModel::Pos>* vec = model->getPossibleMoves(GameModel::PLAYER2);
