@@ -72,25 +72,25 @@ protected:
 
 TEST_F (AIPlayerTest, basicTest) {
 
-    testView.drawBoard();
+    //testView.drawBoard();
     EXPECT_NE(ai1.makeMove(&testModel), GameModel::Pos(0,0));
     //AI has 2 moves resulting in same score, chooses the first one
     EXPECT_EQ(ai1.makeMove(&testModel), GameModel::Pos(3,5));
 
     //example from Ex3 pdf
     testModel.place(GameModel::PLAYER1, GameModel::Pos(3,4));
-    testView.drawBoard();
+    //testView.drawBoard();
     EXPECT_EQ(ai1.makeMove(&testModel), GameModel::Pos(3,3));
 
     //scn 2 - AI doesnt try to get easy points..
     testView.setView(testModel2);
-    testView.drawBoard();
+    //testView.drawBoard();
     EXPECT_NE(ai1.makeMove(&testModel2), GameModel::Pos(3,2));
     EXPECT_EQ(ai1.makeMove(&testModel2), GameModel::Pos(4,5));
 
     //scn 3 - AI chooses minimax properly (2 moves with same score to computer but diff score to opponent)
     testView.setView(testModel3);
-    testView.drawBoard();
+    //testView.drawBoard();
     EXPECT_NE(ai1.makeMove(&testModel3), GameModel::Pos(3,6));
 }
 
@@ -101,7 +101,7 @@ TEST_F (AIPlayerTest, edgeTests) {
     EXPECT_EQ(ai1.makeMove(&noMovesp2m), GameModel::Pos(0,0));
     // Board is full
     testView.setView(fullBoard);
-    testView.drawBoard();
+    //testView.drawBoard();
     EXPECT_EQ(ai1.makeMove(&fullBoard), GameModel::Pos(0,0));
     //opponent has no possible moves, AI should choose a move
     EXPECT_NE(ai1.makeMove(&noMovesp1m), GameModel::Pos(0,0));
