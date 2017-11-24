@@ -1,24 +1,14 @@
 cmake_minimum_required(VERSION 3.8)
 project(Reversi)
-
 set(CMAKE_CXX_STANDARD 98)
 
-set(SOURCE_FILES
-        Board.cpp
-        Board.h
-        ConsoleView.cpp
-        ConsoleView.h
-        Controller.cpp
-        Controller.h
-        GameModel.cpp
-        GameModel.h
-		HumanPlayer.cpp
-        HumanPlayer.h
-        main.cpp
-        Player.h
-        View.h
-		AIPlayer.cpp
-		AIPlayer.h ReversiMenu.cpp ReversiMenu.h)
+file(GLOB HEADER_FILES include/*.h)
+file(GLOB SOURCE_FILES src/*.cpp)
 
-add_definitions(-std=c++98)
-add_executable(Reversi ${SOURCE_FILES} main.cpp)
+add_library(ReversiGame STATIC ${SOURCE_FILES} ${HEADER_FILES})
+
+add_executable(Reversi ${SOURCE_FILES})
+
+add_subdirectory(tests)
+
+target_link_libraries(Reversi ReversiGame)
