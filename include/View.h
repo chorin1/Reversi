@@ -23,6 +23,9 @@ public:
 	virtual void drawMoveIsInvalid (const GameModel::Pos& pos) const = 0;
 	//Endgame graphics. parameters represent the final score of each player.
 	virtual void drawEndGame(int& scoreP1, int& scoreP2) const = 0;
+	virtual void setView(GameModel& model) {
+		m_model = &model;
+	}
 protected:
 	const GameModel* m_model;
 };
