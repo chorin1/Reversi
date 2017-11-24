@@ -1,6 +1,6 @@
 /*
 *  Reversi - Advanced Programming 1
-*  Ex: #2
+*  Ex: #3
 *  Group: 04
 *  GameModel is responsible to store the data of the Reversi game. (eg. the board, possible moves for each player)
 *  Also responsible to store game logic (eg. what is a possible move)
@@ -12,6 +12,7 @@
 #include <vector>
 
 class GameModel {
+	friend class AIPlayerTest;
 public:
 
 	struct Pos {
@@ -23,6 +24,9 @@ public:
 		
 		bool operator==(const Pos& pos2) const {
 			return pos2.m_x == m_x && pos2.m_y == m_y;
+		}
+		bool operator!=(const Pos& pos2) const {
+			return !(*this == pos2);
 		}
 	};
 
