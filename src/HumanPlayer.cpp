@@ -8,6 +8,7 @@
 #include <cctype>
 #include <string>
 #include <cstdlib>
+#include "../include/GameModel.h"
 
 using std::cin;
 using std::cout;
@@ -45,7 +46,8 @@ GameModel::Pos HumanPlayer::makeMove(const GameModel*) const {
 			int yCoordInt = atoi(yCoord.c_str());
 			
 			//are the integers valid?
-			if (xCoordInt < 1 || xCoordInt > 30 || yCoordInt < 1 || yCoordInt > 30) {
+			if (xCoordInt < 1 || xCoordInt > GameModel::MAX_BOARD_SIZE ||
+                yCoordInt < 1 || yCoordInt > GameModel::MAX_BOARD_SIZE) {
 				std::cout << "Invalid input. Please try again: ";
 				continue;
 			}

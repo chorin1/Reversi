@@ -14,7 +14,10 @@ GameModel::GameModel() {
 }
 
 GameModel::GameModel(int boardSize) {
-	m_board = new Board(boardSize);
+    if (boardSize > MAX_BOARD_SIZE || boardSize < 3)
+        m_board = new Board(DEFAULT_BOARD_SIZE);
+    else
+	    m_board = new Board(boardSize);
 	updatePossibleMoves(PLAYER1);
 	updatePossibleMoves(PLAYER2);
 }

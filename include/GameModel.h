@@ -35,6 +35,9 @@ public:
 		PLAYER2
 	};
 
+	const static int DEFAULT_BOARD_SIZE = 8;
+	const static int MAX_BOARD_SIZE = 30;
+
 	//create with default boardSize
 	GameModel();
 	//create with custom boardSize
@@ -60,7 +63,6 @@ public:
 	int calcScoreOf(PlayerNum player) const;
 
 private:
-	const static int DEFAULT_BOARD_SIZE = 8;
 	Board* m_board;
 	std::vector<Pos> m_possibleMovesPlayer1;
 	std::vector<Pos> m_possibleMovesPlayer2;
