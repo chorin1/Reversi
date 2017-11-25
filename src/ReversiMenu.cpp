@@ -42,7 +42,7 @@ void ReversiMenu::beginGame() {
 void ReversiMenu::selectFromMenu() {
 
     cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
-    cout << "         -A Game By Nathan & Ben-     " << endl;
+    cout << "         -A Game By Nitai & Ben-     " << endl;
     cout << "------------------------------------------" << endl << endl;
     cout << "Please select form the following options:" << endl;
     cout << "1. Play against a human player." << endl;
