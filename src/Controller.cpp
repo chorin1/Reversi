@@ -29,7 +29,7 @@ void Controller::beginGame() {
 		//current player has moves
 
 		//draw board and turn if this player is human
-		if (!(currentPlayerNum==GameModel::PLAYER2 && isPlayer2Human==false)) {
+		if (isCurPlayerHuman) {
 			m_view->drawBoard();
 			m_view->drawTurn(currentPlayerNum, lastMove);
 		}
@@ -58,7 +58,8 @@ void Controller::beginGame() {
 }
 
 void Controller::switchCurrentPlayer() {
-	currentPlayerNum = (currentPlayerNum == GameModel::PLAYER1) ? GameModel::PLAYER2 : GameModel::PLAYER1;
+	currentPlayerNum = (currentPlayerNum == GameModel::PLAYER1)? GameModel::PLAYER2 : GameModel::PLAYER1;
+	isCurPlayerHuman = (currentPlayerNum == GameModel::PLAYER1)? isPlayer1Human : isPlayer2Human;
 }
 const Player* Controller::getCurrentPlayer() const {
 	return (currentPlayerNum == GameModel::PLAYER1) ? m_player1 : m_player2;
