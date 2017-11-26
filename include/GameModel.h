@@ -13,6 +13,7 @@
 
 class GameModel {
 	friend class AIPlayerTest;
+	friend class GameModelTest;
 public:
 
 	struct Pos {
