@@ -1,6 +1,7 @@
-//
-//
-
+/*
+*  AIPlayer.cpp
+*
+*/
 #include "../include/AIPlayer.h"
 #include <cassert>
 #include <climits>

@@ -3,19 +3,20 @@
 *
 */
 
-#include "../include/GameModel.h"
 #include <algorithm>
 #include <assert.h>
+#include "../include/GameModel.h"
+#include "../include/Board.h"
 
 GameModel::GameModel() {
-	m_board = new Board(DEFAULT_BOARD_SIZE);
+	m_board = new Board(Board::DEFAULT_BOARD_SIZE);
 	updatePossibleMoves(PLAYER1);
 	updatePossibleMoves(PLAYER2);
 }
 
 GameModel::GameModel(int boardSize) {
-    if (boardSize > MAX_BOARD_SIZE || boardSize < 3)
-        m_board = new Board(DEFAULT_BOARD_SIZE);
+    if (boardSize > Board::MAX_BOARD_SIZE || boardSize < 3)
+        m_board = new Board(Board::DEFAULT_BOARD_SIZE);
     else
 	    m_board = new Board(boardSize);
 	updatePossibleMoves(PLAYER1);

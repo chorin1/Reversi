@@ -23,6 +23,8 @@ public:
 	Board(const Board &otherBoard);
 	~Board();
 
+	const static int DEFAULT_BOARD_SIZE = 8;
+	const static int MAX_BOARD_SIZE = 30;
 	int getBoardSize() const {return m_boardSize;}
 	//returns the cell at location (converts the boardSize*boardSize to a 2d array)
 	Cell getCellAt(int x, int y) const {return m_board[x + y*m_boardSize];}

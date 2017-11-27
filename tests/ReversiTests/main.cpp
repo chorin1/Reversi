@@ -1,6 +1,12 @@
-//
-// Created by chorin on 24/11/2017.
-//
+/*
+ *  Reversi - Advanced Programming 1
+ *  By Nitai Halle & Ben Chorin
+ *  Ex: #4
+ *	Group: 04
+ *  Date: 27/11/17
+ *
+ *  main file used for testing Reversi classes using google test
+ */
 #include <iostream>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

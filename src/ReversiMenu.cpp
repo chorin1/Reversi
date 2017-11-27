@@ -1,6 +1,7 @@
-//
-// Created by chorin on 11/22/17.
-//
+/*
+*  ReversiMenu.cpp
+*
+*/
 
 #include "../include/ReversiMenu.h"
 #include "../include/GameModel.h"

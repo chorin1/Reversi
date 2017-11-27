@@ -1,8 +1,9 @@
 /*
  *  Reversi - Advanced Programming 1
- *  Ex: #2
+ *  By Nitai Halle & Ben Chorin
+ *  Ex: #4
  *	Group: 04
- *  Date: 12/11/17
+ *  Date: 27/11/17
  */
 
 #include "../include/ReversiMenu.h"
