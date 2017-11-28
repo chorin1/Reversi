@@ -5,9 +5,9 @@
 #include "Board.h"
 class BoardTest : public testing::Test{
 public:
-    BoardTest():b1(8),b2(10){}
+    BoardTest():b1(8),b2(10), b3(1000){}
 protected:
-    Board b1,b2;
+    Board b1,b2,b3;
 };
 
 //test size of Board.
@@ -29,7 +29,7 @@ TEST_F(BoardTest ,Board_test2){
     EXPECT_EQ(b2.getCellAt(centerB2 - 1,centerB2),Board::CELL_PLAYER1);
     EXPECT_EQ(b2.getCellAt(centerB2 ,centerB2 - 1),Board::CELL_PLAYER1);
     EXPECT_EQ(b2.getCellAt(b2.getBoardSize() - 1,b2.getBoardSize() - 1),Board::CELL_EMPTY);
-    EXPECT_EQ(b1.getCellAt(b1.getBoardSize() + 1,b1.getBoardSize()),Board::CELL_ERROR);
+    
 
 
 };
