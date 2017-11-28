@@ -1,13 +1,13 @@
-/*
+/**
 *  Reversi - Advanced Programming 1
-*  Ex: #2
+*  Ex: #3
 *  Group: 04
 *  A basic class for creating board size NxN for Reversi
 */
+
 #pragma once
 
 class Board {
-
 public:
 	//enumeration of each cell data
     enum Cell {
@@ -17,7 +17,7 @@ public:
         CELL_PLAYER2
     };
 
-	//create a board according to boardSize, default is 8
+	//create a board according to boardSize
 	Board(int boardSize);
 	//Copy constructor
 	Board(const Board &otherBoard);
@@ -33,8 +33,6 @@ public:
 private:
 	const int m_boardSize;
 	Cell* m_board;
-	
 	//initialize the board according to Reversi starting positions
-	void initBoard(); 
-
+	void initBoard();
 };

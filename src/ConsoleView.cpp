@@ -8,16 +8,14 @@
 using std::cout;
 using std::endl;
 
-
-
 void ConsoleView::drawBoard() const {
 	cout << endl << "Current Board:" << endl << endl;
-    drawFirstRow();
-    drawCompleteLine();
-    for (int i=1; i<= m_model->getBoardSize() ; i++) {
-        drawRow(i);
-        drawCompleteLine();
-    }
+	drawFirstRow();
+	drawCompleteLine();
+	for (int i=1; i<= m_model->getBoardSize() ; i++) {
+		drawRow(i);
+		drawCompleteLine();
+	}
 	cout << endl;
 }
 

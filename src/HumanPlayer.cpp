@@ -47,7 +47,7 @@ GameModel::Pos HumanPlayer::makeMove(const GameModel*) const {
 			
 			//are the integers valid?
 			if (xCoordInt < 1 || xCoordInt > GameModel::MAX_BOARD_SIZE ||
-                yCoordInt < 1 || yCoordInt > GameModel::MAX_BOARD_SIZE) {
+				yCoordInt < 1 || yCoordInt > GameModel::MAX_BOARD_SIZE) {
 				std::cout << "Invalid input. Please try again: ";
 				continue;
 			}

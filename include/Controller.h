@@ -1,4 +1,4 @@
-/*
+/**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
 *  Group: 04
@@ -13,13 +13,12 @@
 #include "Player.h"
 #include "HumanPlayer.h"
 
-
 class Controller {
 public:
 	//bind controller to a model and a view. Player parameter order will define who will be X and who O.
-	Controller(GameModel& model, const View& view, const Player& player1, const Player& player2) :
-		       m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2),
-			   gameEnded (false) , currentPlayerNum(GameModel::PLAYER1) {
+	Controller (GameModel& model, const View& view, const Player& player1, const Player& player2) :
+                m_model(&model), m_view(&view), m_player1(&player1), m_player2(&player2),
+                gameEnded (false) , currentPlayerNum(GameModel::PLAYER1) {
 		//if player is human, switch the human flag (for draw board and draw moves for player)
 		if (const HumanPlayer* pcast1 = dynamic_cast<const HumanPlayer*>(m_player1))
 			isPlayer1Human = true;
@@ -30,7 +29,7 @@ public:
         else
             isPlayer2Human = false;
 
-		isCurPlayerHuman = isPlayer1Human;
+        isCurPlayerHuman = isPlayer1Human;
 	}
 	~Controller() {}
 	void beginGame();

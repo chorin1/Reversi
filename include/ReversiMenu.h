@@ -1,9 +1,13 @@
-//
-// Created by chorin on 11/22/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #3
+*  Group: 04
+*  Main menu for game reversi.
+*  Shows the menu in the console and creates the game (controller, players and model)
+*  according to the user choice.
+*/
 
 #pragma once
-
 
 class ReversiMenu {
 private:

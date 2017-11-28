@@ -1,6 +1,6 @@
-/*
+/**
 *  Reversi - Advanced Programming 1
-*  Ex: #2
+*  Ex: #3
 *  Group: 04
 *  View class to play Reversi game on the console
 */
@@ -11,8 +11,9 @@
 
 class ConsoleView : public View {
 public:
-	//Explenasion for public methods in base class (view.h)
-    ConsoleView (GameModel& model) : View(model){}
+
+	//Explanation for the public methods can be read inside base class (view.h)
+	ConsoleView (GameModel& model) : View(model){}
 	~ConsoleView() {};
 	void drawBoard() const;
 	void drawTurn(const GameModel::PlayerNum player, const GameModel::Pos lastPlacePos = GameModel::Pos(0, 0)) const; 

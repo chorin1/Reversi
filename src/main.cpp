@@ -10,12 +10,12 @@
 #include <iostream>
 
 int main() {
-    while (ReversiMenu::m_choice != 0) {
-        ReversiMenu::selectFromMenu();
-        ReversiMenu::beginGame();
-        std::cin.get();
-    }
-    return 0;
+	while (ReversiMenu::m_choice != 0) {
+		ReversiMenu::selectFromMenu();
+		ReversiMenu::beginGame();
+		std::cin.get();
+	}
+	return 0;
 }
 
 
