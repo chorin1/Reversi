@@ -15,7 +15,6 @@
 
 
 class Controller {
-	
 public:
 	//bind controller to a model and a view. Player parameter order will define who will be X and who O.
 	Controller(GameModel& model, const View& view, const Player& player1, const Player& player2) :

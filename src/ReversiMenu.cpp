@@ -21,7 +21,7 @@ ReversiMenu::GameType ReversiMenu::m_choice = PVP;
 
 void ReversiMenu::beginGame() {
     if (m_choice == 0) {
-        cout << "Exiting..." << endl;
+        cout << "Thank you for playing..." << endl;
     } else {
         GameModel model;
         ConsoleView view(model);
