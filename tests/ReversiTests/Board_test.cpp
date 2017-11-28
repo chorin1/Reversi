@@ -29,7 +29,7 @@ TEST_F(BoardTest ,Board_test2){
     EXPECT_EQ(b2.getCellAt(centerB2 - 1,centerB2),Board::CELL_PLAYER1);
     EXPECT_EQ(b2.getCellAt(centerB2 ,centerB2 - 1),Board::CELL_PLAYER1);
     EXPECT_EQ(b2.getCellAt(b2.getBoardSize() - 1,b2.getBoardSize() - 1),Board::CELL_EMPTY);
-    //EXPECT_EQ(b2.getCellAt(b2.getBoardSize() + 1,b2.getBoardSize() + 8),Board::CELL_EMPTY);
+    EXPECT_EQ(b1.getCellAt(b1.getBoardSize() + 1,b1.getBoardSize()),Board::CELL_ERROR);
 
 
 };
