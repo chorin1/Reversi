@@ -121,9 +121,12 @@ TEST_F(GameModelTest, basicTest){
 TEST_F(GameModelTest, edgeTest){
     GameModel overSize(1000);
     GameModel underSize(2);
-    //check if the size of the board is In the right range.
+    GameModel size6(6);
+    GameModel copy(size6);
+    //check if the size of the board is In the right range,or if it in the right size.
     EXPECT_EQ(overSize.getBoardSize(),8);
     EXPECT_EQ(underSize.getBoardSize(),8);
+    EXPECT_EQ(copy.getBoardSize(),6);
 
     //test scenario 2.
     //test if the players can move.
