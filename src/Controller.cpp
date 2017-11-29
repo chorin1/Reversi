@@ -7,7 +7,7 @@
 
 void Controller::beginGame() {
 	GameModel::Pos lastMove = GameModel::Pos(0, 0);
-    gameEnded = false;
+	gameEnded = false;
 	while (!gameEnded) {
 
 		//both players can't move

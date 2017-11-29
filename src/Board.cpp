@@ -8,7 +8,7 @@
 #include "../include/Board.h"
 #include <assert.h>
 
-Board::Board(int boardSize = 8): m_boardSize(boardSize) {
+Board::Board(int boardSize = DEFAULT_BOARD_SIZE): m_boardSize(boardSize) {
 	m_board = new Cell [m_boardSize * m_boardSize];
 	initBoard();
 }
@@ -26,10 +26,8 @@ Board::~Board() {
 	delete[] m_board;
 }
 
-
-
 void Board::initBoard() {
-	assert(Board::m_boardSize > 3 || Board::m_boardSize < 20);
+	assert(Board::m_boardSize > 3 || Board::m_boardSize < MAX_BOARD_SIZE);
         int center = Board::m_boardSize / 2;
         for (int i = 0; i < Board::m_boardSize; i++) {
             for (int j = 0; j < Board::m_boardSize; j++) {

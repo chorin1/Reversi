@@ -8,16 +8,14 @@
 using std::cout;
 using std::endl;
 
-
-
 void ConsoleView::drawBoard() const {
 	cout << endl << "Current Board:" << endl << endl;
-    drawFirstRow();
-    drawCompleteLine();
-    for (int i=1; i<= m_model->getBoardSize() ; i++) {
-        drawRow(i);
-        drawCompleteLine();
-    }
+	drawFirstRow();
+	drawCompleteLine();
+	for (int i=1; i<= m_model->getBoardSize() ; i++) {
+		drawRow(i);
+		drawCompleteLine();
+	}
 	cout << endl;
 }
 
@@ -81,7 +79,7 @@ void ConsoleView::drawEndGame(int& scoreP1, int& scoreP2) const {
 	cout << "   ~ Final score ~" << endl;
 	cout << "Player 'X': " << scoreP1 << "   Player 'O': " << scoreP2;
 	cout << endl << endl;
-	cout << "Thank you for playing!";
+	cout << "Press any key to return to menu.." << endl;
 
 }
 

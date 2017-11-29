@@ -1,6 +1,6 @@
-/*
+/**
 *  Reversi - Advanced Programming 1
-*  Ex: #2
+*  Ex: #3
 *  Group: 04
 *  Human player with input through keyboard.
 *  the class is responsible to return a "sane" position back to the controller

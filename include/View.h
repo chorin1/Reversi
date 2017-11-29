@@ -1,6 +1,6 @@
-/*
+/**
 *  Reversi - Advanced Programming 1
-*  Ex: #2
+*  Ex: #3
 *  Group: 04
 *  Interface class for view - use to draw Reversi game.
 */
