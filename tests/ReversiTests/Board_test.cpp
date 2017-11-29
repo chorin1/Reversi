@@ -1,5 +1,7 @@
-//
-// Created by nitai halle on 11/24/17.
+/**
+ * Unit testing for a board used in reversi game
+ */
+
 
 #include "gtest/gtest.h"
 #include "Board.h"
