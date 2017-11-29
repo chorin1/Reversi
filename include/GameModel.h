@@ -15,7 +15,7 @@ class GameModel {
 	friend class AIPlayerTest;
 	friend class GameModelTest;
 public:
-	const static int MAX_BOARD_SIZE = Board::MAX_BOARD_SIZE;
+
 	struct Pos {
 		int m_x;
 		int m_y;
@@ -37,7 +37,7 @@ public:
 	};
 
 	const static int DEFAULT_BOARD_SIZE = 8;
-	const static int MAX_BOARD_SIZE = 30;
+	const static int MAX_BOARD_SIZE = Board::MAX_BOARD_SIZE;
 
 	//create with default boardSize
 	GameModel();
