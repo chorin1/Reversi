@@ -108,15 +108,6 @@ TEST_F(GameModelTest, basicTest){
     EXPECT_TRUE(testModel1.isPossibleMove(GameModel::PLAYER1,GameModel::Pos(6,6)));
     //check if the score is accurate.
     EXPECT_EQ(testModel1.calcScoreOf(GameModel::PLAYER1), 3);
-
-
-
-    const std::vector<GameModel::Pos> *vec = testModel1.getPossibleMoves(GameModel::PLAYER1);
-    int i=1;
-    for (std::vector<GameModel::Pos>::const_iterator it = vec->begin(); it != vec->end(); ++it) {
-        std::cout  << i;
-        i++;
-    }
 }
 TEST_F(GameModelTest, edgeTest){
     GameModel overSize(1000);
