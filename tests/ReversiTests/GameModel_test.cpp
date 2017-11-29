@@ -1,7 +1,6 @@
-
-//
-// Created by nitaihalle on 11/26/17.
-//
+/**
+ * Unit testing for the GameModel - Reversi game
+ */
 #include <gtest/gtest.h>
 #include "GameModel.h"
 #include "ConsoleView.h"
