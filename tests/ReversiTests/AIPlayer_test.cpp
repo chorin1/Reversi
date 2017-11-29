@@ -71,7 +71,6 @@ protected:
 };
 
 TEST_F (AIPlayerTest, basicTest) {
-
 	//testView.drawBoard();
 	EXPECT_NE(ai1.makeMove(&testModel), GameModel::Pos(0,0));
 	//AI has 2 moves resulting in same score, chooses the first one

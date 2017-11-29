@@ -41,7 +41,6 @@ void ReversiMenu::beginGame() {
 }
 
 void ReversiMenu::selectFromMenu() {
-
 	cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
 	cout << "         -A Game By Nathan & Ben-     " << endl;
 	cout << "------------------------------------------" << endl << endl;
