@@ -25,17 +25,33 @@ void ReversiMenu::beginGame() {
 	} else {
 		GameModel model;
 		ConsoleView view(model);
-		HumanPlayer p1;
+		Player *p1;
 		Player *p2;
-		if (m_choice == PVC) {
-			p2 = new AIPlayer();
-			cout << "Starting a game vs AI..." << endl << endl;
-		} else {
-			p2 = new HumanPlayer();
-			cout << "Starting a PVP game..." << endl << endl;
+		switch (m_choice) {
+			case PVC:
+				p1 = new HumanPlayer();
+				p2 = new AIPlayer();
+				cout << "Starting a game vs AI..." << endl << endl;
+			break;
+			case PVP:
+				p1 = new HumanPlayer();
+				p2 = new HumanPlayer();
+				cout << "Starting a PVP game..." << endl << endl;
+			break;
+			case NETWORK_GAME:
+                //create client
+                //connect to server
+                //get player number
+                //create a player with a reference to client
+                //create a human player
+                break;
+			default:
+				cout << "error in menu selection" << endl;
+
 		}
-		Controller controller(model, view, p1, *p2);
+		Controller controller(model, view, *p1, *p2);
 		controller.beginGame();
+		delete p1;
 		delete p2;
 	}
 }
@@ -47,6 +63,7 @@ void ReversiMenu::selectFromMenu() {
 	cout << "Please select form the following options:" << endl;
 	cout << "1. Play against a human player." << endl;
 	cout << "2. Play against an AI player." << endl;
+	cout << "3. Play against a player on the network" << endl;
 	cout << "0. Exit" << endl << endl;
 	cout << "choice: ";
 

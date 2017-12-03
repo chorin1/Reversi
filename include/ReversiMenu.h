@@ -14,6 +14,7 @@ private:
     enum GameType {
         PVP = 1,
         PVC,
+        NETWORK_GAME,
         GAMETYPE_COUNT
     };
 public:
