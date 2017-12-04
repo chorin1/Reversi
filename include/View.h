@@ -26,6 +26,7 @@ public:
 	virtual void setView(GameModel& model) {
 		m_model = &model;
 	}
+	virtual void printException(const char* msg) const = 0;
 protected:
 	const GameModel* m_model;
 };

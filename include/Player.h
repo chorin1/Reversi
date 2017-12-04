@@ -16,4 +16,6 @@ public:
 	virtual ~Player() {};
 	//return the position of the wanted move by the player
 	virtual GameModel::Pos makeMove(const GameModel* const = NULL) const = 0;
+    //only implemented in a network player
+    virtual void sendMove(GameModel::Pos) const {}
 };

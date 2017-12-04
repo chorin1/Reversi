@@ -20,6 +20,7 @@ public:
 	void drawNoPossibleMoves(const GameModel::PlayerNum player, const GameModel::Pos lastPlacePos = GameModel::Pos(0, 0)) const;
 	void drawMoveIsInvalid(const GameModel::Pos& pos) const;
 	void drawEndGame(int& scoreP1, int& scoreP2) const;
+	void printException(const char* msg) const;
 private:
 
 	//draws the first row of the board (column numbering)
