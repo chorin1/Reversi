@@ -7,7 +7,7 @@ file(GLOB SOURCE_FILES src/*.cpp)
 
 add_library(ReversiGame STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
-add_executable(Reversi ${SOURCE_FILES})
+add_executable(Reversi ${SOURCE_FILES} src/Server.cpp src/Server.h)
 
 add_subdirectory(tests)
 
