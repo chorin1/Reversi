@@ -14,7 +14,7 @@ public:
 
     Server(int port, int serverSocket);
 
-    //Server::Server();
+    Server();
 
     struct Pos {
         int m_x;

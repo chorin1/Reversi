@@ -19,9 +19,8 @@ Server::Server(int port) : port(port), serverSocket(0) {
     cout << "Server" << endl;
 }
 
-/*Server::Server() {
+Server::Server() {
     const char* serverIP;
-    int port;
 
     std::ifstream configFile;
     configFile.open("config.txt");
@@ -40,12 +39,7 @@ Server::Server(int port) : port(port), serverSocket(0) {
 
     configFile.close();
 
-
-
-    //////
-
 }
-*/
 void Server::start() {
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == -1)
