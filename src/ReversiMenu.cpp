@@ -29,8 +29,8 @@ void ReversiMenu::beginGame() {
 		ConsoleView view(model);
 		Player *p1 = NULL;
 		Player *p2 = NULL;
-        Client *client = NULL;
-        int clientPlayerNum = 0;
+		Client *client = NULL;
+		int clientPlayerNum = 0;
 		switch (m_choice) {
 			case PVC:
 				p1 = new HumanPlayer();
@@ -45,37 +45,37 @@ void ReversiMenu::beginGame() {
 			case NETWORK_GAME:
 				// create a client with config file
 				try {
-                	client = new Client();
-                    client->connectToServer();
+					client = new Client();
+					client->connectToServer();
 				} catch (const char *msg) {
 					cout << "Failed to connect to server. Reason: " << msg << endl;
 					break;
 				}
-                cout << "Connected to server!" << endl;
+				cout << "Connected to server!" << endl;
 			 cout << "Waiting for other players to join..." << endl;
-                clientPlayerNum = client->getClientPlayerNum();
-                cout << "Another player joined..." << endl << endl;
-                if (clientPlayerNum==1) {
-                    p1 = new HumanPlayer();
-                    p2 = new NetPlayer(*client);
-                    cout << "You will play as 'X'" << endl;
-                } else {
-                    p1 = new NetPlayer(*client);
-                    p2 = new HumanPlayer();
-                    cout << "You will play as 'O'" << endl;
-                }
-                cout << "Starting a network game..." << endl << endl;
-                break;
+				clientPlayerNum = client->getClientPlayerNum();
+				cout << "Another player joined..." << endl << endl;
+				if (clientPlayerNum==1) {
+					p1 = new HumanPlayer();
+					p2 = new NetPlayer(*client);
+					cout << "You will play as 'X'" << endl;
+				} else {
+					p1 = new NetPlayer(*client);
+					p2 = new HumanPlayer();
+					cout << "You will play as 'O'" << endl;
+				}
+				cout << "Starting a network game..." << endl << endl;
+				break;
 			default:
 				cout << "error in menu selection" << endl;
-                break;
+				break;
 		}
 		if (p1!=NULL && p2!=NULL) {
 			Controller controller(model, view, *p1, *p2);
 			controller.beginGame();
 			delete p1;
 			delete p2;
-            delete client;
+			delete client;
 		}
 	}
 }
