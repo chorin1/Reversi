@@ -52,7 +52,7 @@ void ReversiMenu::beginGame() {
 					break;
 				}
                 cout << "Connected to server!" << endl;
-                cout << "Waiting for other players to join..." << endl;
+			 cout << "Waiting for other players to join..." << endl;
                 clientPlayerNum = client->getClientPlayerNum();
                 cout << "Another player joined..." << endl << endl;
                 if (clientPlayerNum==1) {

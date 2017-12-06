@@ -12,12 +12,12 @@
 
 class AIPlayer : public Player {
 public:
-    AIPlayer() {};
-    ~AIPlayer() {};
-    //returns the position of the wanted move using minimax AI method
-    GameModel::Pos makeMove(const GameModel* const model) const;
+	AIPlayer() {};
+	~AIPlayer() {};
+	//returns the position of the wanted move using minimax AI method
+	GameModel::Pos makeMove(const GameModel* const model) const;
 private:
-    int maxOpponentMoveScore(const GameModel* const model) const;
+	int maxOpponentMoveScore(const GameModel* const model) const;
 
 };
 

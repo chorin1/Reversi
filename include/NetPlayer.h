@@ -13,12 +13,12 @@
 class NetPlayer : public Player {
 
 public:
-    NetPlayer (Client& client) : m_client(&client) {}
-    ~NetPlayer() {}
-    GameModel::Pos makeMove(const GameModel* const = NULL) const;
-    // sends the move played to the server
-    virtual void sendMove(GameModel::Pos pos) const;
+	NetPlayer (Client& client) : m_client(&client) {}
+	~NetPlayer() {}
+	GameModel::Pos makeMove(const GameModel* const = NULL) const;
+	// sends the move played to the server
+	virtual void sendMove(GameModel::Pos pos) const;
 private:
-    Client *const m_client;
+	Client *const m_client;
 };
 
