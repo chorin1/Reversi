@@ -16,9 +16,13 @@ void Controller::beginGame() {
 		//both players can't move
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
 			gameEnded = true;
-			//send endgame to both players (for network play)
-			m_player1->sendMove(Client::endGamePos);
-			m_player2->sendMove(Client::endGamePos);
+			//send endgame (for network play)
+			try {
+				m_player1->sendMove(Client::endGamePos);
+				m_player2->sendMove(Client::endGamePos);
+			} catch (const char *msg){
+				m_view->printException(msg);
+			}
 			continue;
 		}
 
@@ -27,8 +31,12 @@ void Controller::beginGame() {
 			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
 			lastMove = GameModel::Pos(0, 0);
 			switchCurrentPlayer();
-			//send nomove to other player
-			getCurrentPlayer()->sendMove(Client::noMovePos);
+			//send noMove to other player
+			try {
+				getCurrentPlayer()->sendMove(Client::noMovePos);
+			} catch (const char *msg) {
+				m_view->printException(msg);
+			}
 			continue;
 		}
 		
@@ -55,7 +63,12 @@ void Controller::beginGame() {
 		lastMove = wantedMove;
 		switchCurrentPlayer();
 		//send the move to network player
-		getCurrentPlayer()->sendMove(lastMove);
+		try {
+			getCurrentPlayer()->sendMove(lastMove);
+		} catch (const char *msg){
+			m_view->printException(msg);
+		}
+		//end of turn
 	}
 
 	//game has ended

@@ -43,14 +43,15 @@ void ReversiMenu::beginGame() {
 				cout << "Starting a PVP game..." << endl << endl;
 			break;
 			case NETWORK_GAME:
-				client = new Client("127.0.0.1", 8000);
+				// create a client with config file
 				try {
+                	client = new Client();
                     client->connectToServer();
 				} catch (const char *msg) {
 					cout << "Failed to connect to server. Reason: " << msg << endl;
 					break;
 				}
-                cout << "Connected to server" << endl;
+                cout << "Connected to server!" << endl;
                 cout << "Waiting for other players to join..." << endl;
                 clientPlayerNum = client->getClientPlayerNum();
                 cout << "Another player joined..." << endl << endl;
