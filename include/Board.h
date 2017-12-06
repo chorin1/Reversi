@@ -10,12 +10,12 @@
 class Board {
 public:
 	//enumeration of each cell data
-    enum Cell {
-        CELL_ERROR,
-        CELL_EMPTY,
-        CELL_PLAYER1,
-        CELL_PLAYER2
-    };
+	enum Cell {
+		CELL_ERROR,
+		CELL_EMPTY,
+		CELL_PLAYER1,
+		CELL_PLAYER2
+	};
 
 	//create a board according to boardSize
 	Board(int boardSize);

@@ -4,33 +4,46 @@
 */
 
 #include "../include/Controller.h"
+#include "../include/Client.h"
 
 void Controller::beginGame() {
 	GameModel::Pos lastMove = GameModel::Pos(0, 0);
 	gameEnded = false;
 	while (!gameEnded) {
 
+		m_view->drawBoard();
+
 		//both players can't move
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
-			m_view->drawBoard();
 			gameEnded = true;
+			//send endgame (for network play)
+			try {
+				m_player1->sendMove(Client::endGamePos);
+				m_player2->sendMove(Client::endGamePos);
+			} catch (const char *msg){
+				m_view->printException(msg);
+			}
 			continue;
 		}
 
 		//current player has no moves
 		if (!m_model->isAbleToMove(currentPlayerNum)) {
-			m_view->drawBoard();
 			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
 			lastMove = GameModel::Pos(0, 0);
 			switchCurrentPlayer();
+			//send noMove to other player
+			try {
+				getCurrentPlayer()->sendMove(Client::noMovePos);
+			} catch (const char *msg) {
+				m_view->printException(msg);
+			}
 			continue;
 		}
 		
 		//current player has moves
 
-		//draw board and turn if this player is human
+		//draw turn if this player is human
 		if (isCurPlayerHuman) {
-			m_view->drawBoard();
 			m_view->drawTurn(currentPlayerNum, lastMove);
 		}
 		GameModel::Pos wantedMove(0,0);
@@ -49,6 +62,13 @@ void Controller::beginGame() {
 		m_model->place(currentPlayerNum, wantedMove);
 		lastMove = wantedMove;
 		switchCurrentPlayer();
+		//send the move to network player
+		try {
+			getCurrentPlayer()->sendMove(lastMove);
+		} catch (const char *msg){
+			m_view->printException(msg);
+		}
+		//end of turn
 	}
 
 	//game has ended

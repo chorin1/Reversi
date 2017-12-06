@@ -10,6 +10,8 @@
 #include "../include/AIPlayer.h"
 #include "../include/Controller.h"
 #include "../include/ConsoleView.h"
+#include "../include/Client.h"
+#include "../include/NetPlayer.h"
 #include <iostream>
 
 using std::cin;
@@ -25,18 +27,56 @@ void ReversiMenu::beginGame() {
 	} else {
 		GameModel model;
 		ConsoleView view(model);
-		HumanPlayer p1;
-		Player *p2;
-		if (m_choice == PVC) {
-			p2 = new AIPlayer();
-			cout << "Starting a game vs AI..." << endl << endl;
-		} else {
-			p2 = new HumanPlayer();
-			cout << "Starting a PVP game..." << endl << endl;
+		Player *p1 = NULL;
+		Player *p2 = NULL;
+		Client *client = NULL;
+		int clientPlayerNum = 0;
+		switch (m_choice) {
+			case PVC:
+				p1 = new HumanPlayer();
+				p2 = new AIPlayer();
+				cout << "Starting a game vs AI..." << endl << endl;
+			break;
+			case PVP:
+				p1 = new HumanPlayer();
+				p2 = new HumanPlayer();
+				cout << "Starting a PVP game..." << endl << endl;
+			break;
+			case NETWORK_GAME:
+				// create a client with config file
+				try {
+					client = new Client();
+					client->connectToServer();
+				} catch (const char *msg) {
+					cout << "Failed to connect to server. Reason: " << msg << endl;
+					break;
+				}
+				cout << "Connected to server!" << endl;
+			 	cout << "Waiting for other players to join..." << endl;
+				clientPlayerNum = client->getClientPlayerNum();
+				cout << "Another player joined..." << endl << endl;
+				if (clientPlayerNum==1) {
+					p1 = new HumanPlayer();
+					p2 = new NetPlayer(*client);
+					cout << "You will play as 'X'" << endl;
+				} else {
+					p1 = new NetPlayer(*client);
+					p2 = new HumanPlayer();
+					cout << "You will play as 'O'" << endl;
+				}
+				cout << "Starting a network game..." << endl << endl;
+				break;
+			default:
+				cout << "error in menu selection" << endl;
+				break;
 		}
-		Controller controller(model, view, p1, *p2);
-		controller.beginGame();
-		delete p2;
+		if (p1!=NULL && p2!=NULL) {
+			Controller controller(model, view, *p1, *p2);
+			controller.beginGame();
+			delete p1;
+			delete p2;
+			delete client;
+		}
 	}
 }
 
@@ -47,6 +87,7 @@ void ReversiMenu::selectFromMenu() {
 	cout << "Please select form the following options:" << endl;
 	cout << "1. Play against a human player." << endl;
 	cout << "2. Play against an AI player." << endl;
+	cout << "3. Play against a player on the network" << endl;
 	cout << "0. Exit" << endl << endl;
 	cout << "choice: ";
 

@@ -139,3 +139,7 @@ void ConsoleView::drawRow(int row) const {
 void ConsoleView::drawPos(const GameModel::Pos& pos) const {
 	cout << "(" << pos.m_x << "," << pos.m_y << ") ";
 }
+
+void ConsoleView::printException(const char * msg) const {
+	cout << "Error! description: " << msg << endl;
+}
