@@ -10,5 +10,6 @@ add_library(ReversiGame STATIC ${SOURCE_FILES} ${HEADER_FILES})
 add_executable(Reversi ${SOURCE_FILES})
 
 add_subdirectory(tests)
+add_subdirectory(Server)
 
 target_link_libraries(Reversi ReversiGame)
