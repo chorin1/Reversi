@@ -3,14 +3,9 @@
 //
 
 #pragma once
-#include <stdlib.h>
-
 
 class Server {
 public:
-    Server(int port);
-    Server();
-
     struct Pos {
         int m_x;
         int m_y;
@@ -26,18 +21,17 @@ public:
         }
     };
 
+
+    Server(int port);
+    Server();
+
     void start();
     void stop();
 
     const static Pos noMovePos;
     const static Pos endGamePos;
-
 private:
     int port;
     int serverSocket;
-
     void handleClients(int clientSocket,int clientSocket2);
-    void getPos(Pos pos) const;
-    Pos sendPos() const;
 };
-

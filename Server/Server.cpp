@@ -1,14 +1,15 @@
 //
 // Created by nitaihalle on 12/4/17.
 //
-#include "Server.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
-#include <stdio.h>
-#include<fstream>
+#include <stdlib.h>
+#include <fstream>
+#include "Server.h"
+
 using std::string;
 using std::cout;
 using std::endl;
