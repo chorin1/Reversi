@@ -94,8 +94,20 @@ void Server::start() {
             cout << "client disconnected.." << endl;
             return;
         }
+        Pos pos(0,0);
+        n = read(clientSocket, &pos, sizeof(pos));
+        if (n==-1) {
+            cout << "error reading send" << endl;
+            return;
+        }
+        if (n==0) {
+            cout << "client disconnected.." << endl;
+            return;
+        }
 
-        handleClient(clientSocket,clientSocket2);
+
+        handleClient(clientSocket2,clientSocket);
+
 
         //close communication
         close(clientSocket);
