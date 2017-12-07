@@ -21,7 +21,6 @@ using std::string;
 const GameModel::Pos Client::noMovePos = GameModel::Pos(-5,-5);
 const GameModel::Pos Client::endGamePos = GameModel::Pos(-1,-1);
 
-
 Client::Client() {
 	const char* serverIP;
 	int port;
@@ -98,6 +97,8 @@ GameModel::Pos Client::getMove() {
 	int n = read(clientSocket, &pos, sizeof(pos));
 	if (n == -1)
 		throw "Error getting position from socket";
+	if (n == 0)
+		throw "Disconnected from server";
 	//TODO: delete cout later
 	cout << "Got from server move: " << pos.m_x << ", " << pos.m_y << endl;
 	return pos;
@@ -107,6 +108,8 @@ void Client::sendMove(GameModel::Pos pos) {
 	int n = write(clientSocket, &pos, sizeof(pos));
 	if (n==-1)
 		throw "Error sending move to socket";
+	if (n == 0)
+		throw "Disconnected from server";
 	//TODO: delete cout later
 	cout << "Sent to server move: " << pos.m_x << ", " << pos.m_y << endl;
 }

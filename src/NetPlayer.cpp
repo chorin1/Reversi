@@ -23,8 +23,8 @@ GameModel::Pos NetPlayer::makeMove(const GameModel*) const {
 	cout << "Waiting for other player's move..." << endl;
 	try {
 		pos = m_client->getMove();
-	} catch (const char *msg) {
-		throw (*msg);
+	} catch (const char* msg) {
+		throw (msg);
 	}
 	return pos;
 }

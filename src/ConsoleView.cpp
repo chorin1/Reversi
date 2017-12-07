@@ -66,9 +66,12 @@ void ConsoleView::drawMoveIsInvalid(const GameModel::Pos& pos) const {
 	cout << "Move (" << pos.m_x << "," << pos.m_y << ") is not possible. Please try again: ";
 }
 
+void ConsoleView::drawNoPossibleMoveForBoth() const {
+	cout << "No possible moves for both players." << endl;
+}
 void ConsoleView::drawEndGame(int& scoreP1, int& scoreP2) const {
 	cout << endl << endl << endl;
-	cout << "No possible moves for both players." << endl << endl << "---The game has ended!---" << endl;
+	cout << endl << endl << "---The game has ended!---" << endl;
 	if (scoreP1 > scoreP2)
 		cout << "The winner is: Player 'X'" << endl;
 	else if (scoreP1 < scoreP2)

@@ -17,7 +17,9 @@ public:
 	~ConsoleView() {};
 	void drawBoard() const;
 	void drawTurn(const GameModel::PlayerNum player, const GameModel::Pos lastPlacePos = GameModel::Pos(0, 0)) const; 
-	void drawNoPossibleMoves(const GameModel::PlayerNum player, const GameModel::Pos lastPlacePos = GameModel::Pos(0, 0)) const;
+	void drawNoPossibleMoves(const GameModel::PlayerNum player,
+                             const GameModel::Pos lastPlacePos = GameModel::Pos(0, 0)) const;
+	void drawNoPossibleMoveForBoth() const;
 	void drawMoveIsInvalid(const GameModel::Pos& pos) const;
 	void drawEndGame(int& scoreP1, int& scoreP2) const;
 	void printException(const char* msg) const;

@@ -16,6 +16,7 @@ void Controller::beginGame() {
 		//both players can't move
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
 			gameEnded = true;
+			m_view->drawNoPossibleMoveForBoth();
 			//send endgame (for network play)
 			try {
 				m_player1->sendMove(Client::endGamePos);
@@ -50,7 +51,13 @@ void Controller::beginGame() {
 		bool moveValid = false;
 		//loop until player selects a valid move
 		do {
-			wantedMove = getCurrentPlayer()->makeMove(m_model);
+			try {
+				wantedMove = getCurrentPlayer()->makeMove(m_model);
+			} catch (const char* msg){
+				m_view->printException(msg);
+				gameEnded = true;
+				break;
+			}
 			if (m_model->isPossibleMove(currentPlayerNum, wantedMove)) {
 				moveValid = true;
 			}
@@ -61,12 +68,16 @@ void Controller::beginGame() {
 		//move is valid, lets place the piece
 		m_model->place(currentPlayerNum, wantedMove);
 		lastMove = wantedMove;
+
 		switchCurrentPlayer();
+
 		//send the move to network player
 		try {
 			getCurrentPlayer()->sendMove(lastMove);
 		} catch (const char *msg){
 			m_view->printException(msg);
+			gameEnded = true;
+			break;
 		}
 		//end of turn
 	}
