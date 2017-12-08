@@ -73,10 +73,10 @@ void ReversiMenu::beginGame() {
 		if (p1!=NULL && p2!=NULL) {
 			Controller controller(model, view, *p1, *p2);
 			controller.beginGame();
-			delete p1;
-			delete p2;
-			delete client;
 		}
+		delete p1;
+		delete p2;
+		delete client;
 	}
 }
 

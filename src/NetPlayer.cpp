@@ -9,12 +9,10 @@ using std::cout;
 using std::endl;
 
 void NetPlayer::sendMove(GameModel::Pos pos) const {
-	//TODO: delete cout here
-	cout << "DELETE LATER: sending move " << pos.m_x << "," << pos.m_y << " to server";
 	try {
 		m_client->sendMove(pos);
 	} catch (const char *msg) {
-		throw (*msg);
+		throw;
 	}
 }
 
@@ -24,7 +22,7 @@ GameModel::Pos NetPlayer::makeMove(const GameModel*) const {
 	try {
 		pos = m_client->getMove();
 	} catch (const char* msg) {
-		throw (msg);
+		throw;
 	}
 	return pos;
 }

@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
-*  Group: 04
 *  View class to play Reversi game on the console
 */
 

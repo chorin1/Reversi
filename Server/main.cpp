@@ -1,6 +1,10 @@
-//
-// Created by nitaihalle on 12/6/17.
-//
+/*
+ *  Reversi - Advanced Programming 1
+ *  By Nitai Halle & Ben Chorin
+ *  Ex: #4
+ *  Server main
+ */
+
 #include <iostream>
 #include "Server.h"
 #include <stdlib.h>

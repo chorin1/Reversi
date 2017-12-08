@@ -1,6 +1,8 @@
-//
-// Created by nitaihalle on 12/4/17.
-//
+/*
+*  Server.cpp
+*
+*/
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -21,24 +23,24 @@ const Server::Pos Server::noMovePos = Pos(-5,-5);
 const Server::Pos Server::endGamePos = Pos(-1,-1);
 
 Server::Server(int port) : port(port), serverSocket(0) {
-	cout << "Setting up server on custom port..." << endl;
+	cout << "Setting up server on custom port " << port << endl;
 }
 
 Server::Server() {
-	const char* serverIP;
-
 	std::ifstream configFile;
 	configFile.open("serverConfig.txt");
 	if (!configFile.is_open())
-		throw("error opening serverConfig.txt");
+		throw("Error opening serverConfig.txt");
+
 	string inputStr;
 	configFile >> inputStr;
+	configFile.close();
+
 	port = atoi(inputStr.c_str());
 	if (port < 1 || port > 65535)
-		throw("error parsing port from config file");
-	cout << "Setting up server on port " << port << endl;
+		throw("Error parsing port from config file");
 
-	configFile.close();
+	cout << "Setting up server on port " << port << endl;
 	serverSocket = 0;
 }
 void Server::start() {
@@ -91,13 +93,13 @@ void Server::start() {
 			if (n==0)
 				throw "Client2 disconnected";
 
-
 		} catch (const char* msg) {
 			cout << "couldn't set up connection. Reason: " << msg << endl;
 			continue;
 		}
 
 		try {
+			//begin the game (start sending moves from one client to the other)
 			handleClients(socketP1, socketP2);
 		} catch (const char* msg) {
 			cout << "error handling clients. reason: " << msg << endl;
@@ -107,29 +109,24 @@ void Server::start() {
         cout << "Closing Sockets to both players.." << endl;
 		close(socketP1);
 		close(socketP2);
-
 	}
-
 }
 
 void Server::handleClients(int socketP1,int socketP2) {
 
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
+	Pos pos(0,0);
 
-	while (true) {
-		Pos pos(0,0);
+	do {
 		int n = read(*currSocket, &pos, sizeof(pos));
 		if (n==-1)
 			throw "Error reading pos";
 		if (n==0)
 			throw "Client disconnected";
-		// game has ended
-		if (pos == endGamePos)
-			break;
 
-		// player is able to play, send move to other player
-		if (pos != noMovePos) {
+		if (pos != noMovePos && pos != endGamePos) {
+			// player is able to play, send move to other player
 			n = write(*otherSocket, &pos, sizeof(pos));
 			if (n==-1 || n==0)
 				throw "Error sending pos";
@@ -138,7 +135,7 @@ void Server::handleClients(int socketP1,int socketP2) {
         // switch players
         currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
         otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
-	}
+	} while (pos != endGamePos);
 }
 
 void Server::stop() {

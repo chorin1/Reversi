@@ -9,8 +9,8 @@
 void Controller::beginGame() {
 	GameModel::Pos lastMove = GameModel::Pos(0, 0);
 	gameEnded = false;
-	while (!gameEnded) {
 
+	while (!gameEnded) {
 		m_view->drawBoard();
 
 		//both players can't move
@@ -30,6 +30,7 @@ void Controller::beginGame() {
 		//current player has no moves
 		if (!m_model->isAbleToMove(currentPlayerNum)) {
 			m_view->drawNoPossibleMoves(currentPlayerNum, lastMove);
+			// zeroize the last move
 			lastMove = GameModel::Pos(0, 0);
 			switchCurrentPlayer();
 			//send noMove to other player
@@ -55,6 +56,7 @@ void Controller::beginGame() {
 				wantedMove = getCurrentPlayer()->makeMove(m_model);
 			} catch (const char* msg){
 				m_view->printException(msg);
+				// if disconnected from server, the game will end
 				gameEnded = true;
 				break;
 			}
@@ -76,8 +78,9 @@ void Controller::beginGame() {
 			getCurrentPlayer()->sendMove(lastMove);
 		} catch (const char *msg){
 			m_view->printException(msg);
+			// if disconnected from server, the game will end
 			gameEnded = true;
-			break;
+			continue;
 		}
 		//end of turn
 	}

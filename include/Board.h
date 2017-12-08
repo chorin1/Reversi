@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
-*  Group: 04
 *  A basic class for creating board size NxN for Reversi
 */
 

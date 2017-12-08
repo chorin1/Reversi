@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
-*  Group: 04
 *  GameModel is responsible to store the data of the Reversi game. (eg. the board, possible moves for each player)
 *  Also responsible to store game logic (eg. what is a possible move)
 *  Has a position struct used to describe a point on the board.

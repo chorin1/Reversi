@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
-*  Group: 04
 *  Player interface for creating players (human, AI or LAN/WEB) to play game reversi.
 */
 

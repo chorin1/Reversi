@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #4
-*  Group: 04
 *  Client class, connects to server and sends & recieves POS objects
 *  if player is unable to move or game has ended
 *  a special POS will be sent, set by const static values

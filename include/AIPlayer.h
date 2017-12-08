@@ -1,7 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
 *  Ex: #3
-*  Group: 04
 *  Date: 27/11/17
 *  This class represents an AI playing Reversi game using the minimax algorithm.
 *  The class assumes computer will always play 'O' (player 2)

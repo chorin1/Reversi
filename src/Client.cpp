@@ -31,6 +31,8 @@ Client::Client() {
 		throw("error opening config.txt");
 	string inputStr;
 	configFile >> inputStr;
+	configFile.close();
+
 	if (inputStr.find(':') == std::string::npos)
 		throw("error parsing config file");
 
@@ -40,10 +42,10 @@ Client::Client() {
 	string serverPortString = inputStr.substr(inputStr.find(':') + 1);
 	port = atoi(serverPortString.c_str());
 
-	configFile.close();
+	if (port < 1 || port > 65535)
+		throw("error parsing port from config file");
 
-	//TODO: delete cout
-	std::cout << "creating client with -> " << serverIP << ":" << port << endl;
+	std::cout << "Trying to connect to " << serverIP << ":" << port << endl;
 
 	this->serverIP = serverIP;
 	this->serverPort = port;
@@ -79,9 +81,6 @@ void Client::connectToServer() {
 
 	if (connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error connecting to server";
-	//TODO: delete cout
-	cout << "Connected to server!" << endl;
-
 }
 
 int Client::getClientPlayerNum() {
@@ -99,8 +98,6 @@ GameModel::Pos Client::getMove() {
 		throw "Error getting position from socket";
 	if (n == 0)
 		throw "Disconnected from server";
-	//TODO: delete cout later
-	cout << "Got from server move: " << pos.m_x << ", " << pos.m_y << endl;
 	return pos;
 }
 
@@ -110,8 +107,6 @@ void Client::sendMove(GameModel::Pos pos) {
 		throw "Error sending move to socket";
 	if (n == 0)
 		throw "Disconnected from server";
-	//TODO: delete cout later
-	cout << "Sent to server move: " << pos.m_x << ", " << pos.m_y << endl;
 }
 
 void Client::disconnect() {
