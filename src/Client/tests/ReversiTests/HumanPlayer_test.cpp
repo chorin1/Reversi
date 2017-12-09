@@ -4,8 +4,8 @@
 
 
 #include "gtest/gtest.h"
-#include "HumanPlayer.h"
-#include "GameModel.h"
+#include "../../include/HumanPlayer.h"
+#include "../../include/GameModel.h"
 #include <iostream>
 #include <ctime>
 

@@ -4,7 +4,7 @@
 
 
 #include "gtest/gtest.h"
-#include "Board.h"
+#include "../../include/Board.h"
 class BoardTest : public testing::Test{
 public:
 	BoardTest():b1(8),b2(10),b3(b2){}

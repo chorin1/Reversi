@@ -2,9 +2,9 @@
  * Unit testing for the AIPlayer (minimax algo)
  */
 #include "gtest/gtest.h"
-#include "AIPlayer.h"
-#include "GameModel.h"
-#include "ConsoleView.h"
+#include "../../include/AIPlayer.h"
+#include "../../include/GameModel.h"
+#include "../../include/ConsoleView.h"
 #include <iostream>
 
 class AIPlayerTest: public testing::Test {

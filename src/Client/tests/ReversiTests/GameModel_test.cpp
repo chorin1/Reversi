@@ -2,8 +2,8 @@
  * Unit testing for the GameModel - Reversi game
  */
 #include <gtest/gtest.h>
-#include "GameModel.h"
-#include "ConsoleView.h"
+#include "../../include/GameModel.h"
+#include "../../include/ConsoleView.h"
 #include <algorithm>
 class GameModelTest : public testing::Test{
 	public:
