@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include <vector>
 
 class Server {
 public:
@@ -37,6 +38,10 @@ public:
 
     // stop the server
     void stop();
+
+    // send and receive serialized data from socket (each string is seperated by '~')
+    std::vector<std::string> receiveSerialized(int &fromSocket);
+    void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 
     // constant used to define if the game has ended or if the current player has no available moves
     const static Pos noMovePos;

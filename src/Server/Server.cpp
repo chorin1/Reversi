@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
+#include <cassert>
 #include "Server.h"
 
 using std::string;
@@ -17,6 +18,7 @@ using std::cout;
 using std::endl;
 
 #define MAX_CONNECTED_CLIENTS 2
+#define MAX_BUFFER_SIZE 512
 
 // must set static members globally
 const Server::Pos Server::noMovePos = Pos(-5,-5);
@@ -140,4 +142,64 @@ void Server::handleClients(int socketP1,int socketP2) {
 
 void Server::stop() {
 	close(serverSocket);
+}
+
+std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
+	int stringSize = 0;
+	char msgBuffer[MAX_BUFFER_SIZE] = "";
+	std::vector<std::string> vec;
+
+	// get string size
+	int n = read(fromSocket, &stringSize, sizeof(stringSize));
+	if (n ==- 1)
+		throw "Error reading string size";
+	if (n == 0)
+		throw "client disconnected..";
+
+	cout << "expecting size of: " << stringSize << " bytes" << endl;
+	n = read(fromSocket, &msgBuffer, stringSize);
+	if (n == -1)
+		throw "Error getting serialized msg";
+	if (n == 0)
+		throw "client disconnected..";
+
+	cout << "Got full buffer: " << msgBuffer << endl;
+
+	// convert c_string buffer with separating '~' to vector of std::string, '\0' is neglected
+	int i=0;
+	while (i < stringSize) {
+		std::string strToAdd;
+		while (msgBuffer[i] != '~' && i < stringSize) {
+			strToAdd += msgBuffer[i];
+			i++;
+		}
+		vec.push_back(strToAdd);
+		i++;
+	}
+	return vec;
+}
+
+void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
+	char msgBuffer[MAX_BUFFER_SIZE] = "";
+	for (std::vector<std::string>::const_iterator i = vec.begin(); i != vec.end(); ++i) {
+		// check that a buffer overflow will not occur
+		assert(strlen(msgBuffer) + i->length() + 2 > MAX_BUFFER_SIZE);
+		strcat(msgBuffer, i->c_str());
+		strcat(msgBuffer,"~");
+	}
+	// now msgBuffer is filled with messages separated by '~' with '\0' at end
+	int msgSize = sizeof(char)*(strlen(msgBuffer)+1);
+	cout << "sending message: " << msgBuffer << endl;
+	cout << "size is: " << msgSize << endl;
+	int n = write(toSocket, &msgSize, sizeof(int));
+	if (n == -1)
+		throw "Error writing length to socket";
+	if (n == 0)
+		throw "client disconnected..";
+
+	n = write(toSocket, &msgBuffer, msgSize);
+	if (n == -1)
+		throw "Error writing buffer to socket";
+	if (n == 0)
+		throw "client disconnected..";
 }
