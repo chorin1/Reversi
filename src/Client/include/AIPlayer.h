@@ -17,6 +17,4 @@ public:
 	GameModel::Pos makeMove(const GameModel* const model) const;
 private:
 	int maxOpponentMoveScore(const GameModel* const model) const;
-
 };
-

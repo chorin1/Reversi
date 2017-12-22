@@ -21,4 +21,3 @@ public:
 private:
 	Client *const m_client;
 };
-

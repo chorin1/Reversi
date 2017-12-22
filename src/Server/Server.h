@@ -39,16 +39,15 @@ public:
     // stop the server
     void stop();
 
-
-
     // constant used to define if the game has ended or if the current player has no available moves
     const static Pos noMovePos;
     const static Pos endGamePos;
+
+    // send and receive serialized data from socket (each string is seperated by '~') and extract to vector
+    std::vector<std::string> receiveSerialized(int &fromSocket);
+    void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 private:
     int port;
     int serverSocket;
     void handleClients(int clientSocket,int clientSocket2);
-    // send and receive serialized data from socket (each string is seperated by '~')
-    std::vector<std::string> receiveSerialized(int &fromSocket);
-    void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 };
