@@ -35,4 +35,8 @@ private:
 	const char *serverIP;
 	int serverPort;
 	int clientSocket;
+
+	// send and receive serialized data from socket (each string is separated by '~')
+	std::vector<std::string> receiveSerialized();
+	void sendSerialized(std::vector<std::string> &vec);
 };
