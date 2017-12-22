@@ -10,13 +10,17 @@ CommandsManager::CommandsManager(Server& server) {
 }
 
 void CommandsManager::executeCommand(std::string &command, const std::vector<std::string> &args,
-									 int senderSocket=0, int otherSocket=0) {
+									 int senderSocket, int otherSocket) {
 	if (commandsMap.count(command)==0) {
 		std::cout << "Trying to execute unknown command: " << command << std::endl;
 		return;
 	}
 	Command *commandObj = commandsMap[command];
-	commandObj->execute(args, senderSocket, otherSocket);
+	try {
+		commandObj->execute(args, senderSocket, otherSocket);
+	} catch (const char *msg) {
+		throw;
+	}
 }
 
 CommandsManager::~CommandsManager() {

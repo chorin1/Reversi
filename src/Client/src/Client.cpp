@@ -13,7 +13,9 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <cassert>
+#include <sstream>
 #include "../include/Client.h"
+#include <string>
 
 #define MAX_BUFFER_SIZE 512
 using std::cout;
@@ -96,20 +98,42 @@ int Client::getClientPlayerNum() {
 
 GameModel::Pos Client::getMove() {
 	GameModel::Pos pos(0, 0);
-	int n = read(clientSocket, &pos, sizeof(pos));
-	if (n == -1)
-		throw "Error getting position from socket";
-	if (n == 0)
-		throw "Disconnected from server";
-	return pos;
+	std::vector<std::string> messageVec;
+
+	try {
+        messageVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	// message from server
+	if (messageVec.front()=="msg") {
+		cout << messageVec.at(1) << endl;
+		return getMove();
+	}
+	//valid move
+	if (messageVec.front()=="play") {
+		pos.m_x = atoi(messageVec.at(1).c_str());
+		pos.m_y = atoi(messageVec.at(2).c_str());
+		return pos;
+	}
+	throw "didn't get a compatible message from Server";
 }
 
+
 void Client::sendMove(GameModel::Pos pos) {
-	int n = write(clientSocket, &pos, sizeof(pos));
-	if (n==-1)
-		throw "Error sending move to socket";
-	if (n == 0)
-		throw "Disconnected from server";
+	std::vector<std::string> messageVec;
+	// set up a vector of "play", "X", "Y"
+    messageVec.push_back("play");
+	// convert number to string
+	string coord = static_cast<std::ostringstream*>( &(std::ostringstream() << pos.m_x) )->str();
+    messageVec.push_back(coord);
+	coord = static_cast<std::ostringstream*>( &(std::ostringstream() << pos.m_y) )->str();
+    messageVec.push_back(coord);
+	try {
+		sendSerialized(messageVec);
+	} catch (const char* msg) {
+		throw;
+	}
 }
 
 void Client::disconnect() {

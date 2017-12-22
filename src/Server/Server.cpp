@@ -12,6 +12,7 @@
 #include <fstream>
 #include <cassert>
 #include "Server.h"
+#include "CommandsManager.h"
 
 using std::string;
 using std::cout;
@@ -118,9 +119,17 @@ void Server::handleClients(int socketP1,int socketP2) {
 
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
-	Pos pos(0,0);
+	CommandsManager cmmndManager(*this);
+	//Pos pos(0,0);
 
 	do {
+		try {
+			std::vector<std::string> message = receiveSerialized(*currSocket);
+			cmmndManager.executeCommand(message.front(),message, *currSocket, *otherSocket);
+		}  catch (const char *msg){
+		throw;
+		}
+		/*
 		int n = read(*currSocket, &pos, sizeof(pos));
 		if (n==-1)
 			throw "Error reading pos";
@@ -133,11 +142,11 @@ void Server::handleClients(int socketP1,int socketP2) {
 			if (n==-1 || n==0)
 				throw "Error sending pos";
 		}
-
+		*/
         // switch players
         currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
         otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
-	} while (pos != endGamePos);
+	} while (true);
 }
 
 void Server::stop() {

@@ -10,6 +10,7 @@
 
 #pragma once
 #include <vector>
+#include <string>
 
 class Server {
 public:
@@ -43,7 +44,11 @@ public:
     const static Pos noMovePos;
     const static Pos endGamePos;
 
-    // send and receive serialized data from socket (each string is seperated by '~') and extract to vector
+    /* send and receive serialized data from socket (each string is separated by '~')
+     * buffer size is exactly the vector size (for network efficiency) - an int of the msg size will be sent beforehand
+     * can throw const char* errors.
+     * first element of vector is the command.
+     */
     std::vector<std::string> receiveSerialized(int &fromSocket);
     void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 private:
