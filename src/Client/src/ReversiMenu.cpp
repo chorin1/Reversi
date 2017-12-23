@@ -25,12 +25,11 @@ void ReversiMenu::beginGame() {
 	if (m_choice == 0) {
 		cout << "Thank you for playing..." << endl;
 	} else {
-		GameModel model;
+		GameModel model(4);
 		ConsoleView view(model);
 		Player *p1 = NULL;
 		Player *p2 = NULL;
 		Client *client = NULL;
-		int clientPlayerNum = 0;
 		switch (m_choice) {
 			case PVC:
 				p1 = new HumanPlayer();
@@ -43,28 +42,7 @@ void ReversiMenu::beginGame() {
 				cout << "Starting a PVP game..." << endl << endl;
 			break;
 			case NETWORK_GAME:
-				// create a client with config file
-				try {
-					client = new Client();
-					client->connectToServer();
-				} catch (const char *msg) {
-					cout << "Failed to connect to server. Reason: " << msg << endl;
-					break;
-				}
-				cout << "Connected to server!" << endl;
-			 	cout << "Waiting for other players to join..." << endl;
-				clientPlayerNum = client->getClientPlayerNum();
-				cout << "Another player joined..." << endl << endl;
-				if (clientPlayerNum==1) {
-					p1 = new HumanPlayer();
-					p2 = new NetPlayer(*client);
-					cout << "You will play as 'X'" << endl;
-				} else {
-					p1 = new NetPlayer(*client);
-					p2 = new HumanPlayer();
-					cout << "You will play as 'O'" << endl;
-				}
-				cout << "Starting a network game..." << endl << endl;
+				makeNetworkGamePlayers(client,p1,p2);
 				break;
 			default:
 				cout << "error in menu selection" << endl;
@@ -80,6 +58,77 @@ void ReversiMenu::beginGame() {
 	}
 }
 
+// get reference to client and player pointers. set up client and create players
+void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2) {
+	try {
+		// create a client with config file
+		client = new Client();
+		client->connectToServer();
+	} catch (const char *msg) {
+		cout << "Failed to connect to server. Reason: " << msg << endl;
+		return;
+	}
+	cout << "Connected to server!" << endl;
+	//TODO: show netsubmenu
+	cout << "Waiting for other players to join..." << endl;
+	int clientPlayerNum = client->getClientPlayerNum();
+	cout << "Another player joined..." << endl << endl;
+	if (clientPlayerNum==1) {
+		p1 = new HumanPlayer();
+		p2 = new NetPlayer(*client);
+		cout << "You will play as 'X'" << endl;
+	} else {
+		p1 = new NetPlayer(*client);
+		p2 = new HumanPlayer();
+		cout << "You will play as 'O'" << endl;
+	}
+	cout << "Starting a network game..." << endl << endl;
+}
+
+//TODO add gameListObject <-- start here
+/*
+void ReversiMenu::netSubMenu(int gameListObject) {
+	cout << "------------------------------------------" << endl;
+	cout << "                Network Game              " << endl;
+	cout << "------------------------------------------" << endl << endl;
+	cout << "Current game sessions:" << endl;
+	//TODO: print all game sessions
+	cout << endl << endl;
+	cout << "1. Join game" << endl;
+	cout << "2. Create game" << endl;
+	cout << "3. Refresh list" << endl;
+	cout << "0. Exit" << endl << endl;
+	cout << "choice: ";
+
+	int netMenuChoice;
+	while (true) {
+		cin >> netMenuChoice;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cout << "Invalid choice. Please try again: ";
+		} else {
+			std::cin.ignore(32767, '\n');
+			if (netMenuChoice >= 0 && netMenuChoice <= 3) {
+				break;
+			} else
+				cout << "Invalid choice. Please try again: ";
+		}
+	}
+	switch (netMenuChoice) {
+		case 1:
+
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			return;
+	}
+
+}
+*/
 void ReversiMenu::selectFromMenu() {
 	cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
 	cout << "         -A Game By Nathan & Ben-     " << endl;
@@ -112,3 +161,4 @@ ReversiMenu::GameType ReversiMenu::getMenuChoice() {
 
 	}
 }
+

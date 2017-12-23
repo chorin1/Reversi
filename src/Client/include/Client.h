@@ -8,6 +8,7 @@
 
 #pragma once
 #include "GameModel.h"
+#include <string>
 #define NO_MOVE_POS GameModel::Pos(-5,-5)
 
 class Client {
@@ -16,7 +17,7 @@ public:
 	Client();
 	// create a client with a custom server IP & port
 	Client(const char *serverIP, int serverPort);
-	~Client() {this->disconnect();}
+	~Client() {disconnect();}
 
 	// connect to the designated server
 	void connectToServer();
@@ -37,7 +38,6 @@ private:
 	const char *serverIP;
 	int serverPort;
 	int clientSocket;
-	std::string currGameName;
 
 	// send and receive serialized data from socket (each string is separated by '~')
 	std::vector<std::string> receiveSerialized();

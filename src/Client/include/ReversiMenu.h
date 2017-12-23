@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include "Client.h"
+#include "Player.h"
+
 class ReversiMenu {
 private:
 	enum GameType {
@@ -22,4 +25,6 @@ public:
 	static void beginGame();
 private:
 	static GameType getMenuChoice();
+	// get reference to client and player pointers. set up client and create network player.
+	static void makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2);
 };

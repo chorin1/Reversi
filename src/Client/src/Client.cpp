@@ -146,10 +146,7 @@ void Client::disconnect() {
 	// send close message to server
 	std::vector<std::string> closeMsg;
 	closeMsg.push_back("close");
-    //TODO: update currGameName on join/begin
-	closeMsg.push_back(currGameName);
 	sendSerialized(closeMsg);
-
 	close(clientSocket);
 }
 

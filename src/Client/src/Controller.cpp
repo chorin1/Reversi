@@ -17,16 +17,6 @@ void Controller::beginGame() {
 		if (!m_model->isAbleToMove(GameModel::PLAYER1) && !m_model->isAbleToMove(GameModel::PLAYER2)) {
 			gameEnded = true;
 			m_view->drawNoPossibleMoveForBoth();
-			//TODO: no need to send endgame (will be sent outside) when client destructs
-			//send endgame (for network play)
-			/*
-			try {
-				m_player1->sendMove(Client::endGamePos);
-				m_player2->sendMove(Client::endGamePos);
-			} catch (const char *msg){
-				m_view->printException(msg);
-			}
-			 */
 			continue;
 		}
 

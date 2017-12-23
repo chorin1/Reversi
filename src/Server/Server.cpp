@@ -116,38 +116,26 @@ void Server::start() {
 }
 
 void Server::handleClients(int socketP1,int socketP2) {
-
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
+	//todo: remove temporary create commandmanager here
 	CommandsManager cmmndManager(*this);
-	//Pos pos(0,0);
-
+	bool closedGame = false;
 	do {
 		try {
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
-			cmmndManager.executeCommand(netMessage.front(),netMessage, *currSocket, *otherSocket);
-		}  catch (const char *msg){
-		throw;
+			cmmndManager.executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
+			// to check if clients disconnected
+			if (netMessage.front()=="close")
+				closedGame = true;
+		} catch (const char *msg) {
+			throw;
 		}
-		//TODO: delete old code below
-		/*
-		int n = read(*currSocket, &pos, sizeof(pos));
-		if (n==-1)
-			throw "Error reading pos";
-		if (n==0)
-			throw "Client disconnected";
-
-		if (pos != noMovePos && pos != endGamePos) {
-			// player is able to play, send move to other player
-			n = write(*otherSocket, &pos, sizeof(pos));
-			if (n==-1 || n==0)
-				throw "Error sending pos";
-		}
-		*/
-        // switch players
         currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
         otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
-	} while (true);
+	} while (!closedGame);
+
+	//kill thread
 }
 
 void Server::stop() {
