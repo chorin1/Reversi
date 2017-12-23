@@ -4,9 +4,11 @@
 
 #include "CommandsManager.h"
 #include "PlayCommand.h"
+#include "CloseCommand.h"
 
 CommandsManager::CommandsManager(Server& server) {
 	commandsMap["play"] = new PlayCommand(server);
+	commandsMap["close"] = new CloseCommand(server);
 }
 
 void CommandsManager::executeCommand(std::string &command, const std::vector<std::string> &args,

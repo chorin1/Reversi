@@ -1,4 +1,4 @@
 cmake_minimum_required(VERSION 3.8)
 project(Reversi)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../../../exe")
-add_executable(Server main.cpp Server.cpp Server.h Command.h CommandsManager.cpp CommandsManager.h PlayCommand.cpp PlayCommand.h)
+add_executable(Server main.cpp Server.cpp Server.h Command.h CommandsManager.cpp CommandsManager.h PlayCommand.cpp PlayCommand.h CloseCommand.cpp CloseCommand.h)

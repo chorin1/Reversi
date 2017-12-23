@@ -124,11 +124,12 @@ void Server::handleClients(int socketP1,int socketP2) {
 
 	do {
 		try {
-			std::vector<std::string> message = receiveSerialized(*currSocket);
-			cmmndManager.executeCommand(message.front(),message, *currSocket, *otherSocket);
+			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
+			cmmndManager.executeCommand(netMessage.front(),netMessage, *currSocket, *otherSocket);
 		}  catch (const char *msg){
 		throw;
 		}
+		//TODO: delete old code below
 		/*
 		int n = read(*currSocket, &pos, sizeof(pos));
 		if (n==-1)

@@ -92,7 +92,6 @@ void ReversiMenu::selectFromMenu() {
 	cout << "choice: ";
 
 	m_choice = getMenuChoice();
-
 }
 
 ReversiMenu::GameType ReversiMenu::getMenuChoice() {

@@ -18,13 +18,15 @@
 #include <string>
 
 #define MAX_BUFFER_SIZE 512
+
 using std::cout;
 using std::endl;
 using std::string;
 
+//TODO: no need to send endgame (will be sent outside) when client destructs
 //must set static members globally
-const GameModel::Pos Client::noMovePos = GameModel::Pos(-5,-5);
-const GameModel::Pos Client::endGamePos = GameModel::Pos(-1,-1);
+//const GameModel::Pos Client::noMovePos = GameModel::Pos(-5,-5);
+//const GameModel::Pos Client::endGamePos = GameModel::Pos(-1,-1);
 
 Client::Client() {
 	const char* serverIP;
@@ -124,11 +126,15 @@ void Client::sendMove(GameModel::Pos pos) {
 	std::vector<std::string> messageVec;
 	// set up a vector of "play", "X", "Y"
     messageVec.push_back("play");
-	// convert number to string
-	string coord = static_cast<std::ostringstream*>( &(std::ostringstream() << pos.m_x) )->str();
-    messageVec.push_back(coord);
-	coord = static_cast<std::ostringstream*>( &(std::ostringstream() << pos.m_y) )->str();
-    messageVec.push_back(coord);
+	if (pos == NO_MOVE_POS)
+		messageVec.push_back("noMove");
+	else {
+		// convert number to string
+		string coord = static_cast<std::ostringstream *>( &(std::ostringstream() << pos.m_x))->str();
+		messageVec.push_back(coord);
+		coord = static_cast<std::ostringstream *>( &(std::ostringstream() << pos.m_y))->str();
+		messageVec.push_back(coord);
+	}
 	try {
 		sendSerialized(messageVec);
 	} catch (const char* msg) {
@@ -137,9 +143,15 @@ void Client::sendMove(GameModel::Pos pos) {
 }
 
 void Client::disconnect() {
+	// send close message to server
+	std::vector<std::string> closeMsg;
+	closeMsg.push_back("close");
+    //TODO: update currGameName on join/begin
+	closeMsg.push_back(currGameName);
+	sendSerialized(closeMsg);
+
 	close(clientSocket);
 }
-
 
 std::vector<std::string> Client::receiveSerialized() {
 	int stringSize = 0;
