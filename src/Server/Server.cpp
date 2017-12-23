@@ -21,10 +21,6 @@ using std::endl;
 #define MAX_CONNECTED_CLIENTS 2
 #define MAX_BUFFER_SIZE 512
 
-// must set static members globally
-const Server::Pos Server::noMovePos = Pos(-5,-5);
-const Server::Pos Server::endGamePos = Pos(-1,-1);
-
 Server::Server(int port) : port(port), serverSocket(0) {
 	cout << "Setting up server on custom port " << port << endl;
 }
