@@ -29,11 +29,6 @@ public:
 	GameModel::Pos getMove();
 	// disconnect from server
 	void disconnect();
-
-	//TODO: no need to send endgame (will be sent outside) when client destructs
-	//these values will be sent to server when the local player can't move or to notify server that game has ended
-	//static const GameModel::Pos noMovePos;
-	//static const GameModel::Pos endGamePos;
 private:
 	const char *serverIP;
 	int serverPort;
