@@ -70,6 +70,7 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 	}
 	cout << "Connected to server!" << endl;
 	//TODO: show netsubmenu
+	//try push to git in new branch
 	cout << "Waiting for other players to join..." << endl;
 	int clientPlayerNum = client->getClientPlayerNum();
 	cout << "Another player joined..." << endl << endl;
