@@ -146,6 +146,7 @@ void Client::disconnect() {
 	// send close message to server
 	std::vector<std::string> closeMsg;
 	closeMsg.push_back("close");
+	closeMsg.push_back("sessionName");
 	sendSerialized(closeMsg);
 	close(clientSocket);
 }

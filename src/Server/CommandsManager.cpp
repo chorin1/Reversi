@@ -6,11 +6,13 @@
 #include "PlayCommand.h"
 #include "CloseCommand.h"
 #include "ListGamesCommand.h"
+#include "StartCommand.h"
 
 CommandsManager::CommandsManager(Server& server) {
 	commandsMap["play"] = new PlayCommand(server);
 	commandsMap["close"] = new CloseCommand(server);
 	commandsMap["list_games"] = new ListGamesCommand(server);
+    commandsMap["start"] = new StartCommand(server);
 }
 
 void CommandsManager::executeCommand(std::string &command, const std::vector<std::string> &args,

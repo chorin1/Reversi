@@ -42,6 +42,14 @@ Server::Server() {
 	cout << "Setting up server on port " << port << endl;
 	serverSocket = 0;
 }
+
+Server::~Server() {
+	std::map<std::string, GameSession*>::iterator it;
+	for (it = gameList.begin(); it != gameList.end(); it++) {
+		delete it->second;
+	}
+}
+
 void Server::start() {
 	serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket == -1)

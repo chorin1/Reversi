@@ -22,6 +22,7 @@ public:
     Server();
     // start the server, 2 clients will be handled until game ends or one of them disconnected.
     // the server will then allow 2 new clients to connect
+    ~Server();
     void start();
 
     // stop the server
@@ -35,7 +36,8 @@ public:
     std::vector<std::string> receiveSerialized(int &fromSocket);
     void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 
-    std::map <std::string, GameSession> gameList;
+    std::map <std::string, GameSession*> gameList;
+    friend class JoinCommand;
 private:
     int port;
     int serverSocket;

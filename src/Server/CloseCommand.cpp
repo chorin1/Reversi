@@ -5,13 +5,18 @@
 #include <unistd.h>
 #include <vector>
 #include <string>
+#include <map>
 #include "CloseCommand.h"
 
-void CloseCommand::execute(std::vector<std::string> args, int senderSocket, int otherSocket) {
-	//close sockets
+void CloseCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
+	//close socket
 	close(senderSocket);
-	// TODO: find game (args.at(1)) in game list and delete
-	// put mutex on gamelist object
-	// delete gamename
-	// close thread?
+	close(otherSocket);
+	// TODO: put mutex on gamelist object
+	// delete game from gamelist
+	std::map<std::string, GameSession*>::iterator it = m_server->gameList.find(args.at(1));
+	if (it != m_server->gameList.end()) {
+		delete (it->second);
+		m_server->gameList.erase(it);
+	}
 }

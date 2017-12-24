@@ -4,7 +4,7 @@
 
 #include "PlayCommand.h"
 
-void PlayCommand::execute(std::vector<std::string> args, int senderSocket, int otherSocket) {
+void PlayCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
 	if (senderSocket == 0 || otherSocket == 0)
 		throw "didn't get sockets in PlayCommand::execute";
 	// if player has no moves

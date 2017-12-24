@@ -38,6 +38,7 @@ private:
 	const char *serverIP;
 	int serverPort;
 	int clientSocket;
+	std::string sessionName;
 
 	// send and receive serialized data from socket (each string is separated by '~')
 	std::vector<std::string> receiveSerialized();

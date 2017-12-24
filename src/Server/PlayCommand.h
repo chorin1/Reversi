@@ -11,5 +11,5 @@
 class PlayCommand : public Command {
 public:
 	PlayCommand(Server &server) : Command(server) {}
-	virtual void execute(std::vector<std::string> args, int senderSocket = 0, int otherSocket = 0);
+	virtual void execute(std::vector<std::string> &args, int senderSocket = 0, int otherSocket = 0);
 };
