@@ -213,3 +213,20 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	if (n == 0)
 		throw "client disconnected..";
 }
+
+int Client::numberOfGames(){
+	int numberOfGames = 0;
+	int n = read(clientSocket, &numberOfGames, sizeof(numberOfGames));
+	if (n == -1)
+		throw "Error reading number of games from socket";
+	return numberOfGames;
+}
+
+void Client::numberOption(int option){
+	int n = write(clientSocket, &option, sizeof(option));
+	if (n == -1)
+		throw "Error writing number of game from socket";
+	if (n == 0)
+		throw "client disconnect..";
+
+}

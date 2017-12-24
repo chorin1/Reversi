@@ -70,11 +70,14 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 	}
 	cout << "Connected to server!" << endl;
 	//TODO: show netsubmenu
-	//try push to git in new branch
-	cout << "Waiting for other players to join..." << endl;
-	int clientPlayerNum = client->getClientPlayerNum();
-	cout << "Another player joined..." << endl << endl;
-	if (clientPlayerNum==1) {
+
+	int clientPlayerNum = netSubMenu(client);
+
+	//cout << "Waiting for other players to join..." << endl;
+	//int clientPlayerNum = client->getClientPlayerNum();
+	//cout << "Another player joined..." << endl << endl;
+	if (clientPlayerNum == 1) {
+		cout << "Another player joined..." << endl << endl;
 		p1 = new HumanPlayer();
 		p2 = new NetPlayer(*client);
 		cout << "You will play as 'X'" << endl;
@@ -87,19 +90,32 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 }
 
 //TODO add gameListObject <-- start here
-/*
-void ReversiMenu::netSubMenu(int gameListObject) {
+
+int ReversiMenu::netSubMenu(Client* &client) {
 	cout << "------------------------------------------" << endl;
 	cout << "                Network Game              " << endl;
 	cout << "------------------------------------------" << endl << endl;
-	cout << "Current game sessions:" << endl;
+
 	//TODO: print all game sessions
+ 	int numberOfGames = client->numberOfGames();
+	if(numberOfGames == 0){
+		cout << "nobody wait for game you can create game or wait more and do refresh" << endl;
+	}
+	else{
+		cout << "Current game sessions:" << endl;
+		std::vector <std::string> nameOfGames = client->receiveSerialized();
+		//print the list of the games
+		for (int i = 1; i <= numberOfGames; i++){
+			cout << i << "." << nameOfGames[i] << endl;
+		}
+	}
 	cout << endl << endl;
+	cout << "Please select form the following options:" << endl;
 	cout << "1. Join game" << endl;
 	cout << "2. Create game" << endl;
 	cout << "3. Refresh list" << endl;
-	cout << "0. Exit" << endl << endl;
-	cout << "choice: ";
+	cout << "0. return to main menu" << endl << endl;
+
 
 	int netMenuChoice;
 	while (true) {
@@ -116,23 +132,78 @@ void ReversiMenu::netSubMenu(int gameListObject) {
 				cout << "Invalid choice. Please try again: ";
 		}
 	}
-	switch (netMenuChoice) {
-		case 1:
+	while(netMenuChoice == 3) {
 
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-			return;
+		switch (netMenuChoice) {
+			case 0:
+				client->disconnect();
+				selectFromMenu();
+				break;
+			case 1:
+				//todo:magic number check if we need that
+				client->numberOption(1);
+				cout << "choose which game you want to join" << endl;
+				int numberGameChoice;
+				while (true) {
+					cin >> numberGameChoice;
+					if (cin.fail()) {
+						cin.clear();
+						cin.ignore(32767, '\n');
+						cout << "Invalid choice. Please try again: ";
+					} else {
+						std::cin.ignore(32767, '\n');
+						if (numberGameChoice >= 1 && netMenuChoice <= numberOfGames) {
+							break;
+						} else
+							cout << "Invalid choice. Please try again: ";
+					}
+				}
+				client->numberOption(numberGameChoice);
+
+				return 0;
+
+				//break;
+			case 2:
+				//todo:magic number check if we need that
+				client->numberOption(2);
+				cout << "write the name of your game please " << endl;
+				std::string nameGame;
+
+				std::vector<std::string> namesGame;
+
+				cin >> nameGame;
+
+				namesGame.push_back(nameGame);
+
+				client->sendSerialized(namesGame);
+				cout << "Waiting for other players to join..." << endl;
+				return 1;
+				//break;
+			case 3:
+				client->numberOption(3);
+				cout << "Current game sessions:" << endl;
+				std::vector <std::string> nameOfGames = client->receiveSerialized();
+				//print the list of the games
+				for (int i = 1; i <= numberOfGames; i++)
+					cout << i << "." << nameOfGames[i] << endl;
+				cout << endl << endl;
+				cout << "Please select form the following options:" << endl;
+				cout << "1. Join game" << endl;
+				cout << "2. Create game" << endl;
+				cout << "3. Refresh list" << endl;
+				cout << "0. return to main menu" << endl << endl;
+
+				break;
+			default:
+				break;
+		}
 	}
 
 }
-*/
+
 void ReversiMenu::selectFromMenu() {
 	cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
-	cout << "         -A Game By Nathan & Ben-     " << endl;
+	cout << "         -A Game By Nitai & Ben-     " << endl;
 	cout << "------------------------------------------" << endl << endl;
 	cout << "Please select form the following options:" << endl;
 	cout << "1. Play against a human player." << endl;

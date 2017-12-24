@@ -27,4 +27,6 @@ private:
 	static GameType getMenuChoice();
 	// get reference to client and player pointers. set up client and create network player.
 	static void makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2);
+	//menu for net game.
+	static int netSubMenu(Client* &client);
 };
