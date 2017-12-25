@@ -7,15 +7,16 @@
 #include "CloseCommand.h"
 #include "ListGamesCommand.h"
 #include "StartCommand.h"
+#include "Server.h"
 
-CommandsManager::CommandsManager(Server& server) {
+CommandsManager::CommandsManager(Server &server) {
 	commandsMap["play"] = new PlayCommand(server);
 	commandsMap["close"] = new CloseCommand(server);
 	commandsMap["list_games"] = new ListGamesCommand(server);
     commandsMap["start"] = new StartCommand(server);
 }
 
-void CommandsManager::executeCommand(std::string &command, const std::vector<std::string> &args,
+void CommandsManager::executeCommand(std::string &command, std::vector<std::string> &args,
 									 int senderSocket, int otherSocket) {
 	if (commandsMap.count(command)==0) {
 		std::cout << "Trying to execute unknown command: " << command << std::endl;

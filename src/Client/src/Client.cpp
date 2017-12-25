@@ -23,11 +23,6 @@ using std::cout;
 using std::endl;
 using std::string;
 
-//TODO: no need to send endgame (will be sent outside) when client destructs
-//must set static members globally
-//const GameModel::Pos Client::noMovePos = GameModel::Pos(-5,-5);
-//const GameModel::Pos Client::endGamePos = GameModel::Pos(-1,-1);
-
 Client::Client() {
 	const char* serverIP;
 	int port;

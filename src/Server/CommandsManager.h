@@ -9,9 +9,9 @@
 
 class CommandsManager {
 public:
-	CommandsManager(Server& server);
+	CommandsManager(Server &server);
 	~CommandsManager();
-	void executeCommand(std::string &command, const std::vector<std::string> &args,
+	void executeCommand(std::string &command, std::vector<std::string> &args,
 										 int senderSocket=0, int otherSocket=0);
 private:
 	std::map<std::string, Command *> commandsMap;

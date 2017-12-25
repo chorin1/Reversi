@@ -69,66 +69,32 @@ void Server::start() {
 	socklen_t clientAddressLen;
 
 	while (true) {
-
+		int clientSocket = 0;
 		cout << "Waiting for client connections..." << endl;
-		int socketP1 = 0;
-		int socketP2 = 0;
-
 		try {
-			socketP1 = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
-			cout << "Client1 connected" << endl;
-			if (socketP1 == -1)
-				throw "Error on accepting client1";
-
-			socketP2 = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
-			cout << "Client2 connected" << endl;
-			if (socketP2 == -1)
-				throw "Error on accepting client2";
-
-			// send each player his player number by connection order
-			int send = 1;
-			int n = write(socketP1, &send, sizeof(int));
-			if (n==-1)
-				throw "Error sending player number";
-			if (n==0)
-				throw "Client1 disconnected";
-
-			send = 2;
-			n = write(socketP2, &send, sizeof(int));
-			if (n==-1)
-				throw "Error sending player number";
-			if (n==0)
-				throw "Client2 disconnected";
-
+			clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
+			cout << "Client #" << clientSocket << " connected" << endl;
+			if (clientSocket == -1)
+				throw "Error on accepting client";
+			CommandsManager commandmngr(*this);
+			std::vector<std::string> netMessage = receiveSerialized(clientSocket);
+			commandmngr.executeCommand(netMessage.front(), netMessage, clientSocket);
 		} catch (const char* msg) {
-			cout << "couldn't set up connection. Reason: " << msg << endl;
+			cout << "Error with client #" << clientSocket << " Reason: " << msg << endl;
 			continue;
 		}
-
-		try {
-			//begin the game (start sending moves from one client to the other)
-			handleClients(socketP1, socketP2);
-		} catch (const char* msg) {
-			cout << "error handling clients. reason: " << msg << endl;
-		}
-
-		//close communication
-        cout << "Closing Sockets to both players.." << endl;
-		close(socketP1);
-		close(socketP2);
 	}
 }
 
 void Server::handleClients(int socketP1,int socketP2) {
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
-	//todo: remove temporary create commandmanager here
-	CommandsManager cmmndManager(*this);
 	bool closedGame = false;
 	do {
 		try {
+			CommandsManager commandmngr(*this);
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
-			cmmndManager.executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
+			commandmngr.executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
 			// to check if clients disconnected
 			if (netMessage.front()=="close")
 				closedGame = true;

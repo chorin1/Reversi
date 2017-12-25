@@ -6,7 +6,7 @@
 
 void PlayCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
 	if (senderSocket == 0 || otherSocket == 0)
-		throw "didn't get sockets in PlayCommand::execute";
+		throw "From PlayCommand::execute - can't play, one of the sockets is empty";
 	// if player has no moves
 	if (args.at(1)=="noMove")
 		return;
