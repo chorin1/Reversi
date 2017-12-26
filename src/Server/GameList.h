@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <map>
+#include <string>
 #include "GameSession.h"
 
 // singleton class containing the gamelist
@@ -15,10 +16,11 @@ public:
         static GameList instance; // static singleton, guaranteed to be destroyed
         return instance;
     }
+    std::map <std::string, GameSession*> gameSessionMap;
+    pthread_mutex_t gameListMutex;
 private:
-    std::map <std::string, GameSession*> m_gameSessionMap;
     GameList() {};
     GameList(const GameList&) {} // Prevent construction by copying
     GameList& operator=(const GameList&) {} // Prevent assignment
-    ~GameList() {} // Prevent unwanted destruction
+    ~GameList(); // Prevent unwanted destruction
 };

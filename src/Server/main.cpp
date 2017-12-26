@@ -1,24 +1,39 @@
 /*
  *  Reversi - Advanced Programming 1
  *  By Nitai Halle & Ben Chorin
- *  Ex: #4
+ *  Ex: #5
  *  Server main
  */
 
 #include <iostream>
+#include <string>
 #include "Server.h"
 #include <stdlib.h>
-#include "GameList.h"
 using std::cout;
 using std::endl;
 
 int main() {
+    cout << "Welcome to the Reversi amazing multi-threaded server Ver 0.5" << endl;
+    cout << "------------------------------------------------------------" << endl << endl;
+    cout << "type \"exit\" at any time to close the server" << endl;
+    Server server;
     try {
-		Server server;
         server.start();
     } catch (const char *msg) {
-        cout << "Cannot start server. Reason: " << msg << endl;
-        exit(1);
+        cout << "Couldn't start server. Reason: " << msg << endl;
+        exit(-1);
     }
+    std::string input;
+    bool quit = false;
+    do {
+        std::getline(std::cin,input);
+        if (input!="exit")
+            cout << "unknown command: " << input << endl;
+        else
+            quit = true;
+    } while(!quit);
+
+    server.stop();
+
     return 0;
 }

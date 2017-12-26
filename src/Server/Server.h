@@ -15,6 +15,9 @@
 #include "GameSession.h"
 #include "CommandsManager.h"
 
+#define MAX_CONNECTED_CLIENTS 2
+#define MAX_BUFFER_SIZE 512
+
 class CommandsManager;
 
 class Server {
@@ -39,12 +42,13 @@ public:
     std::vector<std::string> receiveSerialized(int &fromSocket);
     void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 
-    //TODO - move gamelist
-    std::map <std::string, GameSession*> gameList;
-
+    // handle a session between 2 clients
+    void HandleSession(int clientSocket, int clientSocket2);
 private:
     int port;
     int serverSocket;
-    void handleClients(int clientSocket,int clientSocket2);
     CommandsManager* commManager;
+
+    pthread_mutex_t threadListMutex;
+    std::vector<pthread_t> threadsList;
 };

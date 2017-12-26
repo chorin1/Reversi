@@ -3,6 +3,7 @@
 *
 */
 
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -11,26 +12,24 @@
 #include <stdlib.h>
 #include <fstream>
 #include <cassert>
+#include <pthread.h>
 #include "Server.h"
-#include "CommandsManager.h"
+#include "GameList.h"
 
 using std::string;
 using std::cout;
 using std::endl;
 
-#define MAX_CONNECTED_CLIENTS 2
-#define MAX_BUFFER_SIZE 512
-
 Server::Server(int port) : port(port), serverSocket(0) {
 	cout << "Setting up server on custom port " << port << endl;
-    commManager = new CommandsManager(*this);
+	commManager = new CommandsManager(*this);
 }
 
 Server::Server() {
 	std::ifstream configFile;
 	configFile.open("serverConfig.txt");
 	if (!configFile.is_open())
-		throw("Error opening serverConfig.txt");
+		cout << "Error opening serverConfig.txt" << endl;
 
 	string inputStr;
 	configFile >> inputStr;
@@ -38,19 +37,15 @@ Server::Server() {
 
 	port = atoi(inputStr.c_str());
 	if (port < 1 || port > 65535)
-		throw("Error parsing port from config file");
+		cout << "Error parsing port from config file" << endl;
 
 	cout << "Setting up server on port " << port << endl;
 	serverSocket = 0;
-    commManager = new CommandsManager(*this);
+	commManager = new CommandsManager(*this);
 }
 
 Server::~Server() {
-	std::map<std::string, GameSession*>::iterator it;
-	for (it = gameList.begin(); it != gameList.end(); it++) {
-		delete it->second;
-	}
-    delete commManager;
+	delete commManager;
 }
 
 void Server::start() {
@@ -80,7 +75,7 @@ void Server::start() {
 			if (clientSocket == -1)
 				throw "Error on accepting client";
 			std::vector<std::string> netMessage = receiveSerialized(clientSocket);
-            commManager->executeCommand(netMessage.front(), netMessage, clientSocket);
+			commManager->executeCommand(netMessage.front(), netMessage, clientSocket);
 		} catch (const char* msg) {
 			cout << "Error with client #" << clientSocket << " Reason: " << msg << endl;
 			continue;
@@ -88,29 +83,48 @@ void Server::start() {
 	}
 }
 
-void Server::handleClients(int socketP1,int socketP2) {
+void Server::HandleSession(int socketP1, int socketP2) {
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
 	bool closedGame = false;
 	do {
 		try {
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
-            commManager->executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
+			commManager->executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
 			// to check if clients disconnected
 			if (netMessage.front()=="close")
 				closedGame = true;
 		} catch (const char *msg) {
-			throw;
+			cout << msg << endl;
+			closedGame = true;
 		}
-        currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
-        otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
+		currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
+		otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
 	} while (!closedGame);
-
-	//kill thread
 }
 
 void Server::stop() {
+	// close listener socket
+	cout << "closing listener socket" << endl;
 	close(serverSocket);
+	// close all handle sockets
+	pthread_mutex_lock(&GameList::getInstance().gameListMutex);
+	std::map <std::string, GameSession*> &sessionMap = GameList::getInstance().getInstance().gameSessionMap;
+	for (std::map <std::string, GameSession*>::iterator it = sessionMap.begin(); it!=sessionMap.end(); ++it) {
+		cout << "closing socket #" << it->second->player1Socket << endl;
+		close(it->second->player1Socket);
+		cout << "closing socket #" << it->second->player2Socket << endl;
+		close(it->second->player2Socket);
+	}
+	pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+
+	cout << "closing threads" << endl;
+	pthread_mutex_lock(&threadListMutex);
+	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
+		pthread_join(*it, NULL);
+	}
+	pthread_mutex_unlock(&threadListMutex);
+	cout << "all threads closed" << endl;
 }
 
 std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
