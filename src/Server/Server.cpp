@@ -23,6 +23,7 @@ using std::endl;
 
 Server::Server(int port) : port(port), serverSocket(0) {
 	cout << "Setting up server on custom port " << port << endl;
+    commManager = new CommandsManager(*this);
 }
 
 Server::Server() {
@@ -41,6 +42,7 @@ Server::Server() {
 
 	cout << "Setting up server on port " << port << endl;
 	serverSocket = 0;
+    commManager = new CommandsManager(*this);
 }
 
 Server::~Server() {
@@ -48,6 +50,7 @@ Server::~Server() {
 	for (it = gameList.begin(); it != gameList.end(); it++) {
 		delete it->second;
 	}
+    delete commManager;
 }
 
 void Server::start() {
@@ -76,9 +79,8 @@ void Server::start() {
 			cout << "Client #" << clientSocket << " connected" << endl;
 			if (clientSocket == -1)
 				throw "Error on accepting client";
-			CommandsManager commandmngr(*this);
 			std::vector<std::string> netMessage = receiveSerialized(clientSocket);
-			commandmngr.executeCommand(netMessage.front(), netMessage, clientSocket);
+            commManager->executeCommand(netMessage.front(), netMessage, clientSocket);
 		} catch (const char* msg) {
 			cout << "Error with client #" << clientSocket << " Reason: " << msg << endl;
 			continue;
@@ -92,9 +94,8 @@ void Server::handleClients(int socketP1,int socketP2) {
 	bool closedGame = false;
 	do {
 		try {
-			CommandsManager commandmngr(*this);
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
-			commandmngr.executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
+            commManager->executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
 			// to check if clients disconnected
 			if (netMessage.front()=="close")
 				closedGame = true;

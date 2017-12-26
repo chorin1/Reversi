@@ -13,6 +13,9 @@
 #include <string>
 #include <map>
 #include "GameSession.h"
+#include "CommandsManager.h"
+
+class CommandsManager;
 
 class Server {
 public:
@@ -36,10 +39,12 @@ public:
     std::vector<std::string> receiveSerialized(int &fromSocket);
     void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 
+    //TODO - move gamelist
     std::map <std::string, GameSession*> gameList;
-    friend class JoinCommand;
+
 private:
     int port;
     int serverSocket;
     void handleClients(int clientSocket,int clientSocket2);
+    CommandsManager* commManager;
 };

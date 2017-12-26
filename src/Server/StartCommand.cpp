@@ -18,6 +18,6 @@ void StartCommand::execute(std::vector<std::string> &args, int senderSocket, int
 	}
 	//TODO: put mutex on gamelist
 	//update gamelist with created game and player1 socket
-	m_server->gameList[args.at(1)] = new GameSession(senderSocket);
+	//m_server->gameList[args.at(1)] = new GameSession(senderSocket);
 	//TODO: release mutex on gamelist
 }

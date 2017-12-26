@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Server.h"
 #include <stdlib.h>
-
+#include "GameList.h"
 using std::cout;
 using std::endl;
 

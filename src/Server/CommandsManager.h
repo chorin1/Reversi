@@ -7,6 +7,9 @@
 #include "Server.h"
 #include "Command.h"
 
+class Server;
+class Command;
+
 class CommandsManager {
 public:
 	CommandsManager(Server &server);
