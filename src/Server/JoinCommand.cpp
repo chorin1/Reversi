@@ -20,7 +20,9 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
     //TODO: put mutex on gamelist
     it->second->player2Socket = senderSocket;
     // a temp object is created to release mutex quickly (without waiting messages to be sent to clients)
-    GameSession tempGS(it->second->player1Socket, it->second->player2Socket);
+    GameSession tempGS;
+    tempGS.player1Socket = it->second->player1Socket;
+    tempGS.player2Socket = it->second->player2Socket;
     //TODO: release mutex
 
     //send each client its role
@@ -32,5 +34,5 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
     m_server->sendSerialized(tempGS.player2Socket, msgVec);
 
     //TODO: create new thread
-    m_server->handleClients(tempGS.player1Socket, tempGS.player2Socket);
+    //m_server->handleClients(tempGS.player1Socket, tempGS.player2Socket);
 }

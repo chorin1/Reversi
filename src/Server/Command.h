@@ -5,6 +5,8 @@
 #include <string>
 #include "Server.h"
 
+class Server;
+
 class Command {
 public:
 	Command(Server &server): m_server(&server) {}
