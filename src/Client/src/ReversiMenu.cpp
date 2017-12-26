@@ -60,18 +60,12 @@ void ReversiMenu::beginGame() {
 
 // get reference to client and player pointers. set up client and create players
 void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2) {
-	try {
-		// create a client with config file
-		client = new Client();
-		client->connectToServer();
-	} catch (const char *msg) {
-		cout << "Failed to connect to server. Reason: " << msg << endl;
-		return;
-	}
-	cout << "Connected to server!" << endl;
-	//TODO: show netsubmenu
+
+    client = new Client();
 
 	int clientPlayerNum = netSubMenu(client);
+    if (clientPlayerNum == -1)
+        return;
 
 	//cout << "Waiting for other players to join..." << endl;
 	//int clientPlayerNum = client->getClientPlayerNum();
@@ -89,26 +83,40 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 	cout << "Starting a network game..." << endl << endl;
 }
 
-//TODO add gameListObject <-- start here
 
 int ReversiMenu::netSubMenu(Client* &client) {
+
+    try {
+        client->connectToServer();
+    } catch (const char *msg) {
+        cout << "Failed to connect to server. Reason: " << msg << endl;
+        return -1;
+    }
+    cout << "Connected to server!" << endl << endl << endl;
 	cout << "------------------------------------------" << endl;
 	cout << "                Network Game              " << endl;
 	cout << "------------------------------------------" << endl << endl;
 
-	//TODO: print all game sessions
- 	int numberOfGames = client->numberOfGames();
-	if(numberOfGames == 0){
+    std::vector <std::string> nameOfGames;
+
+    std::vector <std::string> command;
+    command.push_back("list_games");
+    client->sendSerialized(command);
+    std::vector <std::string> namesOfGames = client->receiveSerialized();
+    //only ask the list game
+    client->disconnect();
+	if(namesOfGames.size() == 0){
 		cout << "nobody wait for game you can create game or wait more and do refresh" << endl;
 	}
 	else{
 		cout << "Current game sessions:" << endl;
-		std::vector <std::string> nameOfGames = client->receiveSerialized();
+		nameOfGames = client->receiveSerialized();
 		//print the list of the games
-		for (int i = 1; i <= numberOfGames; i++){
+		for (int i = 1; i <= namesOfGames.size(); i++){
 			cout << i << "." << nameOfGames[i] << endl;
 		}
 	}
+    nameOfGames.clear();
 	cout << endl << endl;
 	cout << "Please select form the following options:" << endl;
 	cout << "1. Join game" << endl;
@@ -117,7 +125,7 @@ int ReversiMenu::netSubMenu(Client* &client) {
 	cout << "0. return to main menu" << endl << endl;
 
 
-	int netMenuChoice;
+	int netMenuChoice;// = getNetChoice();
 	while (true) {
 		cin >> netMenuChoice;
 		if (cin.fail()) {
@@ -132,72 +140,110 @@ int ReversiMenu::netSubMenu(Client* &client) {
 				cout << "Invalid choice. Please try again: ";
 		}
 	}
-	while(netMenuChoice == 3) {
+
+    command.pop_back();
+
+	do {
+        int getFromServer;
 
 		switch (netMenuChoice) {
 			case 0:
-				client->disconnect();
+
 				selectFromMenu();
 				break;
-			case 1:
-				//todo:magic number check if we need that
-				client->numberOption(1);
-				cout << "choose which game you want to join" << endl;
-				int numberGameChoice;
-				while (true) {
-					cin >> numberGameChoice;
-					if (cin.fail()) {
-						cin.clear();
-						cin.ignore(32767, '\n');
-						cout << "Invalid choice. Please try again: ";
-					} else {
-						std::cin.ignore(32767, '\n');
-						if (numberGameChoice >= 1 && netMenuChoice <= numberOfGames) {
-							break;
-						} else
-							cout << "Invalid choice. Please try again: ";
-					}
-				}
-				client->numberOption(numberGameChoice);
 
-				return 0;
+			case 1: {
+                try {
+                    client->connectToServer();
+                } catch (const char *msg) {
+                    cout << "Failed to connect to server. Reason: " << msg << endl;
+                    return -1;
+                }
 
-				//break;
-			case 2:
-				//todo:magic number check if we need that
-				client->numberOption(2);
-				cout << "write the name of your game please " << endl;
-				std::string nameGame;
+                command.push_back("list_games");
+                client->sendSerialized(command);
+                nameOfGames.pop_back();
+                nameOfGames = client->receiveSerialized();
+                cout << "choose which game you want to join" << endl;
+                int numberGameChoice;
 
-				std::vector<std::string> namesGame;
+                nameOfGames = client->receiveSerialized();
+                //print the list of the games
+                for (int i = 1; i <= nameOfGames.size(); i++) {
+                    cout << i << "." << nameOfGames[i] << endl;
+                }
+                while (true) {
+                    cin >> numberGameChoice;
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(32767, '\n');
+                        cout << "Invalid choice. Please try again: ";
+                    } else {
+                        std::cin.ignore(32767, '\n');
+                        if (numberGameChoice >= 1 && numberGameChoice <= nameOfGames.size()) {
+                            break;
+                        } else
+                            cout << "Invalid choice. Please try again: ";
+                    }
+                }
+                command.push_back("join");
+                command.push_back(nameOfGames[numberGameChoice]);
 
-				cin >> nameGame;
+                getFromServer = client->getClientPlayerNum();
 
-				namesGame.push_back(nameGame);
+                return getFromServer;
 
-				client->sendSerialized(namesGame);
-				cout << "Waiting for other players to join..." << endl;
-				return 1;
-				//break;
-			case 3:
-				client->numberOption(3);
-				cout << "Current game sessions:" << endl;
-				std::vector <std::string> nameOfGames = client->receiveSerialized();
-				//print the list of the games
-				for (int i = 1; i <= numberOfGames; i++)
-					cout << i << "." << nameOfGames[i] << endl;
-				cout << endl << endl;
-				cout << "Please select form the following options:" << endl;
-				cout << "1. Join game" << endl;
-				cout << "2. Create game" << endl;
-				cout << "3. Refresh list" << endl;
-				cout << "0. return to main menu" << endl << endl;
+                break;
+            }
 
-				break;
+            case 2: {
+
+                try {
+                    client->connectToServer();
+                } catch (const char *msg) {
+                    cout << "Failed to connect to server. Reason: " << msg << endl;
+                    return -1;
+                }
+
+                std::string nameGame;
+                cout << "choose name for your game" << endl;
+                std::getline(std::cin, nameGame);
+
+                command.push_back("start");
+                command.push_back(nameGame);
+
+                getFromServer = client->getClientPlayerNum();
+
+                return getFromServer;
+
+                break;
+            }
+			case 3: {
+
+                try {
+                    client->connectToServer();
+                } catch (const char *msg) {
+                    cout << "Failed to connect to server. Reason: " << msg << endl;
+                    return -1;
+                }
+                command.push_back("list_games");
+                client->sendSerialized(command);
+                nameOfGames.pop_back();
+                nameOfGames = client->receiveSerialized();
+                cout << "all the games they are wait to one more player" << endl;
+                nameOfGames = client->receiveSerialized();
+                //print the list of the games
+                for (int i = 1; i <= nameOfGames.size(); i++){
+                    cout << i << "." << nameOfGames[i] << endl;
+                }
+                netMenuChoice = getNetChoice();
+                break;
+            }
 			default:
+                netMenuChoice = getNetChoice();
 				break;
 		}
-	}
+	} while(netMenuChoice == 3);
 
 }
 
@@ -234,3 +280,21 @@ ReversiMenu::GameType ReversiMenu::getMenuChoice() {
 	}
 }
 
+int ReversiMenu::getNetChoice(){
+    int netMenuChoice;
+    while (true) {
+        cin >> netMenuChoice;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Invalid choice. Please try again: ";
+        } else {
+            std::cin.ignore(32767, '\n');
+            if (netMenuChoice >= 0 && netMenuChoice <= 3) {
+                break;
+            } else
+                cout << "Invalid choice. Please try again: ";
+        }
+    }
+    return netMenuChoice;
+}

@@ -29,4 +29,5 @@ private:
 	static void makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2);
 	//menu for net game.
 	static int netSubMenu(Client* &client);
+    static int getNetChoice();
 };
