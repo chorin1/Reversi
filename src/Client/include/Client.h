@@ -33,7 +33,14 @@ public:
 	std::vector<std::string> receiveSerialized();
 	void sendSerialized(std::vector<std::string> &vec);
 
-	void updateSessionName(std::string name);
+
+
+    std::vector<std::string> getListGames();
+
+    void joinGame(std::string name);
+
+    void createGame(std::string name);
+
 	//receive numbers of games in the server they wait to another player to start the game
 	int numberOfGames();
 	//send to server which game we want to join.

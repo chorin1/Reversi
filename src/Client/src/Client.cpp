@@ -209,9 +209,39 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	if (n == 0)
 		throw "client disconnected..";
 }
-void Client::updateSessionName(std::string name) {
-	sessionName = name;
+
+
+
+std::vector<std::string> Client::getListGames() {
+
+    std::vector <std::string> command;
+    command.push_back("list_games");
+    sendSerialized(command);
+    std::vector <std::string> namesOfGames = receiveSerialized();
+
+    return namesOfGames;
 }
+void Client::joinGame(std::string name) {
+
+    std::vector <std::string> command;
+    command.push_back("join");
+    command.push_back(name);
+    sessionName = name;
+
+    sendSerialized(command);
+}
+
+void Client::createGame(std::string name) {
+
+    std::vector <std::string> command;
+    command.push_back("create");
+    command.push_back(name);
+    sessionName = name;
+
+    sendSerialized(command);
+}
+
+
 int Client::numberOfGames(){
 	int numberOfGames = 0;
 	int n = read(clientSocket, &numberOfGames, sizeof(numberOfGames));
