@@ -105,6 +105,7 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
         switch (choice) {
 
             case 1 : {
+                client->connectToServer();
                 std::vector <std::string> namesOfGames = client->getListGames();
                 printListOfNetGames(namesOfGames);
                 int choiceGame = getNetChoice(namesOfGames.size());
@@ -114,6 +115,7 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
             }
 
             case 2 : {
+                client->connectToServer();
                 std::string nameGame;
                 cout << "choose name for your game" << endl;
                 std::getline(std::cin, nameGame);
@@ -124,7 +126,9 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 
             case 3 :
 
+                client->connectToServer();
                 printListOfNetGames(client->getListGames());
+                client->disconnect();
                 break;
             case 4 :
                 return;

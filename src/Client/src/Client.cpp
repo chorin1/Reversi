@@ -65,6 +65,7 @@ void Client::connectToServer() {
 	if (clientSocket == -1)
 		throw "Error opening socket";
 
+
 	//convert IP to network address
 	struct in_addr address;
 	if (!inet_aton(serverIP, &address))
