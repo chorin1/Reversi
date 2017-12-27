@@ -47,8 +47,6 @@ Client::Client() {
 	if (port < 1 || port > 65535)
 		throw("error parsing port from config file");
 
-	std::cout << "Trying to connect to " << serverIP << ":" << port << endl;
-
 	this->serverIP = serverIP;
 	this->serverPort = port;
 	clientSocket = 0;
@@ -83,6 +81,8 @@ void Client::connectToServer() {
 
 	if (connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error connecting to server";
+
+	cout << "Connected to server" << endl;
 }
 
 int Client::getClientPlayerNum() {

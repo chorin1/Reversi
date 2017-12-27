@@ -35,14 +35,20 @@ void ReversiMenu::beginGame() {
 				p1 = new HumanPlayer();
 				p2 = new AIPlayer();
 				cout << "Starting a game vs AI..." << endl << endl;
-			break;
+				break;
 			case PVP:
 				p1 = new HumanPlayer();
 				p2 = new HumanPlayer();
 				cout << "Starting a PVP game..." << endl << endl;
-			break;
+				break;
 			case NETWORK_GAME:
-				makeNetworkGamePlayers(client,p1,p2);
+				//makeNetworkGamePlayers(client,p1,p2);
+				client = new Client();
+				try {
+					client->connectToServer();
+				} catch (const char *msg) {
+					cout << "msg = " << msg << endl;
+				}
 				break;
 			default:
 				cout << "error in menu selection" << endl;
