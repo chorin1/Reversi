@@ -162,7 +162,7 @@ int ReversiMenu::netSubMenu(Client* &client) {
 
                 command.push_back("list_games");
                 client->sendSerialized(command);
-                nameOfGames.pop_back();
+                nameOfGames.clear();
                 nameOfGames = client->receiveSerialized();
                 cout << "choose which game you want to join" << endl;
                 int numberGameChoice;
@@ -188,6 +188,8 @@ int ReversiMenu::netSubMenu(Client* &client) {
                 }
                 command.push_back("join");
                 command.push_back(nameOfGames[numberGameChoice]);
+                client->sendSerialized(command);
+                client->updateSessionName(nameOfGames[numberGameChoice]);
 
                 getFromServer = client->getClientPlayerNum();
 
@@ -211,6 +213,9 @@ int ReversiMenu::netSubMenu(Client* &client) {
 
                 command.push_back("start");
                 command.push_back(nameGame);
+
+                client->sendSerialized(command);
+                client->updateSessionName(nameGame);
 
                 getFromServer = client->getClientPlayerNum();
 
@@ -236,6 +241,7 @@ int ReversiMenu::netSubMenu(Client* &client) {
                 for (int i = 1; i <= nameOfGames.size(); i++){
                     cout << i << "." << nameOfGames[i] << endl;
                 }
+                client->disconnect();
                 netMenuChoice = getNetChoice();
                 break;
             }

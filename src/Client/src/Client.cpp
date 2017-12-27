@@ -52,6 +52,7 @@ Client::Client() {
 	this->serverIP = serverIP;
 	this->serverPort = port;
 	clientSocket = 0;
+	sessionName = "";
 }
 
 Client::Client(const char *serverIP, int serverPort):
@@ -141,7 +142,7 @@ void Client::disconnect() {
 	// send close message to server
 	std::vector<std::string> closeMsg;
 	closeMsg.push_back("close");
-	closeMsg.push_back("sessionName");
+	closeMsg.push_back(sessionName);
 	sendSerialized(closeMsg);
 	close(clientSocket);
 }
@@ -208,7 +209,9 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	if (n == 0)
 		throw "client disconnected..";
 }
-
+void Client::updateSessionName(std::string name) {
+	sessionName = name;
+}
 int Client::numberOfGames(){
 	int numberOfGames = 0;
 	int n = read(clientSocket, &numberOfGames, sizeof(numberOfGames));
