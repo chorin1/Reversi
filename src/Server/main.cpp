@@ -14,8 +14,7 @@ using std::endl;
 
 int main() {
     cout << "Welcome to the Reversi amazing multi-threaded server Ver 0.5" << endl;
-    cout << "------------------------------------------------------------" << endl << endl;
-    cout << "type \"exit\" at any time to close the server" << endl;
+    cout << "------------------------------------------------------------" << endl;
     Server server;
     try {
         server.start();
@@ -23,6 +22,8 @@ int main() {
         cout << "Couldn't start server. Reason: " << msg << endl;
         exit(-1);
     }
+
+    cout << "type \"exit\" at any time to close the server" << endl;
     std::string input;
     bool quit = false;
     do {

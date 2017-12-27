@@ -10,17 +10,18 @@
 #include "CloseCommand.h"
 
 void CloseCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
-	//close socket
-	close(senderSocket);
-	close(otherSocket);
-
     pthread_mutex_lock(&GameList::getInstance().gameListMutex);
 	// delete game from gamelist
 	std::map<std::string, GameSession*> &sessionMap = GameList::getInstance().gameSessionMap;
 	std::map<std::string, GameSession*>::iterator it = sessionMap.find(args.at(1));
-	if (it != sessionMap.end()) {
+	if (it == sessionMap.end())
+		std::cout << "socket #" << senderSocket << " is trying to close a non-existing game" << std::endl;
+	else {
 		delete (it->second);
 		sessionMap.erase(it);
 	}
     pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+	//close sockets
+	close(senderSocket);
+	close(otherSocket);
 }

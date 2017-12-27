@@ -1,6 +1,8 @@
 //Command Interface
 
 #pragma once
+
+#include <iostream>
 #include <vector>
 #include <string>
 #include "Server.h"

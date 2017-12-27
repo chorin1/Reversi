@@ -16,11 +16,15 @@ void StartCommand::execute(std::vector<std::string> &args, int senderSocket, int
 		std::vector<std::string> msgVec;
 		msgVec.push_back("exists");
 		m_server->sendSerialized(senderSocket, msgVec);
-		return;
+		m_server->closeSocket(senderSocket);
+        pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+        return;
 	}
 	//add game to gamelist with with player1 socket
+	//TODO: delete cout
+	std::cout << "LOG, creating game: " << args.at(1) << std::endl;
     GameList::getInstance().gameSessionMap[args.at(1)] = new GameSession(senderSocket);
     pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
 
-	m_server->deleteCurrThread();
+	// socket REMAINS OPEN so another player can join
 }

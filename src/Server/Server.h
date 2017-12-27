@@ -44,7 +44,12 @@ public:
 
     // handle a session between 2 clients
     void HandleSession(int clientSocket, int clientSocket2);
+
+    // stop and delete current thread from threadlist
     void deleteCurrThread();
+
+    // close the socket
+    void closeSocket(int socketToClose);
 private:
     int port;
     int serverSocket;
@@ -52,4 +57,9 @@ private:
 
     pthread_mutex_t threadListMutex;
     std::vector<pthread_t> threadsList;
+
+    // static handle function to use with pthreads
+    static void *HandleClientStatic(void *object);
+    // function that each thread runs
+    void *handleClient(void *tArgs);
 };

@@ -22,14 +22,14 @@ void ListGamesCommand::execute(std::vector<std::string> &args, int senderSocket,
         if (it->second->player2Socket==0)
             listMsg.push_back(it->first);
     }
-
     pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
 
+    // send list of open games
     try {
         m_server->sendSerialized(senderSocket, listMsg);
     } catch (const char* msg) {
         handleErr(msg);
-        m_server->deleteCurrThread();
     }
-    m_server->deleteCurrThread();
+
+    m_server->closeSocket(senderSocket);
 }
