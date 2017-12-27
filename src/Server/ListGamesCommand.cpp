@@ -27,7 +27,9 @@ void ListGamesCommand::execute(std::vector<std::string> &args, int senderSocket,
 
     try {
         m_server->sendSerialized(senderSocket, listMsg);
-    } catch (const char *msg){
-        throw;
+    } catch (const char* msg) {
+        handleErr(msg);
+        m_server->deleteCurrThread();
     }
+    m_server->deleteCurrThread();
 }

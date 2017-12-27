@@ -38,6 +38,8 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
         // thread will handleSession until game ends
         m_server->HandleSession(p1socket, senderSocket);
     } catch (const char* msg) {
-        throw;
+        handleErr(msg);
+        m_server->deleteCurrThread();
     }
+    m_server->deleteCurrThread();
 }

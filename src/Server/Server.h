@@ -44,6 +44,7 @@ public:
 
     // handle a session between 2 clients
     void HandleSession(int clientSocket, int clientSocket2);
+    void deleteCurrThread();
 private:
     int port;
     int serverSocket;

@@ -189,3 +189,14 @@ void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
 	if (n == 0)
 		throw "client disconnected..";
 }
+
+void Server::deleteCurrThread() {
+    pthread_mutex_lock(&threadListMutex);
+    for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
+        if (pthread_equal(pthread_self(), *it)) {
+            cout << "Removing thread #" << pthread_self() << endl;
+            threadsList.erase(it);
+        }
+    }
+    pthread_mutex_unlock(&threadListMutex);
+}

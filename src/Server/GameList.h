@@ -13,7 +13,7 @@
 class GameList {
 public:
     static GameList& getInstance() {
-        static GameList instance; // static singleton, guaranteed to be destroyed
+        static GameList instance; // static singleton, guaranteed to be deleted
         return instance;
     }
     std::map <std::string, GameSession*> gameSessionMap;

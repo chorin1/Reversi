@@ -21,4 +21,6 @@ void StartCommand::execute(std::vector<std::string> &args, int senderSocket, int
 	//add game to gamelist with with player1 socket
     GameList::getInstance().gameSessionMap[args.at(1)] = new GameSession(senderSocket);
     pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+
+	m_server->deleteCurrThread();
 }

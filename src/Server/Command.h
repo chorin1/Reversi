@@ -14,4 +14,7 @@ public:
 	virtual ~Command() {}
 protected:
 	Server* m_server;
+	void handleErr(char const* msg) {
+		std::cout << "thread #" << pthread_self() << " threw " << msg << std::endl;
+	}
 };
