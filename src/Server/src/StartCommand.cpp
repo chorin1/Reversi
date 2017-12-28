@@ -5,9 +5,9 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "StartCommand.h"
-#include "GameList.h"
-#include "GameSession.h"
+#include "../include/StartCommand.h"
+#include "../include/GameList.h"
+#include "../include/GameSession.h"
 
 void StartCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
     // check if game exists

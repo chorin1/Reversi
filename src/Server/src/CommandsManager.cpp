@@ -2,18 +2,20 @@
 // Created by chorin on 12/22/17.
 //
 
-#include "CommandsManager.h"
-#include "PlayCommand.h"
-#include "CloseCommand.h"
-#include "ListGamesCommand.h"
-#include "StartCommand.h"
-#include "Server.h"
+#include "../include/CommandsManager.h"
+#include "../include/PlayCommand.h"
+#include "../include/CloseCommand.h"
+#include "../include/ListGamesCommand.h"
+#include "../include/StartCommand.h"
+#include "../include/Server.h"
+#include "../include/JoinCommand.h"
 
 CommandsManager::CommandsManager(Server &server) {
 	commandsMap["play"] = new PlayCommand(server);
 	commandsMap["close"] = new CloseCommand(server);
 	commandsMap["list_games"] = new ListGamesCommand(server);
     commandsMap["start"] = new StartCommand(server);
+	commandsMap["join"] = new JoinCommand(server);
 }
 
 void CommandsManager::executeCommand(std::string &command, std::vector<std::string> &args,

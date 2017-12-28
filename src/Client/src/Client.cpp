@@ -24,8 +24,6 @@ using std::endl;
 using std::string;
 
 Client::Client() {
-	const char* serverIP;
-	int port;
 
 	std::ifstream configFile;
 	configFile.open("config.txt");
@@ -38,16 +36,15 @@ Client::Client() {
 	if (inputStr.find(':') == std::string::npos)
 		throw("error parsing config file");
 
-	string serverIPstring = inputStr.substr(0, inputStr.find(':'));
-	serverIP = serverIPstring.c_str();
+	serverIP = inputStr.substr(0, inputStr.find(':'));
+
 
 	string serverPortString = inputStr.substr(inputStr.find(':') + 1);
-	port = atoi(serverPortString.c_str());
+	int port = atoi(serverPortString.c_str());
 
 	if (port < 1 || port > 65535)
 		throw("error parsing port from config file");
 
-	this->serverIP = serverIP;
 	this->serverPort = port;
 	clientSocket = 0;
 }
@@ -57,6 +54,8 @@ Client::Client(const char *serverIP, int serverPort):
 }
 
 void Client::connectToServer() {
+	cout << "Connecting to " << serverIP << ":" << serverPort << endl;
+	const char* IPcharp = serverIP.c_str();
 	// Create a socket point
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (clientSocket == -1)
@@ -64,7 +63,7 @@ void Client::connectToServer() {
 
 	//convert IP to network address
 	struct in_addr address;
-	if (!inet_aton(serverIP, &address))
+	if (!inet_aton(IPcharp, &address))
 		throw "Can't parse IP address";
 	struct hostent *server;
 	server = gethostbyaddr((const void* )&address, sizeof(address), AF_INET);
@@ -82,15 +81,22 @@ void Client::connectToServer() {
 	if (connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error connecting to server";
 
-	cout << "Connected to server" << endl;
+	cout << "Connected.." << endl;
 }
 
 int Client::getClientPlayerNum() {
-	int clientsPlayerNum = 0;
-	int n = read(clientSocket, &clientsPlayerNum, sizeof(clientsPlayerNum));
-	if (n == -1)
-		throw "Error reading player num from socket";
-	return clientsPlayerNum;
+	std::vector<std::string> msgVec;
+	try {
+		std::vector<std::string> msgVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	if (msgVec.front() == "player1")
+		return 1;
+	if (msgVec.front() == "player2")
+		return 2;
+	else
+		throw "Error: got other message while expecting player number from server";
 }
 
 GameModel::Pos Client::getMove() {
@@ -116,7 +122,6 @@ GameModel::Pos Client::getMove() {
 	throw "didn't get a compatible message from Server";
 }
 
-
 void Client::sendMove(GameModel::Pos pos) {
 	std::vector<std::string> messageVec;
 	// set up a vector of "play", "X", "Y"
@@ -137,13 +142,13 @@ void Client::sendMove(GameModel::Pos pos) {
 	}
 }
 
-void Client::disconnect() {
+void Client::closeSession() {
 	// send close message to server
-	std::vector<std::string> closeMsg;
-	closeMsg.push_back("close");
-	closeMsg.push_back("sessionName");
-	sendSerialized(closeMsg);
-	close(clientSocket);
+	std::vector<std::string> msgVec;
+	msgVec.push_back("close");
+	msgVec.push_back(sessionName);
+	sendSerialized(msgVec);
+	disconnect();
 }
 
 std::vector<std::string> Client::receiveSerialized() {
@@ -156,7 +161,7 @@ std::vector<std::string> Client::receiveSerialized() {
 	if (n ==- 1)
 		throw "Error reading string size";
 	if (n == 0)
-		throw "client disconnected..";
+		throw "server disconnected..";
 
 	//TODO: remove cout
 	cout << "expecting size of: " << stringSize << " bytes" << endl;
@@ -164,7 +169,7 @@ std::vector<std::string> Client::receiveSerialized() {
 	if (n == -1)
 		throw "Error getting serialized msg";
 	if (n == 0)
-		throw "client disconnected..";
+		throw "server disconnected..";
 
 	//TODO: remove cout
 	cout << "Got full buffer: " << msgBuffer << endl;
@@ -200,11 +205,84 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	if (n == -1)
 		throw "Error writing length to socket";
 	if (n == 0)
-		throw "client disconnected..";
+		throw "server disconnected..";
 
 	n = write(clientSocket, &msgBuffer, msgSize);
 	if (n == -1)
 		throw "Error writing buffer to socket";
 	if (n == 0)
-		throw "client disconnected..";
+		throw "server disconnected..";
+}
+
+Client::~Client() {
+	disconnect();
+}
+
+void Client::disconnect() {
+	close(clientSocket);
+}
+
+std::vector<std::string> Client::getOpenSessions() {
+	std::vector<std::string> msgVec;
+	msgVec.push_back("list_games");
+	try {
+		sendSerialized(msgVec);
+		msgVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	return msgVec;
+}
+
+int Client::joinGame(std::string gameName) {
+	if (gameName.find('~')!=string::npos || gameName.find(' ')!=string::npos ||
+			gameName.empty() || gameName.find("empty")!=string::npos)
+		throw "illegal game name entered";
+	std::vector<std::string> msgVec;
+	msgVec.push_back("join");
+	msgVec.push_back(gameName);
+	try {
+		sendSerialized(msgVec);
+		msgVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	if (msgVec.at(0) == "not exist")
+		throw "game with this name is full or doesn't exist";
+	if (msgVec.at(0) == "player1")
+		return 1;
+	if (msgVec.at(0) == "player2")
+		return 2;
+	throw "got errored message from server while trying to create game";
+}
+
+int Client::createGame(std::string gameName) {
+	if (gameName.find('~')!=string::npos || gameName.find(' ')!=string::npos ||
+		gameName.empty() || gameName.find("empty")!=string::npos)
+		throw "illegal game name entered";
+	std::vector<std::string> msgVec;
+	msgVec.push_back("start");
+	msgVec.push_back(gameName);
+	try {
+		sendSerialized(msgVec);
+		cout << "waiting for another player to join.." << endl;
+		msgVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	if (msgVec.at(0) == "exists")
+		throw "game with this name already exists";
+	if (msgVec.at(0) == "player1")
+		return 1;
+	if (msgVec.at(0) == "player2")
+		return 2;
+	throw "got errored message from server while trying to create game";
+}
+
+const string &Client::getSessionName() const {
+	return sessionName;
+}
+
+void Client::setSessionName(const string &sessionName) {
+	Client::sessionName = sessionName;
 }

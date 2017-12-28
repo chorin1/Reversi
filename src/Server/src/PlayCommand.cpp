@@ -2,7 +2,7 @@
 // Created by chorin on 12/22/17.
 //
 
-#include "PlayCommand.h"
+#include "../include/PlayCommand.h"
 
 void PlayCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
 	if (senderSocket == 0 || otherSocket == 0)

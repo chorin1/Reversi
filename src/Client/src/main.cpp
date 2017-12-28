@@ -5,14 +5,14 @@
  *  Game main
  */
 
-#include "../include/ReversiMenu.h"
+#include "../include/GameMaker.h"
 #include <iostream>
 
 int main() {
-	while (ReversiMenu::m_choice != 0) {
-		ReversiMenu::selectFromMenu();
-		ReversiMenu::beginGame();
-		std::cin.get();
-	}
+	GameMaker game;
+	do  {
+		game.mainMenuSelection();
+		game.beginGame();
+	} while (game.m_choice != GameMaker::GAME_TYPE_EXIT);
 	return 0;
 }

@@ -17,7 +17,7 @@ public:
 	Client();
 	// create a client with a custom server IP & port
 	Client(const char *serverIP, int serverPort);
-	~Client() {disconnect();}
+	~Client();
 
 	// connect to the designated server
 	void connectToServer();
@@ -29,12 +29,23 @@ public:
 	GameModel::Pos getMove();
 	// disconnect from server
 	void disconnect();
+	// close game session from server
+	void closeSession();
+
+	// methods for getting game list from server, joining a game and creating a new game
+	std::vector<std::string> getOpenSessions();
+	int joinGame(std::string gameName);
+	int createGame(std::string gameName);
+
+	const std::string &getSessionName() const;
+	void setSessionName(const std::string &sessionName);
+
 private:
-	const char *serverIP;
+	//const char *serverIP;
+	std::string serverIP;
 	int serverPort;
 	int clientSocket;
 	std::string sessionName;
-
 	// send and receive serialized data from socket (each string is separated by '~')
 	std::vector<std::string> receiveSerialized();
 	void sendSerialized(std::vector<std::string> &vec);

@@ -5,8 +5,8 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "JoinCommand.h"
-#include "GameList.h"
+#include "../include/JoinCommand.h"
+#include "../include/GameList.h"
 
 void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
 	std::vector<std::string> msgVec;

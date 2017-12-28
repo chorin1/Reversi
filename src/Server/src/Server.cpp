@@ -13,8 +13,8 @@
 #include <fstream>
 #include <cassert>
 #include <pthread.h>
-#include "Server.h"
-#include "GameList.h"
+#include "../include/Server.h"
+#include "../include/GameList.h"
 
 using std::string;
 using std::cout;
@@ -64,13 +64,15 @@ void Server::start() {
 	serverAddress.sin_port = htons(port);
 	if (bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error binding";
-
 	listen(serverSocket, MAX_CONNECTED_CLIENTS);
+
+	cout << "ready to accept new connections.." << endl;
 
 	//define client socket structures
 	struct sockaddr_in clientAddress;
 	socklen_t clientAddressLen;
 
+    //TODO: thread this loop
 	while (true) {
 		int tempSocket = 0;
 		tempSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
@@ -78,7 +80,7 @@ void Server::start() {
 			cout << "Error on client accept" << endl;
 		else {
 			cout << "Client connected!" << endl;
-			// create new struct with client socket for thread
+			// create new struct with client socket & server pointer for thread
 			HandleClientThreadArgs *newClientArgs = (HandleClientThreadArgs *) malloc(sizeof(HandleClientThreadArgs));
 			newClientArgs->serverP = this;
 			newClientArgs->socket = tempSocket;
@@ -95,7 +97,7 @@ void Server::start() {
 			pthread_mutex_unlock(&threadListMutex);
 		}
 	}
-	/* OLD ONE THREADED CODE
+	/* OLD ONE-THREADED CODE
 	while (true) {
 		int clientSocket = 0;
 		cout << "Waiting for client connections..." << endl;
@@ -134,29 +136,7 @@ void Server::HandleSession(int socketP1, int socketP2) {
 	} while (!closedGame);
 }
 
-void Server::stop() {
-	// close listener socket
-	cout << "closing listener socket" << endl;
-	close(serverSocket);
-	// close all handle sockets
-	pthread_mutex_lock(&GameList::getInstance().gameListMutex);
-	std::map <std::string, GameSession*> &sessionMap = GameList::getInstance().getInstance().gameSessionMap;
-	for (std::map <std::string, GameSession*>::iterator it = sessionMap.begin(); it!=sessionMap.end(); ++it) {
-		cout << "closing socket #" << it->second->player1Socket << endl;
-		close(it->second->player1Socket);
-		cout << "closing socket #" << it->second->player2Socket << endl;
-		close(it->second->player2Socket);
-	}
-	pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
 
-	cout << "closing threads" << endl;
-	pthread_mutex_lock(&threadListMutex);
-	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
-		pthread_join(*it, NULL);
-	}
-	pthread_mutex_unlock(&threadListMutex);
-	cout << "all threads closed" << endl;
-}
 
 std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
 	int stringSize = 0;
@@ -165,7 +145,7 @@ std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
 
 	// get string size
 	int n = read(fromSocket, &stringSize, sizeof(stringSize));
-	if (n ==- 1)
+	if (n == -1)
 		throw "Error reading string size";
 	if (n == 0)
 		throw "client disconnected..";
@@ -227,6 +207,7 @@ void Server::deleteCurrThread() {
 		if (pthread_equal(pthread_self(), *it)) {
 			cout << "Removing thread #" << pthread_self() << endl;
 			threadsList.erase(it);
+			break;
 		}
 	}
 	pthread_mutex_unlock(&threadListMutex);
@@ -249,6 +230,34 @@ void* Server::handleClient(void *tArgs) {
 	std::vector<std::string> netMessage = receiveSerialized(args->socket);
 	commManager->executeCommand(netMessage.front(), netMessage, args->socket);
 
+	//TODO: delete couts
+	cout << "finished execute command, deleting thread" << endl;
 	deleteCurrThread();
+	cout << "finished deleting thread, freeing args" << endl;
 	free(args);
+	cout << "thread is ending" << endl;
+}
+
+void Server::stop() {
+	// close listener socket
+	cout << "closing listener socket" << endl;
+	close(serverSocket);
+	// close all handle sockets
+	pthread_mutex_lock(&GameList::getInstance().gameListMutex);
+	std::map <std::string, GameSession*> &sessionMap = GameList::getInstance().getInstance().gameSessionMap;
+	for (std::map <std::string, GameSession*>::iterator it = sessionMap.begin(); it!=sessionMap.end(); ++it) {
+		cout << "closing socket #" << it->second->player1Socket << endl;
+		close(it->second->player1Socket);
+		cout << "closing socket #" << it->second->player2Socket << endl;
+		close(it->second->player2Socket);
+	}
+	pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+
+	cout << "closing threads" << endl;
+	pthread_mutex_lock(&threadListMutex);
+	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
+		pthread_cancel(*it);
+	}
+	pthread_mutex_unlock(&threadListMutex);
+	cout << "all threads closed" << endl;
 }

@@ -6,8 +6,8 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "GameList.h"
-#include "CloseCommand.h"
+#include "../include/GameList.h"
+#include "../include/CloseCommand.h"
 
 void CloseCommand::execute(std::vector<std::string> &args, int senderSocket, int otherSocket) {
     pthread_mutex_lock(&GameList::getInstance().gameListMutex);

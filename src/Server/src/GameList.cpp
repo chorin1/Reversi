@@ -2,7 +2,7 @@
 // Created by chorin on 12/26/17.
 //
 
-#include "GameList.h"
+#include "../include/GameList.h"
 
 GameList::~GameList() {
     std::map<std::string, GameSession*>::iterator it;

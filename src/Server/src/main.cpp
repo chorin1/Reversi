@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include "Server.h"
+#include "../include/Server.h"
 #include <stdlib.h>
 using std::cout;
 using std::endl;
