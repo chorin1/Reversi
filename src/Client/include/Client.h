@@ -37,17 +37,15 @@ public:
 	int joinGame(std::string gameName);
 	int createGame(std::string gameName);
 
+	// current session name
 	const std::string &getSessionName() const;
 	void setSessionName(const std::string &sessionName);
 
-private:
-	std::string serverIP;
-public:
 	const std::string &getServerIP() const;
-
 	int getServerPort() const;
 
 private:
+	std::string serverIP;
 	int serverPort;
 	int clientSocket;
 	std::string sessionName;

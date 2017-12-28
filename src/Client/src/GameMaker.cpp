@@ -12,6 +12,7 @@
 #include "../include/ConsoleView.h"
 #include "../include/Client.h"
 #include "../include/NetPlayer.h"
+#include "../include/Logging.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -55,6 +56,9 @@ void GameMaker::beginGame() {
 		delete p1;
 		delete p2;
 		delete client;
+		p1 = NULL;
+		p2 = NULL;
+		client = NULL;
 	}
 }
 
@@ -68,9 +72,9 @@ void GameMaker::makeNetworkGamePlayers() {
 		cout << "Connecting to " << client->getServerIP() << ":" << client->getServerPort() << endl;
 		client->connectToServer();
 		cout << "Connected to server.." << endl;
-		cout << "------------------------------------------" << endl;
-		cout << "|               Network Game             |" << endl;
-		cout << "------------------------------------------" << endl << endl;
+		cout << "--------------------------------------------------" << endl;
+		cout << "|                  Network Game                  |" << endl;
+		cout << "--------------------------------------------------" << endl << endl;
 		printCurrentGameSessions();
 		client->disconnect();
 	} catch (const char *msg) {
@@ -101,8 +105,11 @@ void GameMaker::makeNetworkGamePlayers() {
 					client->disconnect();
 					break;
 				case NET_MENU_EXIT:
+                    delete (client);
+                    client = NULL;
 					return;
 				default:
+                    throw "error in menu selection";
 					break;
 			}
 		} catch (const char *errMsg) {

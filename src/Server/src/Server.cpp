@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include "../include/Server.h"
 #include "../include/GameList.h"
+#include "../include/Logging.h"
 
 using std::string;
 using std::cout;
@@ -55,6 +56,40 @@ Server::~Server() {
 	delete commManager;
 }
 
+void* Server::startThreadedStatic (void *tArgs) {
+	Server* serverP = (Server*) tArgs;
+	int &listeningSocket = serverP->serverSocket;
+	struct sockaddr_in clientAddress;
+	socklen_t clientAddressLen;
+
+	while (listeningSocket != -1) {
+			int tempSocket = 0;
+			tempSocket = accept(listeningSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
+			if (tempSocket == -1)
+				cout << "Error on client accept" << endl;
+			else {
+				cout << "client connected!" << endl;
+				// create new struct with client socket & server pointer for thread
+				HandleClientThreadArgs *newClientArgs = (HandleClientThreadArgs *) malloc(sizeof(HandleClientThreadArgs));
+				newClientArgs->serverP = serverP;
+				newClientArgs->socket = tempSocket;
+				//handle client with a new thread
+				pthread_t new_thread;
+				int rc = pthread_create(&new_thread, NULL, Server::HandleClientStatic, newClientArgs);
+				if (rc) {
+					cout << "Error: unable to create thread, " << rc << endl;
+					exit(-1);
+				}
+				// add new thread to thread list
+
+				LOG("After accept! locking thread mutex");
+				pthread_mutex_lock(&serverP->threadListMutex);
+				serverP->threadsList.push_back(new_thread);
+				pthread_mutex_unlock(&serverP->threadListMutex);
+				LOG("After accept! mutex released");
+			}
+	}
+}
 void Server::start() {
 	serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket == -1)
@@ -70,57 +105,17 @@ void Server::start() {
 
 	cout << "ready to accept new connections.." << endl;
 
-	//define client socket structures
-	struct sockaddr_in clientAddress;
-	socklen_t clientAddressLen;
-
-    //TODO: thread this loop
-	while (true) {
-		int tempSocket = 0;
-		tempSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
-		if (tempSocket == -1)
-			cout << "Error on client accept" << endl;
-		else {
-			cout << "Client connected!" << endl;
-			// create new struct with client socket & server pointer for thread
-			HandleClientThreadArgs *newClientArgs = (HandleClientThreadArgs *) malloc(sizeof(HandleClientThreadArgs));
-			newClientArgs->serverP = this;
-			newClientArgs->socket = tempSocket;
-			//handle client with a new thread
-			pthread_t new_thread;
-			int rc = pthread_create(&new_thread, NULL, Server::HandleClientStatic, newClientArgs);
-			if (rc) {
-				cout << "Error: unable to create thread, " << rc << endl;
-				exit(-1);
-			}
-			// add new thread to thread list
-
-			cout << "After accept! locking thread mutex" << endl;
-			pthread_mutex_lock(&threadListMutex);
-			cout << "After accept! adding new thread to vector" << endl;
-			threadsList.push_back(new_thread);
-			cout << "After accept! releasing mutex" << endl;
-			pthread_mutex_unlock(&threadListMutex);
-			cout << "After accept! mutex released" << endl;
-		}
+	// start a new thread for main listening socket
+	pthread_t mainThread;
+	int nc = pthread_create(&mainThread, NULL, Server::startThreadedStatic, this);
+	if (nc) {
+		cout << "Error: unable to create main thread, " << mainThread << endl;
+		exit(-1);
 	}
-	/* OLD ONE-THREADED CODE
-	while (true) {
-		int clientSocket = 0;
-		cout << "Waiting for client connections..." << endl;
-		try {
-			clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientAddressLen);
-			cout << "Client #" << clientSocket << " connected" << endl;
-			if (clientSocket == -1)
-				throw "Error on accepting client";
-			std::vector<std::string> netMessage = receiveSerialized(clientSocket);
-			commManager->executeCommand(netMessage.front(), netMessage, clientSocket);
-		} catch (const char* msg) {
-			cout << "Error with client #" << clientSocket << " Reason: " << msg << endl;
-			continue;
-		}
-	}
-	 */
+	// add main listening thread to thread list
+	pthread_mutex_lock(&threadListMutex);
+	threadsList.push_back(mainThread);
+	pthread_mutex_unlock(&threadListMutex);
 }
 
 void Server::HandleSession(int socketP1, int socketP2) {
@@ -156,17 +151,14 @@ std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
 	if (n == 0)
 		throw "client disconnected..";
 
-	//TODO: remove cout
-	cout << "expecting size of: " << stringSize << " bytes" << endl;
+	LOG("expecting size of: " << stringSize << " bytes");
 	n = read(fromSocket, &msgBuffer, stringSize);
 	if (n == -1)
 		throw "Error getting serialized msg";
 	if (n == 0)
 		throw "client disconnected..";
 
-	//TODO: remove cout
-	cout << "Got full buffer: " << msgBuffer << endl;
-
+	LOG("Got full buffer: " << msgBuffer);
 	// convert c_string buffer with separating '~' to vector of std::string, '\0' is neglected
 	int i=0;
 	while (i < stringSize-1) {
@@ -191,9 +183,8 @@ void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
 	}
 	// now msgBuffer is filled with messages separated by '~' with '\0' at end
 	int msgSize = sizeof(char)*(strlen(msgBuffer)+1);
-	//TODO: remove couts
-	cout << "sending message: " << msgBuffer << endl;
-	cout << "size is: " << msgSize << endl;
+	LOG("sending message: " << msgBuffer);
+	LOG("size is: " << msgSize);
 	int n = write(toSocket, &msgSize, sizeof(int));
 	if (n == -1)
 		throw "Error writing length to socket";
@@ -208,18 +199,18 @@ void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
 }
 
 void Server::deleteCurrThread() {
-    cout << "inside deleteCurrThread()" << endl;
+    LOG("inside deleteCurrThread()");
 	pthread_mutex_lock(&threadListMutex);
-    cout << "inside deleteCurrThread() - mutex locked" << endl;
+    LOG("inside deleteCurrThread() - mutex locked");
 	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
 		if (pthread_equal(pthread_self(), *it)) {
-			cout << "Removing thread #" << pthread_self() << endl;
+			cout << "removing thread #" << pthread_self() << endl;
 			threadsList.erase(it);
 			break;
 		}
 	}
-    cout << "inside deleteCurrThread() - mutex unlocked" << endl;
 	pthread_mutex_unlock(&threadListMutex);
+	LOG("inside deleteCurrThread() - mutex unlocked");
 }
 
 void Server::closeSocket(int socketToClose) {
@@ -233,25 +224,23 @@ void* Server::HandleClientStatic(void* object) {
 
 void* Server::handleClient(void *tArgs) {
 	struct HandleClientThreadArgs *args = (struct HandleClientThreadArgs *) tArgs;
-		cout << "in handleClient, handling socket #" << args->socket << endl;
+	cout << "handling socket #" << args->socket << endl;
 
 	// get and exec command from new connected client
 	std::vector<std::string> netMessage = receiveSerialized(args->socket);
-	cout << "EXECUTING COMMAND" << endl;
 	commManager->executeCommand(netMessage.front(), netMessage, args->socket);
 
-	//TODO: delete couts
-	cout << "finished execute command, deleting thread" << endl;
+	LOG("finished execute command, deleting thread");
 	deleteCurrThread();
-	cout << "finished deleting thread, freeing args" << endl;
 	free(args);
-	cout << "thread is ending" << endl;
+	LOG("thread is ending");
 }
 
 void Server::stop() {
-	// close listener socket
 	cout << "closing listener socket" << endl;
 	close(serverSocket);
+	// change server socket so main thread will know to end
+	serverSocket = -1;
 	// close all handle sockets
 	pthread_mutex_lock(&GameList::getInstance().gameListMutex);
 	std::map <std::string, GameSession*> &sessionMap = GameList::getInstance().getInstance().gameSessionMap;

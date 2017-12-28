@@ -9,8 +9,11 @@
 #include <string>
 #include "../include/Server.h"
 #include <stdlib.h>
+
+using std::cin;
 using std::cout;
 using std::endl;
+using std::getline;
 
 int main() {
     cout << "Welcome to the Reversi amazing multi-threaded server Ver 0.5" << endl;
@@ -22,12 +25,11 @@ int main() {
         cout << "Couldn't start server. Reason: " << msg << endl;
         exit(-1);
     }
-
-    cout << "type \"exit\" at any time to close the server" << endl;
+    cout << "type \"exit\" at any time to close the server" << endl << endl;
     std::string input;
     bool quit = false;
     do {
-        std::getline(std::cin,input);
+        getline(cin,input);
         if (input!="exit")
             cout << "unknown command: " << input << endl;
         else

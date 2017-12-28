@@ -16,6 +16,7 @@
 #include <sstream>
 #include "../include/Client.h"
 #include <string>
+#include "../include/Logging.h"
 
 #define MAX_BUFFER_SIZE 512
 
@@ -160,17 +161,14 @@ std::vector<std::string> Client::receiveSerialized() {
 	if (n == 0)
 		throw "server disconnected..";
 
-	//TODO: remove cout
-	cout << "expecting size of: " << stringSize << " bytes" << endl;
+	LOG("expecting size of: " << stringSize << " bytes");
 	n = read(clientSocket, &msgBuffer, stringSize);
 	if (n == -1)
 		throw "Error getting serialized msg";
 	if (n == 0)
 		throw "server disconnected..";
 
-	//TODO: remove cout
-	cout << "Got full buffer: " << msgBuffer << endl;
-
+	LOG("Got full buffer: " << msgBuffer);
 	// convert c_string buffer with separating '~' to vector of std::string, '\0' is neglected
 	int i=0;
 	while (i < stringSize-1) {
@@ -189,24 +187,25 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	char msgBuffer[MAX_BUFFER_SIZE] = "";
 	for (std::vector<std::string>::const_iterator i = vec.begin(); i != vec.end(); ++i) {
 		// check that a buffer overflow will not occur
-		assert(strlen(msgBuffer) + i->length() + 2 < MAX_BUFFER_SIZE);
+		if (strlen(msgBuffer) + i->length() + 2 > MAX_BUFFER_SIZE)
+            throw "trying to send too long message will cause buffer overflow";
 		strcat(msgBuffer, i->c_str());
 		strcat(msgBuffer, "~");
 	}
 	// now msgBuffer is filled with messages separated by '~' with '\0' at end
 	int msgSize = sizeof(char) * (strlen(msgBuffer) + 1);
-	//TODO: remove couts
-	cout << "sending message: " << msgBuffer << endl;
-	cout << "size is: " << msgSize << endl;
+
+	LOG("sending message: " << msgBuffer);
+	LOG("size is: " << msgSize << endl);
 	int n = write(clientSocket, &msgSize, sizeof(int));
 	if (n == -1)
-		throw "Error writing length to socket";
+		throw "error writing length to socket";
 	if (n == 0)
 		throw "server disconnected..";
 
 	n = write(clientSocket, &msgBuffer, msgSize);
 	if (n == -1)
-		throw "Error writing buffer to socket";
+		throw "error writing buffer to socket";
 	if (n == 0)
 		throw "server disconnected..";
 }
@@ -262,7 +261,7 @@ int Client::createGame(std::string gameName) {
 	msgVec.push_back(gameName);
 	try {
 		sendSerialized(msgVec);
-		cout << "Game " << gameName << " created!" << endl;
+		cout << "Game \"" << gameName << "\" created!" << endl;
 		cout << "Waiting for another player to join.." << endl;
 		msgVec = receiveSerialized();
 	} catch (const char* msg) {

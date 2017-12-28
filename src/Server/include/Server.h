@@ -62,4 +62,7 @@ private:
     static void *HandleClientStatic(void *object);
     // function that each thread runs
     void *handleClient(void *tArgs);
+
+    // static handle function to open thread on the main socket
+    static void *startThreadedStatic(void *tArgs);
 };
