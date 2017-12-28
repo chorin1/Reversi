@@ -19,7 +19,7 @@ public:
     std::map <std::string, GameSession*> gameSessionMap;
     pthread_mutex_t gameListMutex;
 private:
-    GameList() {};
+    GameList();
     GameList(const GameList&) {} // Prevent construction by copying
     GameList& operator=(const GameList&) {} // Prevent assignment
     ~GameList(); // Prevent unwanted destruction

@@ -17,6 +17,7 @@ void CloseCommand::execute(std::vector<std::string> &args, int senderSocket, int
 	if (it == sessionMap.end())
 		std::cout << "socket #" << senderSocket << " is trying to close a non-existing game" << std::endl;
 	else {
+		std::cout << "closing game " << it->first << std::endl;
 		delete (it->second);
 		sessionMap.erase(it);
 	}

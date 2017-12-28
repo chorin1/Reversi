@@ -28,6 +28,7 @@ struct HandleClientThreadArgs {
 Server::Server(int port) : port(port), serverSocket(0) {
 	cout << "Setting up server on custom port " << port << endl;
 	commManager = new CommandsManager(*this);
+	pthread_mutex_init(&threadListMutex, NULL);
 }
 
 Server::Server() {
@@ -47,6 +48,7 @@ Server::Server() {
 	cout << "Setting up server on port " << port << endl;
 	serverSocket = 0;
 	commManager = new CommandsManager(*this);
+	pthread_mutex_init(&threadListMutex, NULL);
 }
 
 Server::~Server() {
@@ -92,9 +94,14 @@ void Server::start() {
 				exit(-1);
 			}
 			// add new thread to thread list
+
+			cout << "After accept! locking thread mutex" << endl;
 			pthread_mutex_lock(&threadListMutex);
+			cout << "After accept! adding new thread to vector" << endl;
 			threadsList.push_back(new_thread);
+			cout << "After accept! releasing mutex" << endl;
 			pthread_mutex_unlock(&threadListMutex);
+			cout << "After accept! mutex released" << endl;
 		}
 	}
 	/* OLD ONE-THREADED CODE
@@ -128,6 +135,7 @@ void Server::HandleSession(int socketP1, int socketP2) {
 			if (netMessage.front()=="close")
 				closedGame = true;
 		} catch (const char *msg) {
+			// if there is an error with one of the clients. end the game.
 			cout << msg << endl;
 			closedGame = true;
 		}
@@ -135,8 +143,6 @@ void Server::HandleSession(int socketP1, int socketP2) {
 		otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
 	} while (!closedGame);
 }
-
-
 
 std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
 	int stringSize = 0;
@@ -202,7 +208,9 @@ void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
 }
 
 void Server::deleteCurrThread() {
+    cout << "inside deleteCurrThread()" << endl;
 	pthread_mutex_lock(&threadListMutex);
+    cout << "inside deleteCurrThread() - mutex locked" << endl;
 	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
 		if (pthread_equal(pthread_self(), *it)) {
 			cout << "Removing thread #" << pthread_self() << endl;
@@ -210,6 +218,7 @@ void Server::deleteCurrThread() {
 			break;
 		}
 	}
+    cout << "inside deleteCurrThread() - mutex unlocked" << endl;
 	pthread_mutex_unlock(&threadListMutex);
 }
 
@@ -228,6 +237,7 @@ void* Server::handleClient(void *tArgs) {
 
 	// get and exec command from new connected client
 	std::vector<std::string> netMessage = receiveSerialized(args->socket);
+	cout << "EXECUTING COMMAND" << endl;
 	commManager->executeCommand(netMessage.front(), netMessage, args->socket);
 
 	//TODO: delete couts

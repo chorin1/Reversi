@@ -54,7 +54,6 @@ Client::Client(const char *serverIP, int serverPort):
 }
 
 void Client::connectToServer() {
-	cout << "Connecting to " << serverIP << ":" << serverPort << endl;
 	const char* IPcharp = serverIP.c_str();
 	// Create a socket point
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -80,8 +79,6 @@ void Client::connectToServer() {
 
 	if (connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error connecting to server";
-
-	cout << "Connected.." << endl;
 }
 
 int Client::getClientPlayerNum() {
@@ -237,7 +234,7 @@ std::vector<std::string> Client::getOpenSessions() {
 int Client::joinGame(std::string gameName) {
 	if (gameName.find('~')!=string::npos || gameName.find(' ')!=string::npos ||
 			gameName.empty() || gameName.find("empty")!=string::npos)
-		throw "illegal game name entered";
+		throw "Illegal game name entered.";
 	std::vector<std::string> msgVec;
 	msgVec.push_back("join");
 	msgVec.push_back(gameName);
@@ -247,13 +244,13 @@ int Client::joinGame(std::string gameName) {
 	} catch (const char* msg) {
 		throw;
 	}
-	if (msgVec.at(0) == "not exist")
-		throw "game with this name is full or doesn't exist";
+	if (msgVec.at(0) == "notexist")
+		throw "There are no open games with the name you've entered.";
 	if (msgVec.at(0) == "player1")
 		return 1;
 	if (msgVec.at(0) == "player2")
 		return 2;
-	throw "got errored message from server while trying to create game";
+	throw "Got errored message from server while trying to create game.";
 }
 
 int Client::createGame(std::string gameName) {
@@ -265,18 +262,19 @@ int Client::createGame(std::string gameName) {
 	msgVec.push_back(gameName);
 	try {
 		sendSerialized(msgVec);
-		cout << "waiting for another player to join.." << endl;
+		cout << "Game " << gameName << " created!" << endl;
+		cout << "Waiting for another player to join.." << endl;
 		msgVec = receiveSerialized();
 	} catch (const char* msg) {
 		throw;
 	}
 	if (msgVec.at(0) == "exists")
-		throw "game with this name already exists";
+		throw "Game with this name already exists.";
 	if (msgVec.at(0) == "player1")
 		return 1;
 	if (msgVec.at(0) == "player2")
 		return 2;
-	throw "got errored message from server while trying to create game";
+	throw "Got bad message from server while trying to create game.";
 }
 
 const string &Client::getSessionName() const {
@@ -285,4 +283,12 @@ const string &Client::getSessionName() const {
 
 void Client::setSessionName(const string &sessionName) {
 	Client::sessionName = sessionName;
+}
+
+const string &Client::getServerIP() const {
+	return serverIP;
+}
+
+int Client::getServerPort() const {
+	return serverPort;
 }

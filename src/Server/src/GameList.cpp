@@ -10,3 +10,7 @@ GameList::~GameList() {
         delete it->second;
     }
 }
+
+GameList::GameList() {
+    pthread_mutex_init(&gameListMutex, NULL);
+}

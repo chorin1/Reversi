@@ -41,8 +41,13 @@ public:
 	void setSessionName(const std::string &sessionName);
 
 private:
-	//const char *serverIP;
 	std::string serverIP;
+public:
+	const std::string &getServerIP() const;
+
+	int getServerPort() const;
+
+private:
 	int serverPort;
 	int clientSocket;
 	std::string sessionName;

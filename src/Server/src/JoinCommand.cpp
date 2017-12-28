@@ -12,12 +12,18 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
 	std::vector<std::string> msgVec;
 
 	pthread_mutex_lock(&GameList::getInstance().gameListMutex);
-	std::map<std::string, GameSession*>::iterator it = GameList::getInstance().gameSessionMap.find(args.at(1));
+	std::map<std::string, GameSession*> &gameMap = GameList::getInstance().gameSessionMap;
+	std::map<std::string, GameSession*>::iterator it = gameMap.find(args.at(1));
 	// if game doesnt exist
-	if (it == GameList::getInstance().gameSessionMap.end()) {
-		msgVec.push_back("not exist");
-		m_server->sendSerialized(senderSocket, msgVec);
-		m_server->closeSocket(senderSocket);
+	if (it == gameMap.end()) {
+		pthread_mutex_unlock(&GameList::getInstance().gameListMutex);
+		msgVec.push_back("notexist");
+		try {
+			m_server->sendSerialized(senderSocket, msgVec);
+			m_server->closeSocket(senderSocket);
+		} catch (const char* msg) {
+			handleErr(msg);
+		}
         return;
 	}
 

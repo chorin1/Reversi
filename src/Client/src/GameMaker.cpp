@@ -46,6 +46,10 @@ void GameMaker::beginGame() {
 		if (p1!=NULL && p2!=NULL) {
 			Controller controller(model, view, *p1, *p2);
 			controller.beginGame();
+			if (client!= NULL)
+				try {
+					client->closeSession();
+				} catch (char const* msg) {}
 			std::cin.ignore();
 		}
 		delete p1;
@@ -61,12 +65,13 @@ void GameMaker::makeNetworkGamePlayers() {
 	int clientPlayerNum = 0;
 	try {
 		client = new Client();
+		cout << "Connecting to " << client->getServerIP() << ":" << client->getServerPort() << endl;
 		client->connectToServer();
+		cout << "Connected to server.." << endl;
 		cout << "------------------------------------------" << endl;
 		cout << "|               Network Game             |" << endl;
 		cout << "------------------------------------------" << endl << endl;
 		printCurrentGameSessions();
-		showNetSubMenu();
 		client->disconnect();
 	} catch (const char *msg) {
 		cout << msg << endl;
@@ -76,6 +81,7 @@ void GameMaker::makeNetworkGamePlayers() {
 	}
 
 	do {
+		showNetSubMenu();
 		netMenuChoice = getNetworkMenuChoice();
 		try {
 			switch (netMenuChoice) {
@@ -102,19 +108,22 @@ void GameMaker::makeNetworkGamePlayers() {
 		} catch (const char *errMsg) {
 			cout << errMsg << endl;
 		}
-		showNetSubMenu();
 	} while (clientPlayerNum==0);
 
 	client->setSessionName(netGameName);
 	if (clientPlayerNum==1) {
 		p1 = new HumanPlayer();
 		p2 = new NetPlayer(*client);
-		cout << "You will play as 'X'" << endl;
+		cout << "Starting network Game - you will play as 'X'" << endl;
+		cout << "Press enter to being.." << endl;
+		std::cin.ignore();
 	}
 	else if (clientPlayerNum==2) {
 		p1 = new NetPlayer(*client);
 		p2 = new HumanPlayer();
-		cout << "You will play as 'O'" << endl;
+		cout << "Starting network Game - you will play as 'O'" << endl;
+		cout << "Press enter to being.." << endl;
+		std::cin.ignore();
 	} else {
 		cout << "Error, didn't get player number from server..";
 		p1 = NULL;
@@ -127,7 +136,7 @@ void GameMaker::showNetSubMenu() {
 	cout << "1. Join game" << endl;
 	cout << "2. Create game" << endl;
 	cout << "3. Refresh list" << endl;
-	cout << "4. Exit" << endl << endl;
+	cout << "4. Back to main menu" << endl << endl;
 	cout << "choice: ";
 }
 
