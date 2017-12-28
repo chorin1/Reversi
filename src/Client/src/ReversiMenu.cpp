@@ -43,6 +43,13 @@ void ReversiMenu::beginGame() {
 				cout << "Starting a PVP game..." << endl << endl;
 			break;
 			case NETWORK_GAME:
+                client = new Client();
+                try {
+                    client->connectToServer();
+                } catch (const char *msg) {
+                    cout << "Failed to connect to server. Reason: " << msg << endl;
+                    return;
+                }
 				makeNetworkGamePlayers(client,p1,p2);
 				break;
 			default:
@@ -60,14 +67,16 @@ void ReversiMenu::beginGame() {
 }
 
 void ReversiMenu::printListOfNetGames(std::vector <std::string> namesOfGames) {
-    if(namesOfGames.size() == 0){
+    if(namesOfGames.empty()){
         cout << "nobody wait for game you can create game or wait more and do refresh" << endl;
     }
     else{
         cout << "Current game sessions:" << endl;
         //print the list of the games
-        for (int i = 1; i <= namesOfGames.size(); i++){
+        int i = 0;
+        for(std::vector<std::string>::iterator it = namesOfGames.begin(); it != namesOfGames.end(); ++it){
             cout << i << "." << namesOfGames[i] << endl;
+            i++;
         }
     }
 }
@@ -76,13 +85,6 @@ void ReversiMenu::printListOfNetGames(std::vector <std::string> namesOfGames) {
 void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &p2) {
 
 
-    try {
-        client = new Client();
-        client->connectToServer();
-    } catch (const char *msg) {
-        cout << "Failed to connect to server. Reason: " << msg << endl;
-        return;
-    }
     cout << "Connected to server!" << endl << endl << endl;
     cout << "------------------------------------------" << endl;
     cout << "                Network Game              " << endl;
@@ -100,7 +102,7 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
     cout << "4. return to main menu" << endl << endl;
 
     int choice;
-    do{
+
         choice = getNetChoice(4);
         switch (choice) {
 
@@ -126,16 +128,14 @@ void ReversiMenu::makeNetworkGamePlayers(Client* &client, Player* &p1, Player* &
 
             case 3 :
 
-                client->connectToServer();
-                printListOfNetGames(client->getListGames());
-                client->disconnect();
+                makeNetworkGamePlayers(client,p1,p2);
                 break;
             case 4 :
                 return;
             default:
                 break;
         }
-    } while (choice == 3);
+
 
     int clientPlayerNum = client->getClientPlayerNum();
 

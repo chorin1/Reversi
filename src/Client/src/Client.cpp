@@ -68,7 +68,7 @@ void Client::connectToServer() {
 
 	//convert IP to network address
 	struct in_addr address;
-	if (!inet_aton(serverIP, &address))
+	if (!inet_aton("127.0.0.1", &address))
 		throw "Can't parse IP address";
 	struct hostent *server;
 	server = gethostbyaddr((const void* )&address, sizeof(address), AF_INET);
@@ -88,11 +88,20 @@ void Client::connectToServer() {
 }
 
 int Client::getClientPlayerNum() {
-	int clientsPlayerNum = 0;
-	int n = read(clientSocket, &clientsPlayerNum, sizeof(clientsPlayerNum));
-	if (n == -1)
-		throw "Error reading player num from socket";
-	return clientsPlayerNum;
+
+	std::vector<std::string> messageVec;
+
+	try {
+		messageVec = receiveSerialized();
+	} catch (const char* msg) {
+		throw;
+	}
+	if(messageVec.front() == "player1")
+		return 1;
+	if(messageVec.front() == "player2")
+		return 2;
+	else
+		return -1;
 }
 
 GameModel::Pos Client::getMove() {
@@ -235,7 +244,7 @@ void Client::joinGame(std::string name) {
 void Client::createGame(std::string name) {
 
     std::vector <std::string> command;
-    command.push_back("create");
+    command.push_back("start");
     command.push_back(name);
     sessionName = name;
 
@@ -243,19 +252,3 @@ void Client::createGame(std::string name) {
 }
 
 
-int Client::numberOfGames(){
-	int numberOfGames = 0;
-	int n = read(clientSocket, &numberOfGames, sizeof(numberOfGames));
-	if (n == -1)
-		throw "Error reading number of games from socket";
-	return numberOfGames;
-}
-
-void Client::numberOption(int option){
-	int n = write(clientSocket, &option, sizeof(option));
-	if (n == -1)
-		throw "Error writing number of game from socket";
-	if (n == 0)
-		throw "client disconnect..";
-
-}
