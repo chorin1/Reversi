@@ -13,6 +13,7 @@
 #include <fstream>
 #include <cassert>
 #include <pthread.h>
+#include <csignal>
 #include "../include/Server.h"
 #include "../include/GameList.h"
 #include "../include/Logging.h"
@@ -90,19 +91,27 @@ void* Server::startThreadedStatic (void *tArgs) {
 			}
 	}
 }
+
 void Server::start() {
 	serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket == -1)
 		throw "Error opening socket";
 	struct sockaddr_in serverAddress;
 	bzero((void *) &serverAddress, sizeof(serverAddress));
+	int yes=1;
+	// make bind errors go away for socket re-use
+	if (setsockopt(serverSocket,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int)) == -1) {
+		perror("setsockopt");
+		exit(1);
+	}
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
 	serverAddress.sin_port = htons(port);
 	if (bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) == -1)
 		throw "Error binding";
 	listen(serverSocket, MAX_CONNECTED_CLIENTS);
-
+	//ignore SIGPIPE errors
+	signal(SIGPIPE, SIG_IGN);
 	cout << "ready to accept new connections.." << endl;
 
 	// start a new thread for main listening socket
