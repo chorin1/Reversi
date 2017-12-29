@@ -49,8 +49,8 @@ Client::Client() {
 
 	this->serverPort = port;
 	clientSocket = 0;
-    //ignore SIGPIPE errors
-    signal(SIGPIPE, SIG_IGN);
+	//ignore SIGPIPE errors
+	signal(SIGPIPE, SIG_IGN);
 }
 
 Client::Client(const char *serverIP, int serverPort):
