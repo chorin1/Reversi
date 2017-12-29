@@ -1,7 +1,10 @@
-//
-// Created by chorin on 12/28/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #5
+*  Simple logging header used for log
+*/
 
+// remove comment to print log messages
 //#define DEBUG
 
 #ifdef DEBUG

@@ -1,6 +1,7 @@
-//
-// Created by chorin on 12/22/17.
-//
+/*
+*  PlayCommand.cpp
+*
+*/
 
 #include "../include/PlayCommand.h"
 
@@ -15,4 +16,5 @@ void PlayCommand::execute(std::vector<std::string> &args, int senderSocket, int 
 	} catch (const char *msg){
 		throw;
 	}
+	// socket remains open for the ongoing session
 }

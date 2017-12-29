@@ -6,6 +6,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../exe")
 file(GLOB HEADER_FILES src/Client/include/*.h)
 file(GLOB SOURCE_FILES src/Client/src/*.cpp)
 
+file(GLOB SERVER_INCLUDE src/Server/include/*.h)
+file(GLOB SERVER_SOURCE src/Server/src/*.cpp)
+
 add_executable(ReversiGame ${SOURCE_FILES} ${HEADER_FILES})
 # add as library for google test
 add_library(ReversiLib STATIC ${SOURCE_FILES} ${HEADER_FILES})

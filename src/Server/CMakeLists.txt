@@ -3,4 +3,5 @@ project(Reversi)
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_FLAGS -pthread)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../../../exe")
-add_executable(Server src/main.cpp src/Server.cpp include/Server.h include/Command.h src/CommandsManager.cpp include/CommandsManager.h src/PlayCommand.cpp include/PlayCommand.h src/CloseCommand.cpp include/CloseCommand.h include/GameSession.h src/ListGamesCommand.cpp include/ListGamesCommand.h src/StartCommand.cpp include/StartCommand.h src/JoinCommand.cpp include/JoinCommand.h src/GameList.cpp include/GameList.h include/Logging.h)
+
+add_executable(Server ${SERVER_ICNLUDE} ${SERVER_SOURCE})

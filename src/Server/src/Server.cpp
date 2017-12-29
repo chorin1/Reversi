@@ -121,22 +121,21 @@ void Server::start() {
 void Server::HandleSession(int socketP1, int socketP2) {
 	int* currSocket = &socketP1;
 	int* otherSocket = &socketP2;
-	bool closedGame = false;
+	bool closedSession = false;
 	do {
 		try {
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
 			commManager->executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
-			// to check if clients disconnected
-			if (netMessage.front()=="close")
-				closedGame = true;
 		} catch (const char *msg) {
-			// if there is an error with one of the clients. end the game.
-			cout << msg << endl;
-			closedGame = true;
+			// if one of the clients disconnected/errored the game will end.
+			LOG(msg);
+			closedSession = true;
 		}
 		currSocket = (currSocket == &socketP1)? &socketP2 : &socketP1;
 		otherSocket = (otherSocket == &socketP1)? &socketP2 : &socketP1;
-	} while (!closedGame);
+	} while (!closedSession);
+	close(socketP1);
+	close(socketP2);
 }
 
 std::vector<std::string> Server::receiveSerialized(int &fromSocket) {
@@ -199,9 +198,9 @@ void Server::sendSerialized(int &toSocket, std::vector<std::string> &vec) {
 }
 
 void Server::deleteCurrThread() {
-    LOG("inside deleteCurrThread()");
+	LOG("inside deleteCurrThread()");
 	pthread_mutex_lock(&threadListMutex);
-    LOG("inside deleteCurrThread() - mutex locked");
+	LOG("inside deleteCurrThread() - mutex locked");
 	for (std::vector<pthread_t>::iterator it = threadsList.begin(); it!=threadsList.end(); ++it) {
 		if (pthread_equal(pthread_self(), *it)) {
 			cout << "removing thread #" << pthread_self() << endl;

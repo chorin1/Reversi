@@ -12,7 +12,6 @@
 #include "../include/ConsoleView.h"
 #include "../include/Client.h"
 #include "../include/NetPlayer.h"
-#include "../include/Logging.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -24,7 +23,7 @@ void GameMaker::beginGame() {
 	if (m_choice == GAME_TYPE_EXIT) {
 		cout << "Thank you for playing..." << endl;
 	} else {
-		GameModel model(4);
+		GameModel model;
 		ConsoleView view(model);
 		switch (m_choice) {
 			case PVC:
@@ -62,7 +61,6 @@ void GameMaker::beginGame() {
 	}
 }
 
-// get reference to client and player pointers. set up client and create players
 void GameMaker::makeNetworkGamePlayers() {
 	NetMenuOptions netMenuChoice;
 	std::string netGameName;
@@ -105,11 +103,11 @@ void GameMaker::makeNetworkGamePlayers() {
 					client->disconnect();
 					break;
 				case NET_MENU_EXIT:
-                    delete (client);
-                    client = NULL;
+					delete (client);
+					client = NULL;
 					return;
 				default:
-                    throw "error in menu selection";
+					throw "error in menu selection";
 					break;
 			}
 		} catch (const char *errMsg) {
@@ -122,14 +120,14 @@ void GameMaker::makeNetworkGamePlayers() {
 		p1 = new HumanPlayer();
 		p2 = new NetPlayer(*client);
 		cout << "Starting network Game - you will play as 'X'" << endl;
-		cout << "Press enter to being.." << endl;
+		cout << "Press enter to begin.." << endl;
 		std::cin.ignore();
 	}
 	else if (clientPlayerNum==2) {
 		p1 = new NetPlayer(*client);
 		p2 = new HumanPlayer();
 		cout << "Starting network Game - you will play as 'O'" << endl;
-		cout << "Press enter to being.." << endl;
+		cout << "Press enter to begin.." << endl;
 		std::cin.ignore();
 	} else {
 		cout << "Error, didn't get player number from server..";
@@ -148,9 +146,10 @@ void GameMaker::showNetSubMenu() {
 }
 
 void GameMaker::mainMenuSelection() {
-	cout << "      ~ Welcome to Reversi\\Othello ~     " << endl;
-	cout << "         -A Game By Nitai & Ben-     " << endl;
-	cout << "------------------------------------------" << endl << endl;
+	cout << "-----------------------------------------------" << endl;
+	cout << "       ~ Welcome to Reversi game ver.05 ~      " << endl;
+	cout << "            -A Game By Nitai & Ben-            " << endl;
+	cout << "-----------------------------------------------" << endl << endl;
 	cout << "Please select form the following options:" << endl;
 	cout << "1. Play against a human player." << endl;
 	cout << "2. Play against an AI player." << endl;

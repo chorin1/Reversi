@@ -1,6 +1,7 @@
-//
-// Created by chorin on 12/24/17.
-//
+/*
+*  JoinCommand.cpp
+*
+*/
 
 #include <map>
 #include <string>
@@ -24,7 +25,7 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
 		} catch (const char* msg) {
 			handleErr(msg);
 		}
-        return;
+		return;
 	}
 
 	// game exists!, update game list
@@ -43,6 +44,7 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
 		msgVec.push_back("player2");
 		m_server->sendSerialized(senderSocket, msgVec);
 
+		std::cout << "session \"" << args.at(1) << "\" has started" << std::endl;
 		// thread will handleSession until game ends
 		m_server->HandleSession(p1socket, senderSocket);
 	} catch (const char* msg) {

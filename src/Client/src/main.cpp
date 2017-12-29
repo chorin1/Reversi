@@ -1,12 +1,11 @@
 /*
  *  Reversi - Advanced Programming 1
  *  By Nitai Halle & Ben Chorin
- *  Ex: #4
+ *  Ex: #5
  *  Game main
  */
 
 #include "../include/GameMaker.h"
-#include <iostream>
 
 int main() {
 	GameMaker game;

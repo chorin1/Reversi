@@ -1,6 +1,9 @@
-//
-// Created by chorin on 12/22/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #5
+*  used in an ongoing session, the command will send the player move to the other socket.
+*  socket remains open.
+*/
 
 #pragma once
 #include <iostream>
@@ -11,5 +14,5 @@
 class PlayCommand : public Command {
 public:
 	PlayCommand(Server &server) : Command(server) {}
-	virtual void execute(std::vector<std::string> &args, int senderSocket = 0, int otherSocket = 0);
+	virtual void execute(std::vector<std::string> &args, int senderSocket, int otherSocket = 0);
 };

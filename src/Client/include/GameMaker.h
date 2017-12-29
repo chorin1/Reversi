@@ -1,9 +1,9 @@
 /**
 *  Reversi - Advanced Programming 1
-*  Ex: #3
-*  Main menu for game reversi.
+*  Ex: #5
+*  Main menu for the Reversi game.
 *  Shows the menu in the console and creates the game (controller, players and model)
-*  according to the user choice.
+*  according to the user choice. will also init a networked game with assist of class Client.
 */
 
 #pragma once
@@ -38,10 +38,14 @@ private:
 	Client *client;
 	void getMainMenuChoice();
 	NetMenuOptions getNetworkMenuChoice();
-	// get reference to client and player pointers. set up client and create network player.
-	void makeNetworkGamePlayers();
-	void printCurrentGameSessions();
-	void showNetSubMenu();
 
+	// set up client and create a NetPlayer.
+	void makeNetworkGamePlayers();
+
+	// print current game sessions from server
+	void printCurrentGameSessions();
+	// show the networked game sub-menu
+	void showNetSubMenu();
+	// get from user game name to join or create
 	std::string getDesiredGameNameFromUser();
 };

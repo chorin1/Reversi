@@ -1,6 +1,9 @@
-//
-// Created by chorin on 12/22/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #5
+*  the command manager creates and stores all available commands, whenever a request is being made
+*  the command manager will execute the correct command.
+*/
 
 #pragma once
 #include <map>
@@ -15,7 +18,7 @@ public:
 	CommandsManager(Server &server);
 	~CommandsManager();
 	void executeCommand(std::string &command, std::vector<std::string> &args,
-										 int senderSocket=0, int otherSocket=0);
+										 int senderSocket, int otherSocket=0);
 private:
 	std::map<std::string, Command *> commandsMap;
 };

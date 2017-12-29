@@ -1,6 +1,7 @@
-//
-// Created by chorin on 12/4/17.
-//
+/*
+*  NetPlayer.cpp
+*
+*/
 
 #include <iostream>
 #include "../include/NetPlayer.h"

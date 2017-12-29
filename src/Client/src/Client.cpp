@@ -14,8 +14,8 @@
 #include <cstdlib>
 #include <cassert>
 #include <sstream>
-#include "../include/Client.h"
 #include <string>
+#include "../include/Client.h"
 #include "../include/Logging.h"
 
 #define MAX_BUFFER_SIZE 512
@@ -82,27 +82,12 @@ void Client::connectToServer() {
 		throw "Error connecting to server";
 }
 
-int Client::getClientPlayerNum() {
-	std::vector<std::string> msgVec;
-	try {
-		std::vector<std::string> msgVec = receiveSerialized();
-	} catch (const char* msg) {
-		throw;
-	}
-	if (msgVec.front() == "player1")
-		return 1;
-	if (msgVec.front() == "player2")
-		return 2;
-	else
-		throw "Error: got other message while expecting player number from server";
-}
-
 GameModel::Pos Client::getMove() {
 	GameModel::Pos pos(0, 0);
 	std::vector<std::string> messageVec;
 
 	try {
-        messageVec = receiveSerialized();
+		messageVec = receiveSerialized();
 	} catch (const char* msg) {
 		throw;
 	}
@@ -123,7 +108,7 @@ GameModel::Pos Client::getMove() {
 void Client::sendMove(GameModel::Pos pos) {
 	std::vector<std::string> messageVec;
 	// set up a vector of "play", "X", "Y"
-    messageVec.push_back("play");
+	messageVec.push_back("play");
 	if (pos == NO_MOVE_POS)
 		messageVec.push_back("noMove");
 	else {
@@ -159,14 +144,14 @@ std::vector<std::string> Client::receiveSerialized() {
 	if (n ==- 1)
 		throw "Error reading string size";
 	if (n == 0)
-		throw "server disconnected..";
+		throw "got kicked out from server..";
 
 	LOG("expecting size of: " << stringSize << " bytes");
 	n = read(clientSocket, &msgBuffer, stringSize);
 	if (n == -1)
 		throw "Error getting serialized msg";
 	if (n == 0)
-		throw "server disconnected..";
+		throw "got kicked out from server..";
 
 	LOG("Got full buffer: " << msgBuffer);
 	// convert c_string buffer with separating '~' to vector of std::string, '\0' is neglected
@@ -188,7 +173,7 @@ void Client::sendSerialized(std::vector<std::string> &vec) {
 	for (std::vector<std::string>::const_iterator i = vec.begin(); i != vec.end(); ++i) {
 		// check that a buffer overflow will not occur
 		if (strlen(msgBuffer) + i->length() + 2 > MAX_BUFFER_SIZE)
-            throw "trying to send too long message will cause buffer overflow";
+			throw "trying to send too long message will cause buffer overflow";
 		strcat(msgBuffer, i->c_str());
 		strcat(msgBuffer, "~");
 	}
@@ -230,6 +215,18 @@ std::vector<std::string> Client::getOpenSessions() {
 	return msgVec;
 }
 
+int Client::extractPlayerNumFromVec(std::vector<std::string> &msgVec) {
+	std::string *msg = &msgVec.at(0);
+	if (msgVec.at(0) == "exists")
+		throw "Game with this name already exists.";
+	if (msgVec.at(0) == "notexist")
+		throw "There are no open games with the name you've entered.";
+	if (msgVec.at(0) == "player1")
+		return 1;
+	if (msgVec.at(0) == "player2")
+		return 2;
+	throw "Got errored message from server while trying to get player number game.";
+}
 int Client::joinGame(std::string gameName) {
 	if (gameName.find('~')!=string::npos || gameName.find(' ')!=string::npos ||
 			gameName.empty() || gameName.find("empty")!=string::npos)
@@ -240,16 +237,10 @@ int Client::joinGame(std::string gameName) {
 	try {
 		sendSerialized(msgVec);
 		msgVec = receiveSerialized();
+		return extractPlayerNumFromVec(msgVec);
 	} catch (const char* msg) {
 		throw;
 	}
-	if (msgVec.at(0) == "notexist")
-		throw "There are no open games with the name you've entered.";
-	if (msgVec.at(0) == "player1")
-		return 1;
-	if (msgVec.at(0) == "player2")
-		return 2;
-	throw "Got errored message from server while trying to create game.";
 }
 
 int Client::createGame(std::string gameName) {
@@ -264,16 +255,10 @@ int Client::createGame(std::string gameName) {
 		cout << "Game \"" << gameName << "\" created!" << endl;
 		cout << "Waiting for another player to join.." << endl;
 		msgVec = receiveSerialized();
+		return extractPlayerNumFromVec(msgVec);
 	} catch (const char* msg) {
 		throw;
 	}
-	if (msgVec.at(0) == "exists")
-		throw "Game with this name already exists.";
-	if (msgVec.at(0) == "player1")
-		return 1;
-	if (msgVec.at(0) == "player2")
-		return 2;
-	throw "Got bad message from server while trying to create game.";
 }
 
 const string &Client::getSessionName() const {

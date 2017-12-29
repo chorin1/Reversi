@@ -1,6 +1,11 @@
-//
-// Created by chorin on 12/24/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #5
+*  creates a new game session.
+*  updates the gamelist and tells the server to handle the session.
+*  returns a message to the client if game doesn't exist.
+*/
+
 
 #pragma once
 #include <iostream>
@@ -10,6 +15,6 @@
 
 class StartCommand : public Command {
 public:
-    StartCommand(Server &server) : Command(server) {}
-    virtual void execute(std::vector<std::string> &args, int senderSocket = 0, int otherSocket = 0);
+	StartCommand(Server &server) : Command(server) {}
+	virtual void execute(std::vector<std::string> &args, int senderSocket, int otherSocket = 0);
 };

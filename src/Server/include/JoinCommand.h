@@ -1,6 +1,10 @@
-//
-// Created by chorin on 12/24/17.
-//
+/**
+*  Reversi - Advanced Programming 1
+*  Ex: #5
+*  Join an open game session
+*  updates the gamelist and tells the server to handle the session.
+*  Returns a message to the client if game doesn't exist.
+*/
 
 #pragma once
 #include <iostream>
@@ -9,6 +13,6 @@
 
 class JoinCommand : public Command {
 public:
-    JoinCommand(Server &server) : Command(server) {}
-    virtual void execute(std::vector<std::string> &args, int senderSocket = 0, int otherSocket = 0);
+	JoinCommand(Server &server) : Command(server) {}
+	virtual void execute(std::vector<std::string> &args, int senderSocket, int otherSocket = 0);
 };

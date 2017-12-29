@@ -1,6 +1,7 @@
-//
-// Created by chorin on 12/22/17.
-//
+/*
+*  CommandManager.cpp
+*
+*/
 
 #include "../include/CommandsManager.h"
 #include "../include/PlayCommand.h"
@@ -14,7 +15,7 @@ CommandsManager::CommandsManager(Server &server) {
 	commandsMap["play"] = new PlayCommand(server);
 	commandsMap["close"] = new CloseCommand(server);
 	commandsMap["list_games"] = new ListGamesCommand(server);
-    commandsMap["start"] = new StartCommand(server);
+	commandsMap["start"] = new StartCommand(server);
 	commandsMap["join"] = new JoinCommand(server);
 }
 
