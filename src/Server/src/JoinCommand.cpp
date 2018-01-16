@@ -45,8 +45,9 @@ void JoinCommand::execute(std::vector<std::string> &args, int senderSocket, int 
 		m_server->sendSerialized(senderSocket, msgVec);
 
 		std::cout << "session \"" << args.at(1) << "\" has started" << std::endl;
-		// thread will handleSession until game ends
-		m_server->HandleSession(p1socket, senderSocket);
+
+		// start a new session.
+		m_server->newSession(p1socket, senderSocket);
 	} catch (const char* msg) {
 		handleErr(msg);
 	}

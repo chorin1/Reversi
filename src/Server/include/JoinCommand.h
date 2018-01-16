@@ -1,6 +1,6 @@
 /**
 *  Reversi - Advanced Programming 1
-*  Ex: #5
+*  Ex: #7
 *  Join an open game session
 *  updates the gamelist and tells the server to handle the session.
 *  Returns a message to the client if game doesn't exist.
