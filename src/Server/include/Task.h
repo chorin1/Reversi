@@ -15,10 +15,10 @@ public:
     }
     virtual ~Task() {}
 private:
-    // function that the task executes
+    // pointer to the function that the task should execute
     void *(*func)(void *arg);
     // argument for the function
     void *arg;
-    // so threadPool can free arguments after execution
+    // so threadPool can free the arguments after execution
     friend class ThreadPool;
 };

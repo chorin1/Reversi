@@ -22,6 +22,7 @@ ThreadPool::ThreadPool(int threadsNum) : stopped(false) {
 			exit(-1);
 		}
 	}
+    // init mutex
 	pthread_mutex_init(&taskQueueLock, NULL);
 }
 void* ThreadPool::execute(void *arg) {
@@ -40,7 +41,7 @@ void ThreadPool::executeTasks() {
 			pthread_mutex_unlock(&taskQueueLock);
 			LOG("thread is executing task");
 			task->execute();
-			LOG("task finished executing, deleting task arguments");
+			LOG("task finished executing, deleting task arguments and task");
 			free(task->arg);
 			delete(task);
 			LOG("deleted task arguments");
@@ -50,6 +51,7 @@ void ThreadPool::executeTasks() {
 			sleep(1);
 		}
 	}
+	// all threads will end here
 }
 void ThreadPool::terminate() {
 	stopped = true;

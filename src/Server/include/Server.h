@@ -42,10 +42,10 @@ public:
 	std::vector<std::string> receiveSerialized(int &fromSocket);
 	void sendSerialized(int &toSocket, std::vector<std::string> &vec);
 
-	// handle a session between 2 clients
+	// handle a long-term session between 2 clients
 	void handleSession(int clientSocket, int clientSocket2);
 
-	// stop and delete current thread from threadlist
+	// stop and delete current thread from the longTermThreadList
 	void deleteCurrThreadFromList();
 
 	/*

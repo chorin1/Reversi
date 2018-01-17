@@ -54,6 +54,40 @@ Server::~Server() {
 	delete threadPool;
 }
 
+void Server::start() {
+    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverSocket == -1)
+        throw "Error opening socket";
+    struct sockaddr_in serverAddress;
+    bzero((void *) &serverAddress, sizeof(serverAddress));
+    int yes=1;
+    // make bind errors go away for socket re-use
+    if (setsockopt(serverSocket,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_port = htons(port);
+    if (bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) == -1)
+        throw "Error binding";
+    listen(serverSocket, MAX_CONNECTED_CLIENTS);
+    //ignore SIGPIPE errors
+    signal(SIGPIPE, SIG_IGN);
+    cout << "ready to accept new connections.." << endl;
+
+    // start a new thread for main listening socket
+    pthread_t mainThread;
+    int nc = pthread_create(&mainThread, NULL, Server::startThreadedStatic, this);
+    if (nc) {
+        cout << "Error: unable to create main thread, " << mainThread << endl;
+        exit(-1);
+    }
+    // add main listening thread to thread list
+    pthread_mutex_lock(&threadListMutex);
+    longTermThreadList.push_back(mainThread);
+    pthread_mutex_unlock(&threadListMutex);
+}
 void* Server::startThreadedStatic (void *tArgs) {
 	Server* serverP = (Server*) tArgs;
 	int &listeningSocket = serverP->serverSocket;
@@ -74,40 +108,6 @@ void* Server::startThreadedStatic (void *tArgs) {
 				serverP->threadPool->addTask(new Task(serverP->handleClientStatic, newClientArgs));
 			}
 	}
-}
-void Server::start() {
-	serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-	if (serverSocket == -1)
-		throw "Error opening socket";
-	struct sockaddr_in serverAddress;
-	bzero((void *) &serverAddress, sizeof(serverAddress));
-	int yes=1;
-	// make bind errors go away for socket re-use
-	if (setsockopt(serverSocket,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int)) == -1) {
-		perror("setsockopt");
-		exit(1);
-	}
-	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_addr.s_addr = INADDR_ANY;
-	serverAddress.sin_port = htons(port);
-	if (bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) == -1)
-		throw "Error binding";
-	listen(serverSocket, MAX_CONNECTED_CLIENTS);
-	//ignore SIGPIPE errors
-	signal(SIGPIPE, SIG_IGN);
-	cout << "ready to accept new connections.." << endl;
-
-	// start a new thread for main listening socket
-	pthread_t mainThread;
-	int nc = pthread_create(&mainThread, NULL, Server::startThreadedStatic, this);
-	if (nc) {
-		cout << "Error: unable to create main thread, " << mainThread << endl;
-		exit(-1);
-	}
-	// add main listening thread to thread list
-	pthread_mutex_lock(&threadListMutex);
-	longTermThreadList.push_back(mainThread);
-	pthread_mutex_unlock(&threadListMutex);
 }
 
 void* Server::handleClientStatic(void *object) {
@@ -158,7 +158,7 @@ void Server::handleSession(int socketP1, int socketP2) {
 			std::vector<std::string> netMessage = receiveSerialized(*currSocket);
 			commManager->executeCommand(netMessage.front(), netMessage, *currSocket, *otherSocket);
 		} catch (const char *msg) {
-			// if one of the clients disconnected/errored the game will end.
+			// if one of the clients disconnected/errored the session will end.
 			LOG(msg);
 			closedSession = true;
 		}
