@@ -1,6 +1,6 @@
 # Reversi
 A console game written in C++ using the MVC architecture.
-Includes local PvP, Networked PvP (custom linux socket programming) & an AI player.
+Includes local PvP, Networked PvP (supports linux socket) & an AI player.
 
 ## Compiling
 Compile using Cmake. For legacy GNU makefile browse to src\Client or src\Server and execute "make"
